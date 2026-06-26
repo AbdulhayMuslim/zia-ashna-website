@@ -1,36 +1,44 @@
 import Container from "@/components/ui/Container";
-import { navigationLinks } from "@/data/navigation";
 import ThemeToggle from "@/components/ui/ThemeToggle";
+import { navigationLinks } from "@/data/navigation";
 
 export default function Header() {
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b bg-white/80 backdrop-blur">
-      <Container>
-        <div className="flex h-16 items-center justify-between">
-          {/* Logo */}
-          <a href="#home" className="text-xl font-bold">
-            Founder
-          </a>
+    <header className="w-full fixed top-0 flex items-center justify-center">
+      <div
+        className="
+            m-4 flex items-center justify-around w-[90%] sm:w-[60%] lg:w-[40%]
+            h-12 sm:h-14 lg:h-16
+            rounded-tr-full rounded-bl-full px-4 md:px-6 xl:px-8
+            backdrop-blur-sm bg-white/40 dark:bg-[#222]/60
+            border border-black/10 dark:border-white/10
+            shadow-sm z-50 overflow-hidden
+          "
+      >
+        {navigationLinks.map((item) => {
+          const Icon = item.icon;
 
-          {/* Navigation */}
-          <nav>
-            <ul className="flex items-center gap-8">
-              {navigationLinks.map((link) => (
-                <li key={link.href}>
-                  <a
-                    href={link.href}
-                    className="text-sm font-medium transition-colors hover:text-blue-600"
-                  >
-                    {link.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </nav>
+          return (
+            <a
+              key={item.href}
+              href={item.href}
+              aria-label={item.label}
+              title={item.label}
+              className="
+              text-heading dark:text-brand-secondary
+              w-full h-full flex items-center justify-around hover:bg-gray-200 dark:hover:bg-gray-800
+              rounded-tl-4xl rounded-br-4xl duration-300
+                "
+            >
+              <Icon className="h-6 sm:h-7 lg:h-8 w-6 sm:w-7 lg:-w-8" />
+            </a>
+          );
+        })}
 
+        <div className="h-full w-full flex items-center justify-center">
           <ThemeToggle />
         </div>
-      </Container>
+      </div>
     </header>
   );
 }

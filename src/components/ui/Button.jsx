@@ -13,10 +13,9 @@ export default function Button({
   const classes = cn(
     `
       inline-flex w-fit items-center justify-center gap-2
-      rounded-full
-      px-4 py-2
+      rounded-tr-full rounded-bl-full
+      px-6 py-2
       text-sm font-light text-white
-
       bg-brand-primary
       hover:bg-brand-secondary
 
