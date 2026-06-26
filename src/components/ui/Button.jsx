@@ -1,5 +1,6 @@
 import Link from "next/link";
 import cn from "@/utils/cn";
+import FadeUp from "../animations/FadeUp";
 
 export default function Button({
   href,
@@ -68,8 +69,10 @@ export default function Button({
 
   // Button
   return (
-    <button type="button" onClick={onClick} className={classes} {...props}>
-      {content}
-    </button>
+    <FadeUp>
+      <button type="button" onClick={onClick} className={classes} {...props}>
+        {content}
+      </button>
+    </FadeUp>
   );
 }

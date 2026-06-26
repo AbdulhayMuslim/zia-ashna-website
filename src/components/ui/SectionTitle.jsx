@@ -1,4 +1,5 @@
 import cn from "@/utils/cn";
+import FadeDown from "../animations/FadeDown";
 
 export default function SectionTitle({
   title,
@@ -11,17 +12,18 @@ export default function SectionTitle({
   if (!content) return null;
 
   return (
-    <Tag
-      className={cn(
-        `
+    <FadeDown>
+      <Tag
+        className={cn(
+          `
           inline-block
           w-fit
           rounded-tl-full rounded-br-full
 
-          px-8 py-1.5
+          px-6 py-1.5
 
-          text-md md:text-lg font-medium
-          lg:text-2xl lg:font-semibold
+          text-sm md:text-lg font-medium
+          lg:font-semibold
 
           bg-brand-primary/15
           text-brand-primary
@@ -29,10 +31,11 @@ export default function SectionTitle({
           dark:bg-brand-secondary/20
           dark:text-brand-secondary
         `,
-        className,
-      )}
-    >
-      {content}
-    </Tag>
+          className,
+        )}
+      >
+        {content}
+      </Tag>
+    </FadeDown>
   );
 }

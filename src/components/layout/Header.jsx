@@ -25,7 +25,7 @@ export default function Header() {
               aria-label={item.label}
               title={item.label}
               className="
-              text-heading dark:text-brand-secondary
+              text-orange-600 dark:text-brand-secondary
               w-full h-full flex items-center justify-around hover:bg-gray-200 dark:hover:bg-gray-800
               rounded-tl-4xl rounded-br-4xl duration-300
                 "
