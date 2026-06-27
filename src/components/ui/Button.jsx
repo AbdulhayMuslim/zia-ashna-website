@@ -1,6 +1,5 @@
 import Link from "next/link";
 import cn from "@/utils/cn";
-import FadeUp from "../animations/FadeUp";
 
 export default function Button({
   href,
@@ -14,8 +13,8 @@ export default function Button({
   const classes = cn(
     `
       inline-flex w-fit items-center justify-center gap-2
-      rounded-tr-full rounded-bl-full
-      px-6 py-2
+      rounded-full
+      px-4 py-2
       text-sm font-light text-white
       bg-brand-primary
       hover:bg-brand-secondary
@@ -35,7 +34,12 @@ export default function Button({
   const content = (
     <>
       {label || children}
-      {Icon && <Icon size={16} aria-hidden="true" />}
+      {Icon && (
+        <Icon
+          aria-hidden="true"
+          className="h-5 w-5 bg-bg p-0.5 text-brand-primary rounded-full"
+        />
+      )}
     </>
   );
 
@@ -69,10 +73,8 @@ export default function Button({
 
   // Button
   return (
-    <FadeUp>
-      <button type="button" onClick={onClick} className={classes} {...props}>
-        {content}
-      </button>
-    </FadeUp>
+    <button type="button" onClick={onClick} className={classes} {...props}>
+      {content}
+    </button>
   );
 }

@@ -18,7 +18,7 @@ export default function SectionTitle({
           `
           inline-block
           w-fit
-          rounded-tl-full rounded-br-full
+          rounded-full
 
           px-6 py-1.5
 

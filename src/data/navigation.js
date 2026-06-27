@@ -1,4 +1,11 @@
-import { House, User, BriefcaseBusiness, Trophy, Mail } from "lucide-react";
+import {
+  House,
+  User,
+  BriefcaseBusiness,
+  Trophy,
+  Mail,
+  Sparkles,
+} from "lucide-react";
 
 export const navigationLinks = [
   {
@@ -7,14 +14,19 @@ export const navigationLinks = [
     label: "Home",
   },
   {
-    href: "#about",
-    icon: User,
-    label: "About",
+    href: "#keyfocus",
+    icon: Sparkles,
+    label: "Focus Areas",
   },
   {
     href: "#ventures",
     icon: BriefcaseBusiness,
     label: "Ventures",
+  },
+  {
+    href: "#about",
+    icon: User,
+    label: "About",
   },
   {
     href: "#achievements",
