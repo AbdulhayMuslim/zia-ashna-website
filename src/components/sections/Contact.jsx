@@ -21,46 +21,42 @@ export default function Contact() {
 
           <FadeLeft delay={0.2}>
             <p className="text-center text-md lg:text-start text-text dark:text-text-dark/60">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-              enim ad minim veniam, quis nostrud exercitation ullamco laboris.
-            </p>
-            <p className="pt-4 text-center text-md lg:text-start text-text dark:text-text-dark/60">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua.
+              Our recruitment process is simple, transparent, and designed to
+              help us find the right talent while providing a smooth experience
+              for every candidate.
             </p>
           </FadeLeft>
 
           {/* Steps */}
           <div className="w-full grid grid-cols-3 grid-rows-2 gap-4 place-items-center">
-            <div className="rounded-xl bg-gray-200 dark:bg-[#222] p-4 flex flex-col justify-center items-center h-full w-full gap-2">
+            <div className="rounded-xl bg-brand-primary/10 text-brand-primary p-4 flex flex-col justify-center items-center h-full w-full gap-2">
               <CheckCircle />
-              <h4>Application</h4>
+              <h4 className="text-brand-primary">Application</h4>
             </div>
 
-            <div className="rounded-xl bg-gray-200 dark:bg-[#222] p-4 flex flex-col justify-center items-center h-full w-full gap-2">
+            <div className="rounded-xl bg-brand-primary/10 text-brand-primary p-4 flex flex-col justify-center items-center h-full w-full gap-2">
               <CheckCircle />
-              <h4>Evaluation</h4>
+              <h4 className="text-brand-primary">Evaluation</h4>
             </div>
 
-            <div className="rounded-xl bg-gray-200 dark:bg-[#222] p-4 flex flex-col justify-center items-center h-full w-full gap-2">
+            <div className="rounded-xl bg-brand-primary/10 text-brand-primary p-4 flex flex-col justify-center items-center h-full w-full gap-2">
               <CheckCircle />
-              <h4>Shortlising</h4>
+              <h4 className="text-brand-primary">Shortlising</h4>
             </div>
 
-            <div className="rounded-xl bg-gray-200 dark:bg-[#222] p-4 flex flex-col justify-center items-center h-full w-full gap-2">
+            <div className="rounded-xl bg-brand-primary/10 text-brand-primary p-4 flex flex-col justify-center items-center h-full w-full gap-2">
               <CheckCircle />
-              <h4>Interview</h4>
+              <h4 className="text-brand-primary">Interview</h4>
             </div>
 
-            <div className="rounded-xl bg-gray-200 dark:bg-[#222] p-4 flex flex-col justify-center items-center h-full w-full gap-2">
+            <div className="rounded-xl bg-brand-primary/10 text-brand-primary p-4 flex flex-col justify-center items-center h-full w-full gap-2">
               <CheckCircle />
-              <h4>Intern</h4>
+              <h4 className="text-brand-primary">Intern</h4>
             </div>
 
-            <div className="rounded-xl bg-gray-200 dark:bg-[#222] p-4 flex flex-col justify-center items-center h-full w-full gap-2">
+            <div className="rounded-xl bg-brand-primary/10 text-brand-primary p-4 flex flex-col justify-center items-center h-full w-full gap-2">
               <CheckCircle />
-              <h4>Staff</h4>
+              <h4 className="text-brand-primary">Staff</h4>
             </div>
           </div>
         </div>

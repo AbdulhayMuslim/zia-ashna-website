@@ -62,7 +62,7 @@ export default function History() {
             {/* Center Line */}
             <div className="absolute left-1/2 top-0 hidden h-full w-0.75 -translate-x-1/2 rounded-full bg-linear-to-b from-brand-primary via-brand-secondary to-brand-primary lg:block" />
 
-            <div className="flex flex-col gap-8">
+            <div className="flex flex-col gap-10">
               {journey.map((item, index) => {
                 const Icon = item.icon;
                 const isLeft = index % 2 === 0;
