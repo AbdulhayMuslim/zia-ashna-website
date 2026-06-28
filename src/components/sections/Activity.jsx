@@ -12,12 +12,12 @@ import {
   Banknote,
 } from "lucide-react";
 
-export default function KeyFocus() {
+export default function Activity() {
   return (
     <>
-      <Section id="keyfocus" className="pb-20">
+      <Section id="activity" className="pb-20 bg-gray-200 dark:bg-[#222]">
         <Container className="flex flex-col items-center justify-center gap-4">
-          <SectionTitle title="Key Focus Areas" />
+          <SectionTitle title="Activity" />
 
           {/* Cards */}
           <ZoomIn>

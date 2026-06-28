@@ -9,11 +9,13 @@ html {
 
 @theme {
   /* Colors */
-  --color-brand-primary: #3b82f6;
-  --color-brand-secondary: #8b5cf6;
+  --color-brand-primary: #f38022;
+  --color-brand-secondary: #f38022;
+  /* --color-brand-secondary: #8b5cf6; */
 
   /* Text Colors */
   --color-heading: #222222;
+  --color-heading-soft: #333333;
   --color-heading-dark: #f5f5f5;
   --color-text: #797979;
   --color-text-dark: #e5e5e5;

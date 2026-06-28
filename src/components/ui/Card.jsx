@@ -11,7 +11,7 @@ export default function Card({
   btn,
   number,
   className,
-  overlayColor = "bg-sky-200 dark:bg-violet-900",
+  overlayColor = "bg-brand-primary/20 dark:bg-orange-900",
 }) {
   const Icon = typeof icon !== "string" ? icon : null;
 
@@ -21,7 +21,7 @@ export default function Card({
         `
           group relative overflow-hidden
           rounded-2xl
-          bg-bg dark:bg-[#222]
+          bg-bg dark:bg-bg-dark
           p-8
           shadow-[0_0_30px_rgba(0,0,0,0.08)]
           select-none

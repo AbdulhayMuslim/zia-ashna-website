@@ -1,10 +1,10 @@
 import {
   House,
   User,
-  BriefcaseBusiness,
-  Trophy,
+  BookOpen,
   Mail,
-  Sparkles,
+  Building2,
+  BriefcaseBusiness,
 } from "lucide-react";
 
 export const navigationLinks = [
@@ -14,24 +14,25 @@ export const navigationLinks = [
     label: "Home",
   },
   {
-    href: "#keyfocus",
-    icon: Sparkles,
-    label: "Focus Areas",
-  },
-  {
-    href: "#ventures",
-    icon: BriefcaseBusiness,
-    label: "Ventures",
-  },
-  {
     href: "#about",
     icon: User,
     label: "About",
   },
   {
-    href: "#achievements",
-    icon: Trophy,
-    label: "Achievements",
+    href: "#activity",
+    icon: BriefcaseBusiness,
+    label: "Activity",
+  },
+  {
+    href: "#history",
+    icon: Building2,
+    label: "History",
+  },
+
+  {
+    href: "#publications",
+    icon: BookOpen,
+    label: "Publications",
   },
   {
     href: "#contact",

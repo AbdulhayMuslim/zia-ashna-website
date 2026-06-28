@@ -35,14 +35,14 @@ const journey = [
   },
 ];
 
-export default function Achievements() {
+export default function History() {
   return (
-    <Section id="achievements" className="bg-gray-200 dark:bg-[#222]">
+    <Section id="history">
       <Container>
         <div className="flex flex-col items-center gap-12 lg:gap-16">
           {/* Header */}
           <div className="flex flex-col items-center gap-4 text-center max-w-3xl">
-            <SectionTitle title="Achievements" />
+            <SectionTitle title="History" />
 
             <h2 className="font-heading text-3xl lg:text-4xl font-bold text-brand-primary dark:text-brand-secondary">
               Founder Journey

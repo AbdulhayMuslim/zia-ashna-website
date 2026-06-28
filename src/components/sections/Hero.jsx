@@ -6,6 +6,7 @@ import Image from "next/image";
 import asantech from "@/assets/images/asantech logo.png";
 import tawangar from "@/assets/images/tawangar logo.png";
 import hamkar from "@/assets/images/hamkar logo.png";
+import microasan from "@/assets/images/microasan logo.png";
 import FadeLeft from "../animations/FadeLeft";
 import zia from "@/assets/images/zia ashna.webp";
 import { ArrowRight } from "lucide-react";
@@ -15,7 +16,7 @@ import FadeRight from "../animations/FadeRight";
 
 export default function Hero() {
   return (
-    <Section id="home" className="dark:bg-[#222] pt-23 md:pt-25">
+    <Section id="home" className="bg-gray-200 dark:bg-[#222] pt-23 md:pt-25">
       <Container>
         <div className="flex flex-col lg:flex-row items-center">
           {/* Left Section */}
@@ -23,8 +24,11 @@ export default function Hero() {
             <SectionTitle title="Entrepreneur | Founder" />
 
             <FadeLeft>
-              <h1 className="text-brand-primary dark:text-brand-secondary text-5xl lg:text-6xl text-center lg:text-start font-bold leading-tight">
-                Sayed Zia Ashna
+              <h1 className="text-heading-soft dark:text-heading-dark/80 text-5xl lg:text-6xl text-center lg:text-start font-bold leading-tight">
+                Sayed Zia{" "}
+                <span className="text-brand-primary dark:text-brand-secondary">
+                  ASHNA
+                </span>
               </h1>
             </FadeLeft>
 
@@ -42,14 +46,14 @@ export default function Hero() {
             <ZoomIn className="flex justify-center lg:justify-start">
               <div className="grid grid-cols-1 xsm:grid-cols-2 grid-rows-4 xsm:grid-rows-2 place-items-center gap-4 mt-4 md:w-[80%]">
                 <a
-                  href="https://asantech.net/"
+                  href="https://microasan.com/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-center p-4
               bg-bg dark:bg-gray-600 rounded-xl shadow-[0_0_30px_rgba(0,0,0,0.12)]
               hover:-translate-y-2 duration-300"
                 >
-                  <Image src={asantech} alt="Asan Tech Logo" />
+                  <Image src={microasan} alt="Micro Asan Logo" />
                 </a>
 
                 <a

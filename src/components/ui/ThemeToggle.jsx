@@ -18,13 +18,13 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-      className="bg-gray-200 dark:bg-gray-800 outline-none px-1.5 py-1 rounded-full border border-gray-300 dark:border-gray-700 shadow-sm"
+      className="bg-brand-primary/10 dark:bg-gray-800 outline-none px-1.5 py-1 rounded-full border border-brand-primary/30 dark:border-gray-700 shadow-sm"
       aria-label="Toggle theme"
     >
       {theme === "dark" ? (
         <Sun className="h-5 sm:h-6 lg:h-7 w-5 sm:w-6 lg:-w-7 text-yellow-500" />
       ) : (
-        <Moon className="h-5 sm:h-6 lg:h-7 w-5 sm:w-6 lg:-w-7 text-gray-600" />
+        <Moon className="h-5 sm:h-6 lg:h-7 w-5 sm:w-6 lg:-w-7 text-gray-400" />
       )}
     </button>
   );
