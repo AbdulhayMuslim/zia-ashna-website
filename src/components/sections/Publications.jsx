@@ -24,11 +24,20 @@ export default function Publications() {
           sm:grid-cols-2
           lg:grid-cols-3
           gap-4
-          items-stretch
+          
         "
         >
           {posts.map((post) => (
-            <PostCard key={post.id} {...post} />
+            <PostCard
+              key={post.id}
+              image={post.image}
+              category={post.category}
+              date={post.date}
+              title={post.title}
+              text={post.excerpt}
+              btn="Read Article"
+              href={`/blog/${post.slug}`}
+            />
           ))}
         </FadeRight>
       </Container>

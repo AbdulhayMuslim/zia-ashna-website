@@ -4,7 +4,7 @@ import ContactForm from "../forms/ContactForm";
 import SectionTitle from "../ui/SectionTitle";
 import FadeLeft from "../animations/FadeLeft";
 import { CheckCircle } from "lucide-react";
-import Card from "../ui/Card";
+import ZoomIn from "../animations/ZoomIn";
 
 export default function Contact() {
   return (
@@ -28,37 +28,39 @@ export default function Contact() {
           </FadeLeft>
 
           {/* Steps */}
-          <div className="w-full grid grid-cols-3 grid-rows-2 gap-4 place-items-center">
-            <div className="rounded-xl bg-brand-primary/10 text-brand-primary p-4 flex flex-col justify-center items-center h-full w-full gap-2">
-              <CheckCircle />
-              <h4 className="text-brand-primary">Application</h4>
-            </div>
+          <ZoomIn className="w-full">
+            <div className="w-full grid grid-cols-3 grid-rows-2 gap-4 place-items-center">
+              <div className="rounded-xl bg-brand-primary/10 text-brand-primary p-4 flex flex-col justify-center items-center h-full w-full gap-2">
+                <CheckCircle />
+                <h4 className="text-brand-primary">Application</h4>
+              </div>
 
-            <div className="rounded-xl bg-brand-primary/10 text-brand-primary p-4 flex flex-col justify-center items-center h-full w-full gap-2">
-              <CheckCircle />
-              <h4 className="text-brand-primary">Evaluation</h4>
-            </div>
+              <div className="rounded-xl bg-brand-primary/10 text-brand-primary p-4 flex flex-col justify-center items-center h-full w-full gap-2">
+                <CheckCircle />
+                <h4 className="text-brand-primary">Evaluation</h4>
+              </div>
 
-            <div className="rounded-xl bg-brand-primary/10 text-brand-primary p-4 flex flex-col justify-center items-center h-full w-full gap-2">
-              <CheckCircle />
-              <h4 className="text-brand-primary">Shortlising</h4>
-            </div>
+              <div className="rounded-xl bg-brand-primary/10 text-brand-primary p-4 flex flex-col justify-center items-center h-full w-full gap-2">
+                <CheckCircle />
+                <h4 className="text-brand-primary">Shortlising</h4>
+              </div>
 
-            <div className="rounded-xl bg-brand-primary/10 text-brand-primary p-4 flex flex-col justify-center items-center h-full w-full gap-2">
-              <CheckCircle />
-              <h4 className="text-brand-primary">Interview</h4>
-            </div>
+              <div className="rounded-xl bg-brand-primary/10 text-brand-primary p-4 flex flex-col justify-center items-center h-full w-full gap-2">
+                <CheckCircle />
+                <h4 className="text-brand-primary">Interview</h4>
+              </div>
 
-            <div className="rounded-xl bg-brand-primary/10 text-brand-primary p-4 flex flex-col justify-center items-center h-full w-full gap-2">
-              <CheckCircle />
-              <h4 className="text-brand-primary">Intern</h4>
-            </div>
+              <div className="rounded-xl bg-brand-primary/10 text-brand-primary p-4 flex flex-col justify-center items-center h-full w-full gap-2">
+                <CheckCircle />
+                <h4 className="text-brand-primary">Intern</h4>
+              </div>
 
-            <div className="rounded-xl bg-brand-primary/10 text-brand-primary p-4 flex flex-col justify-center items-center h-full w-full gap-2">
-              <CheckCircle />
-              <h4 className="text-brand-primary">Staff</h4>
+              <div className="rounded-xl bg-brand-primary/10 text-brand-primary p-4 flex flex-col justify-center items-center h-full w-full gap-2">
+                <CheckCircle />
+                <h4 className="text-brand-primary">Staff</h4>
+              </div>
             </div>
-          </div>
+          </ZoomIn>
         </div>
 
         <div className="w-full md:w-[70%] lg:w-[45%]">

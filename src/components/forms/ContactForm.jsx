@@ -4,6 +4,7 @@ import { useState } from "react";
 import { User, Mail, PenSquare, MessageSquare } from "lucide-react";
 import cn from "../../utils/cn";
 import Button from "../../components/ui/Button";
+import FadeRight from "../animations/FadeRight";
 
 const INPUT_STYLES =
   "w-full rounded-full border border-transparent bg-bg dark:bg-bg-dark px-4 pr-12 py-3 text-sm text-heading/80 dark:text-text-dark/80 outline-none transition-all duration-200 placeholder:text-gray-400 focus:border-sky-300 dark:focus:border-gray-600";
@@ -117,213 +118,227 @@ export default function ContactForm() {
   };
 
   return (
-    <section aria-labelledby="contact-form-heading" className="w-full">
-      <div className="rounded-2xl bg-gray-200 p-4 dark:bg-[#222] sm:p-6">
-        <h2
-          id="contact-form-heading"
-          className="mb-6 text-2xl font-semibold text-heading/80 dark:text-heading-dark/80"
-        >
-          Contact Form
-        </h2>
-
-        <form
-          onSubmit={handleSubmit}
-          className="flex flex-col gap-5"
-          noValidate
-        >
-          {/* Honeypot field for bot/spam prevention */}
-          <div
-            className="absolute opacity-0 pointer-events-none w-0 h-0 overflow-hidden"
-            aria-hidden="true"
+    <FadeRight>
+      <section aria-labelledby="contact-form-heading" className="w-full">
+        <div className="rounded-2xl bg-gray-200 p-4 dark:bg-[#222] sm:p-6">
+          <h2
+            id="contact-form-heading"
+            className="mb-6 text-2xl font-semibold text-heading/80 dark:text-heading-dark/80"
           >
-            <label htmlFor="honeyPot">Leave this field blank</label>
-            <input
-              id="honeyPot"
-              name="honeyPot"
-              type="text"
-              tabIndex="-1"
-              value={formData.honeyPot}
-              onChange={handleChange}
-              autoComplete="off"
-            />
-          </div>
+            Contact Form
+          </h2>
 
-          {/* Name Input */}
-          <div className="flex flex-col gap-2">
-            <label
-              htmlFor="name"
-              className="text-sm font-medium text-heading/80 dark:text-heading-dark/80"
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-col gap-5"
+            noValidate
+          >
+            {/* Honeypot field for bot/spam prevention */}
+            <div
+              className="absolute opacity-0 pointer-events-none w-0 h-0 overflow-hidden"
+              aria-hidden="true"
             >
-              Full Name
-            </label>
-
-            <div className="relative">
+              <label htmlFor="honeyPot">Leave this field blank</label>
               <input
-                id="name"
-                name="name"
+                id="honeyPot"
+                name="honeyPot"
                 type="text"
-                autoComplete="name"
-                placeholder="John Smith"
-                value={formData.name}
+                tabIndex="-1"
+                value={formData.honeyPot}
                 onChange={handleChange}
-                className={INPUT_STYLES}
-                aria-invalid={!!errors.name}
-                aria-describedby={errors.name ? "name-error" : undefined}
-              />
-
-              <User
-                size={18}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-text-muted dark:text-text-muted-dark"
+                autoComplete="off"
               />
             </div>
 
-            {errors.name && (
-              <p id="name-error" className="text-sm text-red-500" role="alert">
-                {errors.name}
-              </p>
-            )}
-          </div>
-
-          {/* Email Input */}
-          <div className="flex flex-col gap-2">
-            <label
-              htmlFor="email"
-              className="text-sm font-medium text-heading/80 dark:text-heading-dark/80"
-            >
-              Email Address
-            </label>
-
-            <div className="relative">
-              <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
-                placeholder="john@example.com"
-                value={formData.email}
-                onChange={handleChange}
-                className={INPUT_STYLES}
-                aria-invalid={!!errors.email}
-                aria-describedby={errors.email ? "email-error" : undefined}
-              />
-
-              <Mail
-                size={18}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-text-muted dark:text-text-muted-dark"
-              />
-            </div>
-
-            {errors.email && (
-              <p id="email-error" className="text-sm text-red-500" role="alert">
-                {errors.email}
-              </p>
-            )}
-          </div>
-
-          {/* Subject Input */}
-          <div className="flex flex-col gap-2">
-            <label
-              htmlFor="subject"
-              className="text-sm font-medium text-heading/80 dark:text-heading-dark/80"
-            >
-              Subject
-            </label>
-
-            <div className="relative">
-              <input
-                id="subject"
-                name="_subject"
-                type="text"
-                placeholder="How can we help you?"
-                value={formData._subject}
-                onChange={handleChange}
-                className={INPUT_STYLES}
-                aria-invalid={!!errors._subject}
-                aria-describedby={errors._subject ? "subject-error" : undefined}
-              />
-
-              <PenSquare
-                size={18}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-text-muted dark:text-text-muted-dark"
-              />
-            </div>
-
-            {errors._subject && (
-              <p
-                id="subject-error"
-                className="text-sm text-red-500"
-                role="alert"
+            {/* Name Input */}
+            <div className="flex flex-col gap-2">
+              <label
+                htmlFor="name"
+                className="text-sm font-medium text-heading/80 dark:text-heading-dark/80"
               >
-                {errors._subject}
-              </p>
-            )}
-          </div>
+                Full Name
+              </label>
 
-          {/* Message Textarea */}
-          <div className="flex flex-col gap-2">
-            <label
-              htmlFor="message"
-              className="text-sm font-medium text-heading/80 dark:text-heading-dark/80"
-            >
-              Message
-            </label>
+              <div className="relative">
+                <input
+                  id="name"
+                  name="name"
+                  type="text"
+                  autoComplete="name"
+                  placeholder="John Smith"
+                  value={formData.name}
+                  onChange={handleChange}
+                  className={INPUT_STYLES}
+                  aria-invalid={!!errors.name}
+                  aria-describedby={errors.name ? "name-error" : undefined}
+                />
 
-            <div className="relative">
-              <textarea
-                id="message"
-                name="message"
-                rows="6"
-                placeholder="Tell us more about your request..."
-                value={formData.message}
-                onChange={handleChange}
-                className={cn(INPUT_STYLES, "resize-none rounded-2xl pr-12")}
-                aria-invalid={!!errors.message}
-                aria-describedby={errors.message ? "message-error" : undefined}
-              />
+                <User
+                  size={18}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-text-muted dark:text-text-muted-dark"
+                />
+              </div>
 
-              <MessageSquare
-                size={18}
-                className="absolute right-4 top-4 text-text-muted dark:text-text-muted-dark"
-              />
+              {errors.name && (
+                <p
+                  id="name-error"
+                  className="text-sm text-red-500"
+                  role="alert"
+                >
+                  {errors.name}
+                </p>
+              )}
             </div>
 
-            {errors.message && (
-              <p
-                id="message-error"
-                className="text-sm text-red-500"
-                role="alert"
+            {/* Email Input */}
+            <div className="flex flex-col gap-2">
+              <label
+                htmlFor="email"
+                className="text-sm font-medium text-heading/80 dark:text-heading-dark/80"
               >
-                {errors.message}
+                Email Address
+              </label>
+
+              <div className="relative">
+                <input
+                  id="email"
+                  name="email"
+                  type="email"
+                  autoComplete="email"
+                  placeholder="john@example.com"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className={INPUT_STYLES}
+                  aria-invalid={!!errors.email}
+                  aria-describedby={errors.email ? "email-error" : undefined}
+                />
+
+                <Mail
+                  size={18}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-text-muted dark:text-text-muted-dark"
+                />
+              </div>
+
+              {errors.email && (
+                <p
+                  id="email-error"
+                  className="text-sm text-red-500"
+                  role="alert"
+                >
+                  {errors.email}
+                </p>
+              )}
+            </div>
+
+            {/* Subject Input */}
+            <div className="flex flex-col gap-2">
+              <label
+                htmlFor="subject"
+                className="text-sm font-medium text-heading/80 dark:text-heading-dark/80"
+              >
+                Subject
+              </label>
+
+              <div className="relative">
+                <input
+                  id="subject"
+                  name="_subject"
+                  type="text"
+                  placeholder="How can we help you?"
+                  value={formData._subject}
+                  onChange={handleChange}
+                  className={INPUT_STYLES}
+                  aria-invalid={!!errors._subject}
+                  aria-describedby={
+                    errors._subject ? "subject-error" : undefined
+                  }
+                />
+
+                <PenSquare
+                  size={18}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-text-muted dark:text-text-muted-dark"
+                />
+              </div>
+
+              {errors._subject && (
+                <p
+                  id="subject-error"
+                  className="text-sm text-red-500"
+                  role="alert"
+                >
+                  {errors._subject}
+                </p>
+              )}
+            </div>
+
+            {/* Message Textarea */}
+            <div className="flex flex-col gap-2">
+              <label
+                htmlFor="message"
+                className="text-sm font-medium text-heading/80 dark:text-heading-dark/80"
+              >
+                Message
+              </label>
+
+              <div className="relative">
+                <textarea
+                  id="message"
+                  name="message"
+                  rows="6"
+                  placeholder="Tell us more about your request..."
+                  value={formData.message}
+                  onChange={handleChange}
+                  className={cn(INPUT_STYLES, "resize-none rounded-2xl pr-12")}
+                  aria-invalid={!!errors.message}
+                  aria-describedby={
+                    errors.message ? "message-error" : undefined
+                  }
+                />
+
+                <MessageSquare
+                  size={18}
+                  className="absolute right-4 top-4 text-text-muted dark:text-text-muted-dark"
+                />
+              </div>
+
+              {errors.message && (
+                <p
+                  id="message-error"
+                  className="text-sm text-red-500"
+                  role="alert"
+                >
+                  {errors.message}
+                </p>
+              )}
+            </div>
+
+            {/* Error and Success Status Notifications */}
+            {status.text && (
+              <p
+                className={cn(
+                  "text-sm font-medium",
+                  status.type === "success" ? "text-green-600" : "text-red-500",
+                )}
+                role="status"
+              >
+                {status.text}
               </p>
             )}
-          </div>
 
-          {/* Error and Success Status Notifications */}
-          {status.text && (
-            <p
-              className={cn(
-                "text-sm font-medium",
-                status.type === "success" ? "text-green-600" : "text-red-500",
-              )}
-              role="status"
-            >
-              {status.text}
-            </p>
-          )}
-
-          <div>
-            <Button
-              label={loading ? "Sending..." : "Send Message"}
-              type="submit"
-              disabled={loading}
-              className={cn(
-                "font-medium text-sm px-5 py-2.5",
-                loading && "opacity-50 cursor-not-allowed",
-              )}
-            />
-          </div>
-        </form>
-      </div>
-    </section>
+            <div>
+              <Button
+                label={loading ? "Sending..." : "Send Message"}
+                type="submit"
+                disabled={loading}
+                className={cn(
+                  "font-medium text-sm px-5 py-2.5",
+                  loading && "opacity-50 cursor-not-allowed",
+                )}
+              />
+            </div>
+          </form>
+        </div>
+      </section>
+    </FadeRight>
   );
 }

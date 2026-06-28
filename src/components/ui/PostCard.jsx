@@ -45,12 +45,12 @@ export default function PostCard({
           src={image}
           alt={title || "Blog post"}
           sizes="(max-width:768px)100vw,(max-width:1024px)50vw,400px"
-          className="w-full h-60 object-cover duration-400 group-hover:scale-110"
+          className="w-full h-80 object-cover duration-400 group-hover:scale-110"
         />
       </div>
 
       {/* Content */}
-      <div className="p-4 flex flex-col justify-between gap-4">
+      <div className="p-4 flex flex-col justify-between h-full">
         <div className="flex items-center justify-between">
           <div className="py-1 px-2 bg-brand-primary/10 rounded-lg text-brand-primary text-sm">
             {category}
@@ -59,11 +59,11 @@ export default function PostCard({
           <div className="text-brand-primary text-sm">{date}</div>
         </div>
 
-        <h3 className="font-semibold text-md duration-300 text-heading-soft group-hover:text-brand-primary">
+        <h3 className="font-semibold text-xl duration-300 text-heading-soft dark:text-heading-dark/80 group-hover:text-brand-primary">
           {title}
         </h3>
 
-        <p className="font-light text-md text-text dark:text-text-dark/80">
+        <p className="font-light text-md text-text dark:text-text-dark/70">
           {text}
         </p>
 

@@ -9,33 +9,33 @@ import {
 
 export const navigationLinks = [
   {
-    href: "#home",
+    href: "/#home",
     icon: House,
     label: "Home",
   },
   {
-    href: "#about",
+    href: "/#about",
     icon: User,
     label: "About",
   },
   {
-    href: "#activity",
+    href: "/#activity",
     icon: BriefcaseBusiness,
     label: "Activity",
   },
   {
-    href: "#history",
+    href: "/#history",
     icon: Building2,
     label: "History",
   },
 
   {
-    href: "#publications",
+    href: "/#publications",
     icon: BookOpen,
     label: "Publications",
   },
   {
-    href: "#contact",
+    href: "/#contact",
     icon: Mail,
     label: "Contact",
   },
