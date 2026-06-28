@@ -15,22 +15,40 @@ export default function Publications() {
       id="publications"
       className="bg-brand-primary/10 dark:bg-brand-secondary/10 pb-15"
     >
-      <Container className="flex flex-col gap-4 items-center justify-center">
+      <Container className="flex flex-col gap-15 items-center justify-center">
         <SectionTitle
           title="Publications"
           className="bg-gray-200 dark:bg-bg-dark"
         />
 
-        <FadeRight>
-          <div className="grid grid-cols-1 lg:grid-cols-3 grid-rows-3 lg:grid-rows-1 pt-10 gap-4 place-items-center items-stretch">
-            <PostCard
-              image={profile}
-              category="Entrepreneurship"
-              date="June 28, 2026"
-              title="How Building Multiple Ventures Creates Long-Term Value"
-              href="/blog/multiple-ventures"
-            />
-          </div>
+        <FadeRight className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 grid-rows-3 sm:grid-rows-2 lg:grid-rows-1 place-items-center gap-4">
+          <PostCard
+            image={profile}
+            category="Entrepreneurship"
+            date="June 28, 2026"
+            title="How Building Multiple Ventures Creates Long Term Value"
+            text="ayed Zia Ashna is an entrepreneur, founder, and business
+                  leader with a strong background in technology."
+            btn="Read More"
+          />
+          <PostCard
+            image={profile}
+            category="Entrepreneurship"
+            date="June 28, 2026"
+            title="How Building Multiple Ventures Creates Long Term Value"
+            text="ayed Zia Ashna is an entrepreneur, founder, and business
+                  leader with a strong background in technology."
+            btn="Read More"
+          />
+          <PostCard
+            image={profile}
+            category="Entrepreneurship"
+            date="June 28, 2026"
+            title="How Building Multiple Ventures Creates Long Term Value"
+            text="ayed Zia Ashna is an entrepreneur, founder, and business
+                  leader with a strong background in technology."
+            btn="Read More"
+          />
         </FadeRight>
       </Container>
     </Section>
