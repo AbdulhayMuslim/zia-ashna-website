@@ -6,11 +6,11 @@ import Footer from "@/components/layout/Footer";
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="bg-bg dark:bg-bg-dark text-text dark:text-text-dark">
+      <body className="min-h-screen flex flex-col bg-bg dark:bg-bg-dark text-text dark:text-text-dark">
         <ThemeProvider>
           <Header3 />
 
-          <main>{children}</main>
+          <main className="flex-1">{children}</main>
 
           <Footer />
         </ThemeProvider>
