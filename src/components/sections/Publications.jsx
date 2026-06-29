@@ -23,9 +23,10 @@ export default function Publications() {
   return (
     <Section
       id="publications"
-      className="bg-brand-primary/10 dark:bg-brand-secondary/10 pb-15"
+      className="relative bg-brand-primary/10 dark:bg-brand-secondary/10 pb-15"
     >
-      <Container className="flex flex-col gap-15 items-center justify-center">
+      <div className="opacity-70 dark:opacity-10 absolute top-0 left-0 h-full w-full bg-[url('/images/herobg2.png')] bg-cover bg-center bg-no-repeat" />
+      <Container className="relative z-10 flex flex-col gap-15 items-center justify-center">
         <SectionTitle
           title="Publications"
           className="bg-gray-200 dark:bg-bg-dark"

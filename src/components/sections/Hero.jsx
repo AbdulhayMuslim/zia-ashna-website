@@ -16,8 +16,12 @@ import FadeRight from "../animations/FadeRight";
 
 export default function Hero() {
   return (
-    <Section id="home" className="bg-gray-200 dark:bg-[#222] pt-23 md:pt-25">
-      <Container>
+    <Section
+      id="home"
+      className="relative bg-gray-200 dark:bg-[#222] pt-23 md:pt-25"
+    >
+      <div className="opacity-70 dark:opacity-10 absolute top-0 left-0 h-full w-full bg-[url('/images/herobg.png')] bg-cover bg-center bg-no-repeat" />
+      <Container className="relative">
         <div className="flex flex-col lg:flex-row items-center">
           {/* Left Section */}
           <div className="flex flex-col gap-4 lg:gap-6 justify-center items-center lg:items-start lg:pl-10 lg:w-[50%]">
