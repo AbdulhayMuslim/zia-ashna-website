@@ -59,6 +59,8 @@ export default function Header() {
                         duration-300
 
                         hover:bg-brand-primary/20
+
+                        outline-none
                        
                       "
                     >

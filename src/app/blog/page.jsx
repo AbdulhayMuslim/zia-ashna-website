@@ -7,6 +7,7 @@ import Container from "@/components/ui/Container";
 import SectionTitle from "@/components/ui/SectionTitle";
 import PostCard from "@/components/ui/PostCard";
 import ZoomIn from "@/components/animations/ZoomIn";
+import BackButton from "@/components/ui/BackButton";
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
@@ -26,6 +27,8 @@ export default function Blog() {
 
   return (
     <Section className="bg-gray-200 dark:bg-gray-800">
+      <BackButton />
+
       <Container className="flex flex-col items-center gap-12 pt-23 md:pt-25">
         <SectionTitle title="Blog Posts" />
 
