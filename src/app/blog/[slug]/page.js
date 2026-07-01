@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import BackButton from "@/components/ui/BackButton";
 
 import Container from "@/components/ui/Container";
 import { posts } from "@/data/posts";
@@ -15,6 +16,7 @@ export default async function BlogPost({ params }) {
 
   return (
     <main className="min-h-screen py-30">
+      <BackButton />
       <Container className="max-w-5xl mx-auto">
         {/* Hero Image */}
         <div className="overflow-hidden flex justify-center mb-10">
@@ -22,7 +24,7 @@ export default async function BlogPost({ params }) {
             src={post.image}
             alt={post.title}
             priority
-            className="w-1/2 h-1/2 rounded-3xl object-cover"
+            className="w-[90%] lg:w-2/3 rounded-3xl object-cover"
           />
         </div>
 
