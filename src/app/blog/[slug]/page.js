@@ -16,7 +16,6 @@ export default async function BlogPost({ params }) {
 
   return (
     <main className="min-h-screen py-30">
-      <BackButton />
       <Container className="max-w-5xl mx-auto">
         {/* Hero Image */}
         <div className="overflow-hidden flex justify-center mb-10">
