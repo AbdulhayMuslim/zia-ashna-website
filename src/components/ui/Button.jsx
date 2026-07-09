@@ -1,4 +1,3 @@
-import { Button as ButtonPrimitive } from "@base-ui/react/button";
 import { cva } from "class-variance-authority";
 
 import { cn } from "@/lib/utils";
@@ -44,14 +43,36 @@ export default function Button({
   className,
   variant = "default",
   size = "default",
+  href,
+  label,
+  icon: Icon,
+  children,
   ...props
 }) {
+  const content = (
+    <>
+      {label ?? children}
+      {Icon ? <Icon className="size-4" /> : null}
+    </>
+  );
+
+  const sharedProps = {
+    className: cn(buttonVariants({ variant, size, className })),
+    ...props,
+  };
+
+  if (href) {
+    return (
+      <a href={href} {...sharedProps}>
+        {content}
+      </a>
+    );
+  }
+
   return (
-    <ButtonPrimitive
-      data-slot="button"
-      className={cn(buttonVariants({ variant, size, className }))}
-      {...props}
-    />
+    <button type="button" {...sharedProps}>
+      {content}
+    </button>
   );
 }
 
