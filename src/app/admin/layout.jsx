@@ -1,16 +1,17 @@
-import Topbar from "@/components/admin/Topbar";
-import Sidebar from "@/components/admin/Sidebar";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/app-sidebar";
+import { SiteHeader } from "@/components/site-header";
 
 export default function AdminLayout({ children }) {
   return (
-    <div className="flex h-screen">
-      <Sidebar />
+    <SidebarProvider>
+      <AppSidebar />
 
-      <div className="flex-1 flex flex-col">
-        <Topbar />
+      <SidebarInset>
+        <SiteHeader />
 
-        <main className="flex-1 overflow-y-auto p-6">{children}</main>
-      </div>
-    </div>
+        <main className="flex-1 p-6 bg-bg dark:bg-bg-dark">{children}</main>
+      </SidebarInset>
+    </SidebarProvider>
   );
 }
