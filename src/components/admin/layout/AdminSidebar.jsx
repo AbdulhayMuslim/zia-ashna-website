@@ -16,26 +16,27 @@ export default function AdminSidebar({ sidebarOpen, setSidebarOpen }) {
       <div
         onClick={() => setSidebarOpen(false)}
         className={cn(
-          "fixed inset-0 z-40 bg-black/50 transition-opacity duration-300 lg:hidden",
-          sidebarOpen ? "opacity-100 visible" : "opacity-0 invisible",
+          "fixed inset-0 z-40 bg-black/40 transition-opacity lg:hidden",
+          sidebarOpen ? "visible opacity-100" : "invisible opacity-0",
         )}
       />
 
       {/* Sidebar */}
       <aside
+        style={{
+          background: "red",
+          border: "5px solid yellow",
+        }}
         className={cn(
-          "fixed top-0 left-0 z-50 h-screen w-70",
-          "border-r border-gray-200 dark:border-gray-800",
-          "bg-white dark:bg-gray-900",
+          "fixed left-0 top-0 z-50 flex h-screen w-72 flex-col",
           "transition-transform duration-300",
-          "flex flex-col",
           sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
         )}
       >
-        {/* Header */}
-        <div className="flex items-center justify-between border-b border-gray-200 dark:border-gray-800 px-6 py-5">
+        {/* Brand */}
+        <div className="flex h-16 items-center justify-between border-b border-gray-200 px-6 dark:border-gray-800">
           <div>
-            <h1 className="text-lg font-bold tracking-wide">
+            <h1 className="text-lg font-bold text-gray-900 dark:text-white">
               {cmsConfig.name}
             </h1>
 
@@ -46,8 +47,8 @@ export default function AdminSidebar({ sidebarOpen, setSidebarOpen }) {
 
           <button
             onClick={() => setSidebarOpen(false)}
-            className="lg:hidden"
-            aria-label="Close Sidebar"
+            className="rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-800 lg:hidden"
+            aria-label="Close sidebar"
           >
             <X className="h-5 w-5" />
           </button>
@@ -59,9 +60,7 @@ export default function AdminSidebar({ sidebarOpen, setSidebarOpen }) {
             {adminNav.map((item) => {
               const Icon = item.icon;
 
-              const isActive =
-                pathname === item.href ||
-                (item.href !== "/admin" && pathname.startsWith(item.href));
+              const active = pathname === item.href;
 
               return (
                 <li key={item.href}>
@@ -69,16 +68,15 @@ export default function AdminSidebar({ sidebarOpen, setSidebarOpen }) {
                     href={item.href}
                     onClick={() => setSidebarOpen(false)}
                     className={cn(
-                      "group flex items-center gap-3 rounded-xl px-4 py-3",
-                      "transition-all duration-200",
-                      isActive
-                        ? "bg-brand-primary text-white shadow-sm"
+                      "flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition",
+                      active
+                        ? "bg-blue-600 text-white"
                         : "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800",
                     )}
                   >
-                    <Icon className="h-5 w-5 shrink-0" />
+                    <Icon className="h-5 w-5" />
 
-                    <span className="font-medium">{item.title}</span>
+                    <span>{item.title}</span>
                   </Link>
                 </li>
               );
@@ -86,15 +84,28 @@ export default function AdminSidebar({ sidebarOpen, setSidebarOpen }) {
           </ul>
         </nav>
 
-        {/* Footer */}
-        <div className="border-t border-gray-200 dark:border-gray-800 p-4">
+        {/* Logout */}
+        <div className="border-t border-gray-200 p-4 dark:border-gray-800">
           <button
-            type="button"
-            className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-gray-700 transition hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+            className="
+              flex
+              w-full
+              items-center
+              gap-3
+              rounded-xl
+              px-4
+              py-3
+              text-sm
+              font-medium
+              text-gray-700
+              hover:bg-gray-100
+              dark:text-gray-300
+              dark:hover:bg-gray-800
+            "
           >
             <LogOut className="h-5 w-5" />
 
-            <span className="font-medium">Logout</span>
+            <span>Logout</span>
           </button>
         </div>
       </aside>

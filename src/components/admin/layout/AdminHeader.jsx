@@ -7,15 +7,35 @@ import ThemeToggle from "@/components/ui/ThemeToggle";
 
 export default function AdminHeader({ setSidebarOpen }) {
   return (
-    <header className="sticky top-0 z-30 border-b border-gray-200 bg-white/80 backdrop-blur-md dark:border-gray-800 dark:bg-gray-950/80">
-      <div className="flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
+    <header
+      className="
+    sticky
+    top-0
+    z-20
+    h-16
+    border-b
+    border-gray-200
+    bg-white
+    dark:bg-gray-900
+    dark:border-gray-800
+  "
+    >
+      <div className="flex h-full items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Left Side */}
         <div className="flex items-center gap-4">
+          {/* Mobile Sidebar Button */}
           <button
             type="button"
             onClick={() => setSidebarOpen(true)}
-            className="rounded-lg p-2 transition hover:bg-gray-100 dark:hover:bg-gray-800 lg:hidden"
-            aria-label="Open Sidebar"
+            className="
+              rounded-lg
+              p-2
+              transition
+              hover:bg-gray-100
+              dark:hover:bg-gray-800
+              lg:hidden
+            "
+            aria-label="Open sidebar"
           >
             <Menu className="h-5 w-5" />
           </button>
@@ -24,19 +44,21 @@ export default function AdminHeader({ setSidebarOpen }) {
         </div>
 
         {/* Right Side */}
-        <div className="flex items-center gap-2 sm:gap-3">
-          {/* Mobile Search */}
-          <button
-            type="button"
-            className="rounded-lg p-2 transition hover:bg-gray-100 dark:hover:bg-gray-800 lg:hidden"
-            aria-label="Search"
-          >
-            <Search className="h-5 w-5" />
-          </button>
-
+        <div className="flex items-center gap-3">
           {/* Desktop Search */}
           <div className="relative hidden lg:block">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+            <Search
+              className="
+                pointer-events-none
+                absolute
+                left-3
+                top-1/2
+                h-4
+                w-4
+                -translate-y-1/2
+                text-gray-400
+              "
+            />
 
             <input
               type="search"
@@ -51,18 +73,37 @@ export default function AdminHeader({ setSidebarOpen }) {
                 pl-10
                 pr-4
                 text-sm
+                text-gray-900
                 outline-none
                 transition
+                placeholder:text-gray-400
                 focus:border-brand-primary
                 dark:border-gray-700
                 dark:bg-gray-900
+                dark:text-gray-100
               "
             />
           </div>
 
+          {/* Mobile Search */}
+          <button
+            type="button"
+            className="
+              rounded-lg
+              p-2
+              transition
+              hover:bg-gray-100
+              dark:hover:bg-gray-800
+              lg:hidden
+            "
+            aria-label="Search"
+          >
+            <Search className="h-5 w-5" />
+          </button>
+
           <ThemeToggle />
 
-          {/* Future User Menu */}
+          {/* User Menu */}
           <button
             type="button"
             className="
@@ -74,14 +115,16 @@ export default function AdminHeader({ setSidebarOpen }) {
               rounded-full
               border
               border-gray-200
-              bg-white
+              bg-gray-50
+              text-gray-600
               transition
               hover:bg-gray-100
               dark:border-gray-700
               dark:bg-gray-900
+              dark:text-gray-300
               dark:hover:bg-gray-800
             "
-            aria-label="User Menu"
+            aria-label="User menu"
           >
             <UserCircle2 className="h-6 w-6" />
           </button>

@@ -12,10 +12,10 @@ export default function AdminLayout({ children }) {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
       <AdminSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
-      <div className="lg:pl-70">
+      <div className="lg:ml-20">
         <AdminHeader setSidebarOpen={setSidebarOpen} />
 
-        <main className="min-h-screen p-4 sm:p-6 lg:p-8">{children}</main>
+        <main className="p-4 sm:p-6 lg:p-8">{children}</main>
       </div>
     </div>
   );
