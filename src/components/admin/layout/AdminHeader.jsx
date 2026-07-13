@@ -14,10 +14,10 @@ export default function AdminHeader({ setSidebarOpen }) {
     z-20
     h-16
     border-b
-    border-gray-200
-    bg-white
-    dark:bg-gray-900
-    dark:border-gray-800
+    border-gray-300
+    bg-gray-50
+    dark:bg-gray-800
+    dark:border-gray-700
   "
     >
       <div className="flex h-full items-center justify-between px-4 sm:px-6 lg:px-8">
@@ -69,7 +69,7 @@ export default function AdminHeader({ setSidebarOpen }) {
                 rounded-xl
                 border
                 border-gray-200
-                bg-white
+                bg-gary-50
                 pl-10
                 pr-4
                 text-sm
