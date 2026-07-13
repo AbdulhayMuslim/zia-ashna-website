@@ -70,7 +70,7 @@ export default function AdminSidebar({ sidebarOpen, setSidebarOpen }) {
                     className={cn(
                       "flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition",
                       active
-                        ? "bg-blue-600 text-white"
+                        ? "bg-blue-600 text-heading-dark"
                         : "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800",
                     )}
                   >
