@@ -1,38 +1,19 @@
-import cn from "@/utils/cn";
-
-export default function PageHeader({
-  title,
-  description,
-  actions,
-  children,
-  className,
-}) {
+export default function PageHeader({ title, description, actions }) {
   return (
-    <div
-      className={cn(
-        "mb-8 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between",
-        className,
-      )}
-    >
-      <div className="space-y-2">
-        {title ? (
-          <h2 className="text-2xl font-semibold tracking-tight text-gray-900 dark:text-gray-100">
-            {title}
-          </h2>
-        ) : null}
+    <div className="mb-8 flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+      <div>
+        <h1 className="font-heading text-3xl font-bold text-heading dark:text-heading-dark">
+          {title}
+        </h1>
 
-        {description ? (
-          <p className="max-w-2xl text-sm text-gray-500 dark:text-gray-400 sm:text-base">
+        {description && (
+          <p className="mt-2 max-w-2xl text-sm text-text dark:text-text-dark">
             {description}
           </p>
-        ) : null}
-
-        {children ? <div className="pt-1">{children}</div> : null}
+        )}
       </div>
 
-      {actions ? (
-        <div className="flex flex-wrap items-center gap-2">{actions}</div>
-      ) : null}
+      {actions && <div className="flex items-center gap-3">{actions}</div>}
     </div>
   );
 }
