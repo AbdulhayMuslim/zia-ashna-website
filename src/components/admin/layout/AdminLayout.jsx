@@ -12,7 +12,8 @@ export default function AdminLayout({ children }) {
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
       <AdminSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
 
-      <div className="lg:ml-20">
+      {/* Content Area */}
+      <div className="lg:ml-72">
         <AdminHeader setSidebarOpen={setSidebarOpen} />
 
         <main className="p-4 sm:p-6 lg:p-8">{children}</main>

@@ -12,54 +12,57 @@ export default function AdminSidebar({ sidebarOpen, setSidebarOpen }) {
 
   return (
     <>
-      {/* Mobile Overlay */}
+      {/* Overlay */}
       <div
         onClick={() => setSidebarOpen(false)}
         className={cn(
-          "fixed inset-0 z-40 bg-black/40 transition-opacity lg:hidden",
-          sidebarOpen ? "visible opacity-100" : "invisible opacity-0",
+          "fixed inset-0 z-40 bg-black/50 transition-opacity lg:hidden",
+          sidebarOpen ? "opacity-100 visible" : "opacity-0 invisible",
         )}
       />
 
-      {/* Sidebar */}
       <aside
-        style={{
-          background: "red",
-          border: "5px solid yellow",
-        }}
         className={cn(
-          "fixed left-0 top-0 z-50 flex h-screen w-72 flex-col",
+          "fixed left-0 top-0 z-50",
+          "flex h-screen w-72 flex-col",
+          "border-r border-gray-200",
+          "bg-white dark:border-gray-800 dark:bg-gray-900",
           "transition-transform duration-300",
           sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
         )}
       >
-        {/* Brand */}
-        <div className="flex h-16 items-center justify-between border-b border-gray-200 px-6 dark:border-gray-800">
-          <div>
-            <h1 className="text-lg font-bold text-gray-900 dark:text-white">
-              {cmsConfig.name}
-            </h1>
+        {/* Logo Area */}
+        <div className="border-b border-gray-200 px-6 py-5 dark:border-gray-800">
+          <h1 className="text-xl font-bold text-gray-900 dark:text-white">
+            {cmsConfig.name}
+          </h1>
 
-            <p className="text-xs text-gray-500 dark:text-gray-400">
-              {cmsConfig.description}
-            </p>
-          </div>
+          <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+            {cmsConfig.description}
+          </p>
 
           <button
             onClick={() => setSidebarOpen(false)}
-            className="rounded-lg p-2 hover:bg-gray-100 dark:hover:bg-gray-800 lg:hidden"
-            aria-label="Close sidebar"
+            className="
+              absolute
+              right-4
+              top-4
+              rounded-lg
+              p-2
+              hover:bg-gray-100
+              dark:hover:bg-gray-800
+              lg:hidden
+            "
           >
             <X className="h-5 w-5" />
           </button>
         </div>
 
-        {/* Navigation */}
+        {/* Nav */}
         <nav className="flex-1 overflow-y-auto px-4 py-6">
           <ul className="space-y-2">
             {adminNav.map((item) => {
               const Icon = item.icon;
-
               const active = pathname === item.href;
 
               return (
@@ -68,14 +71,13 @@ export default function AdminSidebar({ sidebarOpen, setSidebarOpen }) {
                     href={item.href}
                     onClick={() => setSidebarOpen(false)}
                     className={cn(
-                      "flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition",
+                      "flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all",
                       active
-                        ? "bg-blue-600 text-heading-dark"
+                        ? "bg-brand-primary text-white"
                         : "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800",
                     )}
                   >
                     <Icon className="h-5 w-5" />
-
                     <span>{item.title}</span>
                   </Link>
                 </li>
@@ -84,7 +86,7 @@ export default function AdminSidebar({ sidebarOpen, setSidebarOpen }) {
           </ul>
         </nav>
 
-        {/* Logout */}
+        {/* Footer */}
         <div className="border-t border-gray-200 p-4 dark:border-gray-800">
           <button
             className="
@@ -98,13 +100,13 @@ export default function AdminSidebar({ sidebarOpen, setSidebarOpen }) {
               text-sm
               font-medium
               text-gray-700
+              transition
               hover:bg-gray-100
               dark:text-gray-300
               dark:hover:bg-gray-800
             "
           >
             <LogOut className="h-5 w-5" />
-
             <span>Logout</span>
           </button>
         </div>
