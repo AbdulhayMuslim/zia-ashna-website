@@ -1,21 +1,31 @@
-export default function TextareaField({ label, placeholder, rows = 5 }) {
+export default function TextareaField({
+  label,
+  placeholder,
+  rows = 5,
+  value,
+  onChange,
+}) {
   return (
     <div>
-      <label
-        className="
-          mb-2
-          block
-          text-sm
-          font-medium
-          text-heading
-          dark:text-heading-dark
-        "
-      >
-        {label}
-      </label>
+      {label && (
+        <label
+          className="
+            mb-2
+            block
+            text-sm
+            font-medium
+            text-heading
+            dark:text-heading-dark
+          "
+        >
+          {label}
+        </label>
+      )}
 
       <textarea
         rows={rows}
+        value={value}
+        onChange={onChange}
         placeholder={placeholder}
         className="
           w-full

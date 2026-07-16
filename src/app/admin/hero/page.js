@@ -1,107 +1,87 @@
+import PageContainer from "@/components/admin/layout/PageContainer";
+import PageActions from "@/components/admin/layout/PageActions";
+
 import PageHeader from "@/components/admin/ui/PageHeader";
-import Card from "@/components/admin/ui/Card";
-import Button from "@/components/admin/ui/Button";
+import FormSection from "@/components/admin/ui/FormSection";
+
 import InputField from "@/components/admin/ui/InputField";
 import TextareaField from "@/components/admin/ui/TextareaField";
 
+import ImageUploadField from "@/components/admin/ui/ImageUploadField";
+import RepeaterItem from "@/components/admin/ui/RepeaterItem";
+
+import Button from "@/components/admin/ui/Button";
+
 export default function HeroPage() {
   return (
-    <div className="space-y-8">
+    <PageContainer>
       <PageHeader
         title="Hero Section"
-        description="Manage the homepage hero content, CTA button, hero image and brand logos."
-        actions={<Button>Save Changes</Button>}
+        description="Manage the homepage hero content, image and brand logos."
       />
 
       {/* Content Settings */}
-      <Card
+      <FormSection
         title="Content Settings"
-        description="Main content displayed in the hero section."
+        description="Main hero content displayed on the website."
       >
         <div className="grid gap-6">
           <InputField label="Section Title" placeholder="INTRODUCTION" />
 
-          <InputField label="Name / Heading" placeholder="John Doe" />
+          <InputField label="Name" placeholder="Ashna" />
+
+          <InputField
+            label="Designation"
+            placeholder="Entrepreneur • Network Engineer • Content Creator"
+          />
 
           <TextareaField
             label="Description"
-            placeholder="Enter hero description..."
+            placeholder="Write hero description..."
             rows={6}
           />
 
           <div className="grid gap-6 md:grid-cols-2">
             <InputField label="Button Label" placeholder="Download CV" />
 
-            <InputField label="Button Link" placeholder="https://..." />
+            <InputField label="Button URL" placeholder="https://..." />
           </div>
         </div>
-      </Card>
+      </FormSection>
 
       {/* Hero Image */}
-      <Card title="Hero Image" description="Upload or replace the hero image.">
-        <div
-          className="
-            flex
-            min-h-60
-            items-center
-            justify-center
-            rounded-3xl
-            border-2
-            border-dashed
-            border-border
-            bg-background
-          "
-        >
-          <div className="text-center">
-            <p className="font-medium text-heading dark:text-heading-dark">
-              Hero Image Upload
-            </p>
-
-            <p className="mt-2 text-sm text-text dark:text-text-dark">
-              Image upload component will be connected later.
-            </p>
-          </div>
-        </div>
-      </Card>
+      <FormSection
+        title="Hero Image"
+        description="Upload the main hero image displayed in the hero section."
+      >
+        <ImageUploadField
+          label="Hero Image"
+          description="Recommended high quality portrait image."
+        />
+      </FormSection>
 
       {/* Brand Logos */}
-      <Card
+      <FormSection
         title="Brand Logos"
-        description="Manage partner and client logos displayed in hero section."
+        description="Manage logos displayed below the hero section."
       >
-        <div className="space-y-4">
-          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-            {[1, 2, 3, 4].map((item) => (
-              <div
-                key={item}
-                className="
-                  flex
-                  h-28
-                  items-center
-                  justify-center
-                  rounded-2xl
-                  border
-                  border-border
-                  bg-background
-                "
-              >
-                Logo {item}
-              </div>
-            ))}
-          </div>
+        <div className="space-y-6">
+          <RepeaterItem title="Brand Logo">
+            <div className="grid gap-6">
+              <ImageUploadField
+                label="Logo Image"
+                description="Upload brand logo."
+              />
+
+              <InputField label="Logo URL" placeholder="https://company.com" />
+            </div>
+          </RepeaterItem>
 
           <Button variant="secondary">Add Logo</Button>
         </div>
-      </Card>
+      </FormSection>
 
-      {/* Save Footer */}
-      <Card>
-        <div className="flex justify-end gap-4">
-          <Button variant="secondary">Reset</Button>
-
-          <Button>Save Changes</Button>
-        </div>
-      </Card>
-    </div>
+      <PageActions />
+    </PageContainer>
   );
 }

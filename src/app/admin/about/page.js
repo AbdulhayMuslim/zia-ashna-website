@@ -1,22 +1,27 @@
+import PageContainer from "@/components/admin/layout/PageContainer";
+import PageActions from "@/components/admin/layout/PageActions";
+
 import PageHeader from "@/components/admin/ui/PageHeader";
-import Card from "@/components/admin/ui/Card";
-import Button from "@/components/admin/ui/Button";
+import FormSection from "@/components/admin/ui/FormSection";
+
 import InputField from "@/components/admin/ui/InputField";
 import TextareaField from "@/components/admin/ui/TextareaField";
 
+import RepeaterItem from "@/components/admin/ui/RepeaterItem";
+import Button from "@/components/admin/ui/Button";
+
 export default function AboutPage() {
   return (
-    <div className="space-y-8">
+    <PageContainer>
       <PageHeader
         title="About Section"
-        description="Manage biography, experience, education and certifications."
-        actions={<Button>Save Changes</Button>}
+        description="Manage biography, experience, education and certificates."
       />
 
-      {/* Main Content */}
-      <Card
+      {/* Content Settings */}
+      <FormSection
         title="Content Settings"
-        description="Main content displayed in the About section."
+        description="Main information displayed in the About section."
       >
         <div className="grid gap-6">
           <InputField label="Section Title" placeholder="ABOUT ME" />
@@ -30,119 +35,68 @@ export default function AboutPage() {
 
           <TextareaField
             label="Description"
-            placeholder="Write your biography..."
+            placeholder="Write your about description..."
             rows={8}
           />
         </div>
-      </Card>
+      </FormSection>
 
       {/* Experience Cards */}
-      <Card
+      <FormSection
         title="Experience Cards"
-        description="Highlight key achievements and statistics."
+        description="Manage statistics displayed in the About section."
       >
-        <div className="space-y-4">
-          {[1, 2, 3].map((card) => (
-            <div
-              key={card}
-              className="
-                rounded-2xl
-                border
-                border-border
-                p-5
-              "
-            >
-              <div className="grid gap-4 md:grid-cols-3">
-                <InputField label="Number" placeholder="10+" />
+        <div className="space-y-6">
+          <RepeaterItem title="Experience Card 1">
+            <div className="grid gap-6 md:grid-cols-2">
+              <InputField label="Number" placeholder="10+" />
 
-                <InputField label="Title" placeholder="Years Experience" />
-
-                <InputField label="Icon" placeholder="Briefcase" />
-              </div>
+              <InputField label="Title" placeholder="Years Experience" />
             </div>
-          ))}
-        </div>
+          </RepeaterItem>
 
-        <div className="mt-6">
           <Button variant="secondary">Add Experience Card</Button>
         </div>
-      </Card>
+      </FormSection>
 
       {/* Education */}
-      <Card title="Education Degrees" description="Manage education records.">
-        <div className="space-y-4">
-          {[1, 2].map((item) => (
-            <div
-              key={item}
-              className="
-                rounded-2xl
-                border
-                border-border
-                p-5
-              "
-            >
-              <div className="grid gap-4">
-                <InputField
-                  label="Degree"
-                  placeholder="Bachelor of Computer Science"
-                />
+      <FormSection
+        title="Education Degrees"
+        description="Manage academic qualifications."
+      >
+        <div className="space-y-6">
+          <RepeaterItem title="Degree 1">
+            <div className="grid gap-6">
+              <InputField
+                label="Degree"
+                placeholder="Bachelor of Computer Science"
+              />
 
-                <InputField label="Institution" placeholder="University Name" />
+              <InputField label="Institution" placeholder="Kabul University" />
 
-                <InputField label="Year" placeholder="2024" />
-              </div>
+              <InputField label="Year" placeholder="2020" />
             </div>
-          ))}
-        </div>
+          </RepeaterItem>
 
-        <div className="mt-6">
           <Button variant="secondary">Add Degree</Button>
         </div>
-      </Card>
+      </FormSection>
 
       {/* Certificates */}
-      <Card
+      <FormSection
         title="Certificates"
         description="Manage professional certifications."
       >
-        <div className="space-y-4">
-          {[1, 2].map((item) => (
-            <div
-              key={item}
-              className="
-                rounded-2xl
-                border
-                border-border
-                p-5
-              "
-            >
-              <div className="grid gap-4">
-                <InputField
-                  label="Certificate Name"
-                  placeholder="AWS Certified Developer"
-                />
+        <div className="space-y-6">
+          <RepeaterItem title="Certificate 1">
+            <InputField label="Certificate Name" placeholder="CCNA" />
+          </RepeaterItem>
 
-                <InputField label="Issuer" placeholder="Amazon Web Services" />
-
-                <InputField label="Year" placeholder="2025" />
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-6">
           <Button variant="secondary">Add Certificate</Button>
         </div>
-      </Card>
+      </FormSection>
 
-      {/* Footer Actions */}
-      <Card>
-        <div className="flex justify-end gap-4">
-          <Button variant="secondary">Reset</Button>
-
-          <Button>Save Changes</Button>
-        </div>
-      </Card>
-    </div>
+      <PageActions />
+    </PageContainer>
   );
 }

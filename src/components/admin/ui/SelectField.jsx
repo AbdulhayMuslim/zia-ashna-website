@@ -1,52 +1,72 @@
-import { useId } from "react";
+import { ChevronDown } from "lucide-react";
 
-import cn from "@/utils/cn";
-
-export default function SelectField({
-  id,
-  label,
-  description,
-  error,
-  required,
-  className,
-  selectClassName,
-  children,
-  ...props
-}) {
-  const generatedId = useId();
-  const inputId = id ?? generatedId;
-
+export default function SelectField({ label, value, onChange, options = [] }) {
   return (
-    <div className={cn("space-y-2", className)}>
-      {label ? (
+    <div className="space-y-2">
+      {label && (
         <label
-          htmlFor={inputId}
-          className="text-sm font-medium text-gray-700 dark:text-gray-200"
+          className="
+            block
+            text-sm
+            font-medium
+            text-heading
+            dark:text-heading-dark
+          "
         >
           {label}
-          {required ? <span className="ml-1 text-red-500">*</span> : null}
         </label>
-      ) : null}
+      )}
 
-      <select
-        id={inputId}
-        className={cn(
-          "flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 outline-none transition focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-100",
-          error && "border-red-500 focus:border-red-500 focus:ring-red-500/20",
-          selectClassName,
-        )}
-        {...props}
-      >
-        {children}
-      </select>
+      <div className="relative">
+        <select
+          value={value}
+          onChange={onChange}
+          className="
+            w-full
+            appearance-none
+            rounded-2xl
+            border
+            border-border
+            bg-card
+            px-4
+            py-3
+            pr-12
+            text-sm
+            text-heading
+            shadow-sm
+            transition-all
+            duration-200
+            outline-none
 
-      {description ? (
-        <p className="text-sm text-gray-500 dark:text-gray-400">
-          {description}
-        </p>
-      ) : null}
+            hover:border-brand-primary/40
 
-      {error ? <p className="text-sm text-red-600">{error}</p> : null}
+            focus:border-brand-primary
+            focus:ring-2
+            focus:ring-brand-primary/20
+
+            dark:text-heading-dark
+          "
+        >
+          {options.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+
+        <ChevronDown
+          className="
+            pointer-events-none
+            absolute
+            right-4
+            top-1/2
+            h-4
+            w-4
+            -translate-y-1/2
+            text-brand-primary
+          "
+        />
+      </div>
     </div>
   );
 }

@@ -42,10 +42,10 @@ export const adminNav = [
     description: "Manage history content and images.",
   },
   {
-    title: "Publications Section",
-    href: "/admin/publications",
+    title: "Blog Posts",
+    href: "/admin/blog",
     icon: BookOpen,
-    description: "Manage publications content and images.",
+    description: "Manage blog content and images.",
   },
   {
     title: "Contact Section",

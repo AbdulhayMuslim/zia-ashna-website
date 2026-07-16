@@ -11,6 +11,21 @@ import post10 from "@/assets/images/posts/post10.png";
 import post11 from "@/assets/images/posts/post11.jpg";
 import post12 from "@/assets/images/posts/post12.jpg";
 
+export const categories = [
+  "Entrepreneurship",
+  "Technology",
+  "Leadership",
+  "AI",
+  "Education",
+  "Startups",
+  "Business",
+  "Marketing",
+  "Development",
+  "Innovation",
+  "Productivity",
+  "Strategy",
+];
+
 export const posts = [
   {
     id: 1,
@@ -36,6 +51,8 @@ Each company contributes unique knowledge, resources, and relationships that can
 
 Entrepreneurship is not only about creating companies. It is about creating sustainable value that continues to grow over time.
     `,
+    status: "published",
+    featured: false,
   },
 
   {
@@ -60,6 +77,8 @@ Automation, data analytics, and digital collaboration tools help businesses beco
 
 Technology should never replace strategy. Instead, it should strengthen the vision of the organization and make long-term growth more achievable.
     `,
+    status: "published",
+    featured: false,
   },
 
   {
@@ -84,6 +103,8 @@ When employees understand the purpose behind change, they are more willing to co
 
 Leadership is not measured by authority. It is measured by the ability to inspire people toward a shared vision.
     `,
+    status: "published",
+    featured: false,
   },
 
   {
@@ -108,6 +129,8 @@ The greatest value of AI is not replacing people but enabling them to focus on c
 
 Businesses that embrace AI responsibly today will be better positioned for tomorrow's opportunities.
     `,
+    status: "published",
+    featured: false,
   },
 
   {
@@ -132,6 +155,8 @@ Organizations that encourage knowledge sharing create stronger teams capable of 
 
 Education is not simply preparation for the future. It is a foundation for innovation, leadership, and sustainable growth.
     `,
+    status: "published",
+    featured: false,
   },
 
   {
@@ -156,6 +181,8 @@ As businesses grow, maintaining those values becomes just as important as achiev
 
 Companies with strong cultures attract talented people and create environments where innovation naturally thrives.
     `,
+    status: "published",
+    featured: false,
   },
 
   {
@@ -180,6 +207,8 @@ When customers feel valued, they become loyal advocates who recommend your busin
 
 Long-term success is built by creating meaningful experiences that encourage people to return again and again.
     `,
+    status: "published",
+    featured: false,
   },
 
   {
@@ -204,6 +233,8 @@ Organizations that consistently share valuable insights and engage with their co
 
 Trust is earned through consistency, transparency, and delivering on every promise.
     `,
+    status: "published",
+    featured: false,
   },
 
   {
@@ -228,6 +259,8 @@ Networking is not about collecting contacts. It is about developing genuine rela
 
 The strongest networks are built by helping others before expecting anything in return.
     `,
+    status: "published",
+    featured: false,
   },
 
   {
@@ -252,6 +285,8 @@ Collaboration brings together different experiences and viewpoints, often leadin
 
 Businesses that promote knowledge sharing are better prepared to adapt to changing markets.
     `,
+    status: "published",
+    featured: false,
   },
 
   {
@@ -276,6 +311,8 @@ Small improvements made consistently over weeks and months create significant lo
 
 Success is built through discipline, consistency, and continuous improvement.
     `,
+    status: "published",
+    featured: false,
   },
 
   {
@@ -300,5 +337,7 @@ Future-ready businesses combine innovation with strong leadership, efficient sys
 
 The companies that succeed tomorrow are those that begin preparing today.
     `,
+    status: "draft",
+    featured: false,
   },
 ];

@@ -1,21 +1,31 @@
-export default function InputField({ label, placeholder, type = "text" }) {
+export default function InputField({
+  label,
+  placeholder,
+  type = "text",
+  value,
+  onChange,
+}) {
   return (
     <div>
-      <label
-        className="
-          mb-2
-          block
-          text-sm
-          font-medium
-          text-heading
-          dark:text-heading-dark
-        "
-      >
-        {label}
-      </label>
+      {label && (
+        <label
+          className="
+            mb-2
+            block
+            text-sm
+            font-medium
+            text-heading
+            dark:text-heading-dark
+          "
+        >
+          {label}
+        </label>
+      )}
 
       <input
         type={type}
+        value={value}
+        onChange={onChange}
         placeholder={placeholder}
         className="
           w-full

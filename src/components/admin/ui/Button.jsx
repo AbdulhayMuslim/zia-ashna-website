@@ -2,6 +2,8 @@ export default function Button({
   children,
   variant = "primary",
   type = "button",
+  onClick,
+  className = "",
 }) {
   const variants = {
     primary: "bg-brand-primary text-white hover:opacity-90",
@@ -14,6 +16,7 @@ export default function Button({
   return (
     <button
       type={type}
+      onClick={onClick}
       className={`
         inline-flex
         items-center
@@ -25,6 +28,7 @@ export default function Button({
         font-medium
         transition
         ${variants[variant]}
+        ${className}
       `}
     >
       {children}
