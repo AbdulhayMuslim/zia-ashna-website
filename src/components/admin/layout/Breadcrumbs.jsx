@@ -9,12 +9,6 @@ import { adminNav } from "@/data/admin-nav";
 export default function Breadcrumbs() {
   const pathname = usePathname();
 
-  const currentItem = adminNav.find(
-    (item) =>
-      pathname === item.href ||
-      (item.href !== "/admin" && pathname.startsWith(item.href)),
-  );
-
   const breadcrumbs = [
     {
       title: "Dashboard",
@@ -22,10 +16,34 @@ export default function Breadcrumbs() {
     },
   ];
 
-  if (currentItem && currentItem.href !== "/admin") {
+  const currentSection = adminNav.find(
+    (item) => item.href !== "/admin" && pathname.startsWith(item.href),
+  );
+
+  if (currentSection) {
     breadcrumbs.push({
-      title: currentItem.title,
-      href: currentItem.href,
+      title: currentSection.title,
+      href: currentSection.href,
+    });
+  }
+
+  // Blog Create Page
+  if (pathname === "/admin/blog/create") {
+    breadcrumbs.push({
+      title: "New Post",
+      href: pathname,
+    });
+  }
+
+  // Blog Edit Page
+  else if (
+    pathname.startsWith("/admin/blog/") &&
+    pathname !== "/admin/blog" &&
+    pathname !== "/admin/blog/create"
+  ) {
+    breadcrumbs.push({
+      title: "Edit Post",
+      href: pathname,
     });
   }
 
@@ -37,19 +55,19 @@ export default function Breadcrumbs() {
         return (
           <div key={item.href} className="flex items-center gap-2">
             {isLast ? (
-              <span className="font-medium text-gray-900 dark:text-gray-100">
+              <span className="font-medium text-heading dark:text-heading-dark">
                 {item.title}
               </span>
             ) : (
               <Link
                 href={item.href}
-                className="text-gray-500 transition-colors hover:text-brand-primary"
+                className="text-text hover:text-brand-primary transition-colors"
               >
                 {item.title}
               </Link>
             )}
 
-            {!isLast && <ChevronRight className="h-4 w-4 text-gray-400" />}
+            {!isLast && <ChevronRight className="h-4 w-4 text-text-muted" />}
           </div>
         );
       })}

@@ -94,6 +94,7 @@ export default function AdminHeader({ setSidebarOpen }) {
               text-gray-600
               transition
               hover:bg-gray-100
+              dark:hover:bg-gray-700
               dark:border-gray-700
               dark:bg-gray-800
               dark:text-gray-300

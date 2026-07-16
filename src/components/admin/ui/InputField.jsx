@@ -5,6 +5,8 @@ export default function InputField({
   value,
   onChange,
 }) {
+  console.log(label, value, onChange);
+
   return (
     <div>
       {label && (
@@ -24,21 +26,27 @@ export default function InputField({
 
       <input
         type={type}
-        value={value}
-        onChange={onChange}
+        {...(value !== undefined
+          ? {
+              value,
+              onChange,
+            }
+          : {
+              defaultValue: "",
+            })}
         placeholder={placeholder}
         className="
-          w-full
-          rounded-2xl
-          border
-          border-border
-          bg-background
-          px-4
-          py-3
-          outline-none
-          transition
-          focus:border-brand-primary
-        "
+    w-full
+    rounded-2xl
+    border
+    border-border
+    bg-background
+    px-4
+    py-3
+    outline-none
+    transition
+    focus:border-brand-primary
+  "
       />
     </div>
   );
