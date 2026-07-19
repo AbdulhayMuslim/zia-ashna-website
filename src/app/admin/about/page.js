@@ -1,3 +1,5 @@
+"use client";
+
 import PageContainer from "@/components/admin/layout/PageContainer";
 import PageActions from "@/components/admin/layout/PageActions";
 
@@ -24,16 +26,26 @@ export default function AboutPage() {
         description="Main information displayed in the About section."
       >
         <div className="grid gap-6">
-          <InputField label="Section Title" placeholder="ABOUT ME" />
-
-          <InputField label="Role" placeholder="Full Stack Developer" />
+          <InputField
+            id="sectionTitle"
+            label="Section Title"
+            placeholder="ABOUT ME"
+          />
 
           <InputField
+            id="role"
+            label="Role"
+            placeholder="Full Stack Developer"
+          />
+
+          <InputField
+            id="heading"
             label="Heading"
             placeholder="Building modern digital experiences"
           />
 
           <TextareaField
+            id="description"
             label="Description"
             placeholder="Write your about description..."
             rows={8}
@@ -49,9 +61,17 @@ export default function AboutPage() {
         <div className="space-y-6">
           <RepeaterItem title="Experience Card 1">
             <div className="grid gap-6 md:grid-cols-2">
-              <InputField label="Number" placeholder="10+" />
+              <InputField
+                id="experienceNumber"
+                label="Number"
+                placeholder="10+"
+              />
 
-              <InputField label="Title" placeholder="Years Experience" />
+              <InputField
+                id="experienceTitle"
+                label="Title"
+                placeholder="Years Experience"
+              />
             </div>
           </RepeaterItem>
 
@@ -68,13 +88,18 @@ export default function AboutPage() {
           <RepeaterItem title="Degree 1">
             <div className="grid gap-6">
               <InputField
+                id="degree"
                 label="Degree"
                 placeholder="Bachelor of Computer Science"
               />
 
-              <InputField label="Institution" placeholder="Kabul University" />
+              <InputField
+                id="institution"
+                label="Institution"
+                placeholder="Kabul University"
+              />
 
-              <InputField label="Year" placeholder="2020" />
+              <InputField id="year" label="Year" placeholder="2020" />
             </div>
           </RepeaterItem>
 
@@ -89,14 +114,22 @@ export default function AboutPage() {
       >
         <div className="space-y-6">
           <RepeaterItem title="Certificate 1">
-            <InputField label="Certificate Name" placeholder="CCNA" />
+            <InputField
+              id="certificateName"
+              label="Certificate Name"
+              placeholder="CCNA"
+            />
           </RepeaterItem>
 
           <Button variant="secondary">Add Certificate</Button>
         </div>
       </FormSection>
 
-      <PageActions />
+      <PageActions>
+        <Button variant="secondary">Reset</Button>
+
+        <Button>Save Changes</Button>
+      </PageActions>
     </PageContainer>
   );
 }

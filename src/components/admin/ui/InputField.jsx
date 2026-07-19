@@ -1,53 +1,59 @@
+import cn from "@/utils/cn";
+import FormField from "./FormField";
+
 export default function InputField({
+  id,
+  name,
   label,
-  placeholder,
   type = "text",
   value,
   onChange,
+  placeholder,
+  required = false,
+  disabled = false,
+  error,
+  helperText,
+  className,
+  defaultValue,
+  ...props
 }) {
-  console.log(label, value, onChange);
+  const controlled = value !== undefined;
 
   return (
-    <div>
-      {label && (
-        <label
-          className="
-            mb-2
-            block
-            text-sm
-            font-medium
-            text-heading
-            dark:text-heading-dark
-          "
-        >
-          {label}
-        </label>
-      )}
-
+    <FormField
+      id={id}
+      label={label}
+      required={required}
+      error={error}
+      helperText={helperText}
+    >
       <input
+        id={id}
+        name={name}
         type={type}
-        {...(value !== undefined
+        {...(controlled
           ? {
-              value,
+              value: value ?? "",
               onChange,
             }
           : {
-              defaultValue: "",
+              defaultValue,
             })}
         placeholder={placeholder}
-        className="
-    w-full
-    rounded-2xl
-    border
-    border-border
-    bg-background
-    px-4
-    py-3
-    outline-none
-    transition
-    focus:border-brand-primary
-  "
+        disabled={disabled}
+        aria-invalid={!!error}
+        aria-describedby={
+          error ? `${id}-error` : helperText ? `${id}-helper` : undefined
+        }
+        className={cn(
+          "w-full rounded-2xl border border-border bg-card px-4 py-3 text-heading outline-none transition-all dark:text-heading-dark",
+          "focus:border-brand-primary focus:ring-2 focus:ring-brand-primary/20",
+          "disabled:cursor-not-allowed disabled:opacity-60",
+          error && "border-red-500 focus:border-red-500 focus:ring-red-500/20",
+          className,
+        )}
+        {...props}
       />
-    </div>
+    </FormField>
   );
 }

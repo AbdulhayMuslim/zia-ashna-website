@@ -3,7 +3,7 @@ import cn from "@/utils/cn";
 export default function AdminPageHeader({
   title,
   description,
-  action,
+  actions,
   className,
 }) {
   return (
@@ -25,7 +25,9 @@ export default function AdminPageHeader({
         )}
       </div>
 
-      {action && <div>{action}</div>}
+      {actions && (
+        <div className="flex flex-wrap items-center gap-2">{actions}</div>
+      )}
     </div>
   );
 }

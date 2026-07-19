@@ -1,81 +1,168 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { ImagePlus, Trash2 } from "lucide-react";
+import Button from "./Button";
 
 export default function ImageUploadField({
+  id,
   label,
   description,
-  image,
+  value,
   onChange,
+  disabled = false,
+  accept = "image/*",
+  maxSize = 5 * 1024 * 1024,
 }) {
   const inputRef = useRef(null);
 
-  const handleFileChange = (event) => {
-    const file = event.target.files?.[0];
+  const [preview, setPreview] = useState(
+    typeof value === "string" ? value : null,
+  );
+
+  useEffect(() => {
+    if (typeof value === "string") {
+      setPreview(value);
+    }
+  }, [value]);
+
+  const handleFileChange = (e) => {
+    const file = e.target.files?.[0];
 
     if (!file) return;
 
-    const imageUrl = URL.createObjectURL(file);
+    if (file.size > maxSize) {
+      alert("Image is too large.");
+      return;
+    }
 
-    onChange?.(imageUrl);
+    const previewUrl = URL.createObjectURL(file);
+
+    setPreview((oldPreview) => {
+      if (oldPreview?.startsWith("blob:")) {
+        URL.revokeObjectURL(oldPreview);
+      }
+
+      return previewUrl;
+    });
+
+    onChange?.({
+      file,
+      preview: previewUrl,
+    });
   };
 
+  const removeImage = () => {
+    if (preview?.startsWith("blob:")) {
+      URL.revokeObjectURL(preview);
+    }
+
+    setPreview(null);
+
+    if (inputRef.current) {
+      inputRef.current.value = "";
+    }
+
+    onChange?.(null);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (preview?.startsWith("blob:")) {
+        URL.revokeObjectURL(preview);
+      }
+    };
+  }, [preview]);
+
   return (
-    <div>
+    <div className="space-y-2">
       {label && (
         <label
-          className="
-            mb-2
-            block
-            text-sm
-            font-medium
-            text-heading
-            dark:text-heading-dark
-          "
+          htmlFor={id}
+          className="block text-sm font-medium text-heading dark:text-heading-dark"
         >
           {label}
         </label>
       )}
 
       <input
+        id={id}
         ref={inputRef}
         type="file"
-        accept="image/*"
+        accept={accept}
+        disabled={disabled}
         onChange={handleFileChange}
         className="hidden"
       />
 
       <div
-        onClick={() => inputRef.current?.click()}
         className="
           relative
-          flex
-          min-h-60
-          cursor-pointer
-          items-center
-          justify-center
           overflow-hidden
           rounded-3xl
           border-2
           border-dashed
           border-border
           bg-background
-          transition
-          hover:border-brand-primary
         "
       >
-        {image ? (
-          <Image src={image} alt="Preview" fill className="object-cover" />
-        ) : (
-          <div className="text-center">
-            <p className="font-medium">Click to upload image</p>
+        <div
+          onClick={() => !disabled && inputRef.current?.click()}
+          className="
+            flex
+            min-h-72
+            cursor-pointer
+            items-center
+            justify-center
+            transition
+            hover:border-brand-primary
+          "
+        >
+          {preview ? (
+            <div className="relative h-72 w-full">
+              <Image
+                src={preview}
+                alt="Preview"
+                fill
+                className="object-cover"
+              />
+            </div>
+          ) : (
+            <div className="space-y-3 text-center">
+              <ImagePlus className="mx-auto h-10 w-10 text-brand-primary" />
 
-            {description && (
-              <p className="mt-2 text-sm text-text dark:text-text-dark">
-                {description}
-              </p>
-            )}
+              <div>
+                <p className="font-medium">Click to upload an image</p>
+
+                {description && (
+                  <p className="mt-1 text-sm text-text dark:text-text-dark">
+                    {description}
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {preview && (
+          <div className="absolute bottom-4 right-4 flex gap-2">
+            <Button
+              size="sm"
+              variant="secondary"
+              onClick={() => inputRef.current?.click()}
+            >
+              Replace
+            </Button>
+
+            <Button
+              size="sm"
+              variant="danger"
+              onClick={removeImage}
+              leftIcon={Trash2}
+            >
+              Remove
+            </Button>
           </div>
         )}
       </div>

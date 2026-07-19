@@ -1,11 +1,9 @@
-import Button from "./Button";
+import cn from "@/utils/cn";
 
-export default function ActionBar() {
+export default function ActionBar({ children, className }) {
   return (
-    <div className="flex justify-end gap-4">
-      <Button variant="secondary">Reset</Button>
-
-      <Button>Save Changes</Button>
+    <div className={cn("flex flex-wrap justify-end gap-3", className)}>
+      {children}
     </div>
   );
 }
