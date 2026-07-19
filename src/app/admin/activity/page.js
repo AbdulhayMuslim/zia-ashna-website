@@ -1,3 +1,5 @@
+"use client";
+
 import PageContainer from "@/components/admin/layout/PageContainer";
 import PageActions from "@/components/admin/layout/PageActions";
 
@@ -25,18 +27,22 @@ export default function ActivityPage() {
         description="Manage statistics and achievements shown in the activity section."
       >
         <div className="space-y-6">
-          {/* Default Card */}
           <RepeaterItem title="Activity Card 1">
             <div className="grid gap-6">
-              <IconField label="Icon" />
+              <IconField id="activityIcon" label="Icon" />
 
               <div className="grid gap-6 md:grid-cols-2">
-                <InputField label="Number" placeholder="50+" />
+                <InputField id="number" label="Number" placeholder="50+" />
 
-                <InputField label="Heading" placeholder="Projects Completed" />
+                <InputField
+                  id="heading"
+                  label="Heading"
+                  placeholder="Projects Completed"
+                />
               </div>
 
               <TextareaField
+                id="description"
                 label="Description"
                 placeholder="Short description..."
                 rows={4}
@@ -48,7 +54,11 @@ export default function ActivityPage() {
         </div>
       </FormSection>
 
-      <PageActions />
+      <PageActions>
+        <Button variant="secondary">Reset</Button>
+
+        <Button>Save Changes</Button>
+      </PageActions>
     </PageContainer>
   );
 }

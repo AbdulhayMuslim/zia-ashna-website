@@ -4,6 +4,9 @@ import { useState } from "react";
 
 import { categories } from "@/data/posts";
 
+import PageContainer from "@/components/admin/layout/PageContainer";
+import PageActions from "@/components/admin/layout/PageActions";
+
 import PageHeader from "@/components/admin/ui/PageHeader";
 import Card from "@/components/admin/ui/Card";
 import Button from "@/components/admin/ui/Button";
@@ -23,10 +26,10 @@ export default function CreateBlogPostPage() {
 
   const [status, setStatus] = useState("draft");
   const [featured, setFeatured] = useState(false);
-  const [image, setImage] = useState("");
+  const [image, setImage] = useState(null);
 
   return (
-    <div className="space-y-6">
+    <PageContainer>
       <PageHeader
         title="Create Blog Post"
         description="Create and publish a new blog post."
@@ -38,6 +41,7 @@ export default function CreateBlogPostPage() {
           <Card title="Post Details">
             <div className="space-y-5">
               <InputField
+                id="title"
                 label="Post Title"
                 placeholder="Enter post title"
                 value={title}
@@ -45,6 +49,7 @@ export default function CreateBlogPostPage() {
               />
 
               <InputField
+                id="slug"
                 label="Slug"
                 placeholder="post-url-slug"
                 value={slug}
@@ -52,6 +57,7 @@ export default function CreateBlogPostPage() {
               />
 
               <TextareaField
+                id="excerpt"
                 label="Excerpt"
                 placeholder="Short summary of the post"
                 rows={4}
@@ -63,6 +69,7 @@ export default function CreateBlogPostPage() {
 
           <Card title="Content">
             <RichTextEditor
+              id="content"
               label="Blog Content"
               placeholder="Write your blog post..."
               value={content}
@@ -76,6 +83,7 @@ export default function CreateBlogPostPage() {
           <Card title="Publish">
             <div className="space-y-5">
               <SelectField
+                id="status"
                 label="Status"
                 value={status}
                 onChange={(e) => setStatus(e.target.value)}
@@ -92,6 +100,7 @@ export default function CreateBlogPostPage() {
               />
 
               <SwitchField
+                id="featured"
                 label="Featured Post"
                 description="Show this post in featured sections."
                 checked={featured}
@@ -99,15 +108,16 @@ export default function CreateBlogPostPage() {
               />
 
               <div className="flex flex-col gap-3">
-                <Button>Save Draft</Button>
+                <Button variant="secondary">Save Draft</Button>
 
-                <Button variant="secondary">Publish Post</Button>
+                <Button>Publish Post</Button>
               </div>
             </div>
           </Card>
 
           <Card title="Category">
             <SelectField
+              id="category"
               label="Post Category"
               value={category}
               onChange={(e) => setCategory(e.target.value)}
@@ -126,13 +136,20 @@ export default function CreateBlogPostPage() {
 
           <Card title="Featured Image">
             <ImageUploadField
-              image={image}
+              id="featuredImage"
+              value={image}
               onChange={setImage}
-              description="Recommended size: 1200 × 800 px"
+              helperText="Recommended size: 1200 × 800 px"
             />
           </Card>
         </div>
       </div>
-    </div>
+
+      <PageActions>
+        <Button variant="secondary">Cancel</Button>
+
+        <Button>Publish Post</Button>
+      </PageActions>
+    </PageContainer>
   );
 }

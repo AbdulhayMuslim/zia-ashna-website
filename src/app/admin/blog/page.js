@@ -5,6 +5,8 @@ import Link from "next/link";
 
 import { posts, categories } from "@/data/posts";
 
+import PageContainer from "@/components/admin/layout/PageContainer";
+
 import PageHeader from "@/components/admin/ui/PageHeader";
 import Card from "@/components/admin/ui/Card";
 import Button from "@/components/admin/ui/Button";
@@ -28,7 +30,7 @@ export default function BlogPage() {
   }, [statusFilter, categoryFilter]);
 
   return (
-    <div className="space-y-6">
+    <PageContainer>
       <PageHeader
         title="Blog Posts"
         description="Manage and organize your blog content."
@@ -94,6 +96,7 @@ export default function BlogPage() {
 
           <div className="w-full lg:w-72">
             <SelectField
+              id="categoryFilter"
               label="Category"
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
@@ -115,7 +118,7 @@ export default function BlogPage() {
       {/* Posts Table */}
       <Card>
         <div className="overflow-x-auto">
-          <table className="w-full min-w-212">
+          <table className="w-full min-w-[850px]">
             <thead>
               <tr className="border-b border-border">
                 <th className="px-4 py-4 text-left text-sm font-semibold">
@@ -186,6 +189,6 @@ export default function BlogPage() {
           </table>
         </div>
       </Card>
-    </div>
+    </PageContainer>
   );
 }

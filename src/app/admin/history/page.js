@@ -1,3 +1,5 @@
+"use client";
+
 import PageContainer from "@/components/admin/layout/PageContainer";
 import PageActions from "@/components/admin/layout/PageActions";
 
@@ -25,11 +27,20 @@ export default function HistoryPage() {
         description="Main heading and description for the history section."
       >
         <div className="grid gap-6">
-          <InputField label="Section Title" placeholder="MY HISTORY" />
+          <InputField
+            id="sectionTitle"
+            label="Section Title"
+            placeholder="MY HISTORY"
+          />
 
-          <InputField label="Heading" placeholder="My Professional Journey" />
+          <InputField
+            id="heading"
+            label="Heading"
+            placeholder="My Professional Journey"
+          />
 
           <TextareaField
+            id="description"
             label="Description"
             placeholder="Write history section description..."
             rows={6}
@@ -43,18 +54,22 @@ export default function HistoryPage() {
         description="Manage timeline cards and milestones."
       >
         <div className="space-y-6">
-          {/* Default Card */}
           <RepeaterItem title="History Card 1">
             <div className="grid gap-6">
-              <IconField label="Icon" />
+              <IconField id="historyIcon" label="Icon" />
 
               <div className="grid gap-6 md:grid-cols-2">
-                <InputField label="Number" placeholder="2020" />
+                <InputField id="number" label="Number" placeholder="2020" />
 
-                <InputField label="Heading" placeholder="Started Career" />
+                <InputField
+                  id="cardHeading"
+                  label="Heading"
+                  placeholder="Started Career"
+                />
               </div>
 
               <TextareaField
+                id="cardDescription"
                 label="Description"
                 placeholder="Describe this milestone..."
                 rows={4}
@@ -66,7 +81,11 @@ export default function HistoryPage() {
         </div>
       </FormSection>
 
-      <PageActions />
+      <PageActions>
+        <Button variant="secondary">Reset</Button>
+
+        <Button>Save Changes</Button>
+      </PageActions>
     </PageContainer>
   );
 }

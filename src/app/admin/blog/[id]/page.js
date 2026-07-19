@@ -4,6 +4,9 @@ import { useState } from "react";
 
 import { posts, categories } from "@/data/posts";
 
+import PageContainer from "@/components/admin/layout/PageContainer";
+import PageActions from "@/components/admin/layout/PageActions";
+
 import PageHeader from "@/components/admin/ui/PageHeader";
 import Card from "@/components/admin/ui/Card";
 import Button from "@/components/admin/ui/Button";
@@ -22,22 +25,23 @@ export default function EditBlogPostPage({ params }) {
   const [category, setCategory] = useState(post?.category || "");
   const [excerpt, setExcerpt] = useState(post?.excerpt || "");
   const [content, setContent] = useState(post?.content || "");
-  const [image, setImage] = useState(post?.image || "");
+  const [image, setImage] = useState(post?.image || null);
 
   const [status, setStatus] = useState(post?.status || "draft");
-
   const [featured, setFeatured] = useState(post?.featured || false);
 
   if (!post) {
     return (
-      <Card>
-        <p>Post not found.</p>
-      </Card>
+      <PageContainer>
+        <Card>
+          <p>Post not found.</p>
+        </Card>
+      </PageContainer>
     );
   }
 
   return (
-    <div className="space-y-6">
+    <PageContainer>
       <PageHeader
         title="Edit Blog Post"
         description="Update an existing blog post."
@@ -49,18 +53,21 @@ export default function EditBlogPostPage({ params }) {
           <Card title="Post Details">
             <div className="space-y-5">
               <InputField
+                id="title"
                 label="Post Title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
               />
 
               <InputField
+                id="slug"
                 label="Slug"
                 value={slug}
                 onChange={(e) => setSlug(e.target.value)}
               />
 
               <TextareaField
+                id="excerpt"
                 label="Excerpt"
                 rows={4}
                 value={excerpt}
@@ -71,6 +78,7 @@ export default function EditBlogPostPage({ params }) {
 
           <Card title="Content">
             <RichTextEditor
+              id="content"
               label="Blog Content"
               value={content}
               onChange={(e) => setContent(e.target.value)}
@@ -83,6 +91,7 @@ export default function EditBlogPostPage({ params }) {
           <Card title="Publish">
             <div className="space-y-5">
               <SelectField
+                id="status"
                 label="Status"
                 value={status}
                 onChange={(e) => setStatus(e.target.value)}
@@ -99,22 +108,18 @@ export default function EditBlogPostPage({ params }) {
               />
 
               <SwitchField
+                id="featured"
                 label="Featured Post"
                 description="Show this post in featured areas."
                 checked={featured}
                 onChange={setFeatured}
               />
-
-              <div className="flex flex-col gap-3">
-                <Button>Save Changes</Button>
-
-                <Button variant="secondary">Update & Publish</Button>
-              </div>
             </div>
           </Card>
 
           <Card title="Category">
             <SelectField
+              id="category"
               label="Post Category"
               value={category}
               onChange={(e) => setCategory(e.target.value)}
@@ -133,13 +138,20 @@ export default function EditBlogPostPage({ params }) {
 
           <Card title="Featured Image">
             <ImageUploadField
-              image={image}
+              id="featuredImage"
+              value={image}
               onChange={setImage}
-              description="Recommended size: 1200 × 800 px"
+              helperText="Recommended size: 1200 × 800 px"
             />
           </Card>
         </div>
       </div>
-    </div>
+
+      <PageActions>
+        <Button variant="secondary">Cancel</Button>
+
+        <Button>Save Changes</Button>
+      </PageActions>
+    </PageContainer>
   );
 }
