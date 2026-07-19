@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useParams } from "next/navigation";
 
 import { posts, categories } from "@/data/posts";
 
@@ -17,8 +18,19 @@ import ImageUploadField from "@/components/admin/ui/ImageUploadField";
 import RichTextEditor from "@/components/admin/ui/RichTextEditor";
 import SwitchField from "@/components/admin/ui/SwitchField";
 
-export default function EditBlogPostPage({ params }) {
-  const post = posts.find((item) => String(item.id) === String(params.id));
+function generateSlug(text) {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/['"]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+export default function EditBlogPostPage() {
+  const { id } = useParams();
+
+  const post = posts.find((item) => String(item.id) === String(id));
 
   const [title, setTitle] = useState(post?.title || "");
   const [slug, setSlug] = useState(post?.slug || "");
@@ -29,6 +41,10 @@ export default function EditBlogPostPage({ params }) {
 
   const [status, setStatus] = useState(post?.status || "draft");
   const [featured, setFeatured] = useState(post?.featured || false);
+
+  function handleGenerateSlug() {
+    setSlug(generateSlug(title));
+  }
 
   if (!post) {
     return (
@@ -59,12 +75,24 @@ export default function EditBlogPostPage({ params }) {
                 onChange={(e) => setTitle(e.target.value)}
               />
 
-              <InputField
-                id="slug"
-                label="Slug"
-                value={slug}
-                onChange={(e) => setSlug(e.target.value)}
-              />
+              <div className="flex items-end gap-3">
+                <div className="flex-1">
+                  <InputField
+                    id="slug"
+                    label="Slug"
+                    value={slug}
+                    onChange={(e) => setSlug(e.target.value)}
+                  />
+                </div>
+
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={handleGenerateSlug}
+                >
+                  Generate
+                </Button>
+              </div>
 
               <TextareaField
                 id="excerpt"

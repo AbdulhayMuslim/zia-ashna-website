@@ -118,7 +118,7 @@ export default function BlogPage() {
       {/* Posts Table */}
       <Card>
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[850px]">
+          <table className="w-full min-w-212">
             <thead>
               <tr className="border-b border-border">
                 <th className="px-4 py-4 text-left text-sm font-semibold">

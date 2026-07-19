@@ -17,6 +17,15 @@ import ImageUploadField from "@/components/admin/ui/ImageUploadField";
 import RichTextEditor from "@/components/admin/ui/RichTextEditor";
 import SwitchField from "@/components/admin/ui/SwitchField";
 
+function generateSlug(text) {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/['"]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
 export default function CreateBlogPostPage() {
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
@@ -27,6 +36,10 @@ export default function CreateBlogPostPage() {
   const [status, setStatus] = useState("draft");
   const [featured, setFeatured] = useState(false);
   const [image, setImage] = useState(null);
+
+  function handleGenerateSlug() {
+    setSlug(generateSlug(title));
+  }
 
   return (
     <PageContainer>
@@ -48,13 +61,25 @@ export default function CreateBlogPostPage() {
                 onChange={(e) => setTitle(e.target.value)}
               />
 
-              <InputField
-                id="slug"
-                label="Slug"
-                placeholder="post-url-slug"
-                value={slug}
-                onChange={(e) => setSlug(e.target.value)}
-              />
+              <div className="flex gap-3 items-end">
+                <div className="flex-1">
+                  <InputField
+                    id="slug"
+                    label="Slug"
+                    placeholder="post-url-slug"
+                    value={slug}
+                    onChange={(e) => setSlug(e.target.value)}
+                  />
+                </div>
+
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={handleGenerateSlug}
+                >
+                  Generate
+                </Button>
+              </div>
 
               <TextareaField
                 id="excerpt"
@@ -106,12 +131,6 @@ export default function CreateBlogPostPage() {
                 checked={featured}
                 onChange={setFeatured}
               />
-
-              <div className="flex flex-col gap-3">
-                <Button variant="secondary">Save Draft</Button>
-
-                <Button>Publish Post</Button>
-              </div>
             </div>
           </Card>
 
