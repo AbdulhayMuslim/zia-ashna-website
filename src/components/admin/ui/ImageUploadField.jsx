@@ -11,6 +11,7 @@ export default function ImageUploadField({
   description,
   value,
   onChange,
+  error,
   disabled = false,
   accept = "image/*",
   maxSize = 5 * 1024 * 1024,
@@ -18,12 +19,16 @@ export default function ImageUploadField({
   const inputRef = useRef(null);
 
   const [preview, setPreview] = useState(
-    typeof value === "string" ? value : null,
+    typeof value === "string" ? value : value?.preview || null,
   );
 
   useEffect(() => {
     if (typeof value === "string") {
       setPreview(value);
+    } else if (value?.preview) {
+      setPreview(value.preview);
+    } else {
+      setPreview(null);
     }
   }, [value]);
 
@@ -96,28 +101,10 @@ export default function ImageUploadField({
         className="hidden"
       />
 
-      <div
-        className="
-          relative
-          overflow-hidden
-          rounded-3xl
-          border-2
-          border-dashed
-          border-border
-          bg-background
-        "
-      >
+      <div className="relative overflow-hidden rounded-3xl border-2 border-dashed border-border bg-background">
         <div
           onClick={() => !disabled && inputRef.current?.click()}
-          className="
-            flex
-            min-h-72
-            cursor-pointer
-            items-center
-            justify-center
-            transition
-            hover:border-brand-primary
-          "
+          className="flex min-h-72 cursor-pointer items-center justify-center transition hover:border-brand-primary"
         >
           {preview ? (
             <div className="relative h-72 w-full">
@@ -148,6 +135,7 @@ export default function ImageUploadField({
         {preview && (
           <div className="absolute bottom-4 right-4 flex gap-2">
             <Button
+              type="button"
               size="sm"
               variant="secondary"
               onClick={() => inputRef.current?.click()}
@@ -156,16 +144,19 @@ export default function ImageUploadField({
             </Button>
 
             <Button
+              type="button"
               size="sm"
               variant="danger"
-              onClick={removeImage}
               leftIcon={Trash2}
+              onClick={removeImage}
             >
               Remove
             </Button>
           </div>
         )}
       </div>
+
+      {error && <p className="text-sm text-red-500">{error}</p>}
     </div>
   );
 }

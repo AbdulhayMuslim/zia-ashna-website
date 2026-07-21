@@ -1,10 +1,8 @@
-"use client";
-
 export default function RichTextEditor({
   label,
   placeholder = "Start writing...",
-  value,
-  onChange,
+  error,
+  ...props
 }) {
   return (
     <div className="space-y-2">
@@ -14,33 +12,15 @@ export default function RichTextEditor({
         </label>
       )}
 
-      <div
-        className="
-          rounded-2xl
-          border
-          border-border
-          bg-card
-          p-4
-        "
-      >
+      <div className="rounded-2xl border border-border bg-card p-4">
         <textarea
-          value={value}
-          onChange={onChange}
           placeholder={placeholder}
-          className="
-            h-87
-            w-full
-            resize-none
-            bg-transparent
-            text-sm
-            outline-none
-            text-heading
-            placeholder:text-text-muted
-            dark:text-heading-dark
-            dark:placeholder:text-text-muted-dark
-          "
+          className="h-87 w-full resize-none bg-transparent text-sm outline-none text-heading placeholder:text-text-muted dark:text-heading-dark dark:placeholder:text-text-muted-dark"
+          {...props}
         />
       </div>
+
+      {error && <p className="text-sm text-red-500">{error}</p>}
     </div>
   );
 }

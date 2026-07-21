@@ -1,8 +1,11 @@
 "use client";
 
-import { toast } from "@/components/admin/ui/Toast";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
+import { toast } from "@/components/admin/ui/Toast";
+import { createBlogSchema } from "@/validations/blog";
 import { categories } from "@/data/posts";
 
 import PageContainer from "@/components/admin/layout/PageContainer";
@@ -28,19 +31,52 @@ function generateSlug(text) {
 }
 
 export default function CreateBlogPostPage() {
-  const [title, setTitle] = useState("");
-  const [slug, setSlug] = useState("");
-  const [category, setCategory] = useState("");
-  const [excerpt, setExcerpt] = useState("");
-  const [content, setContent] = useState("");
-
-  const [status, setStatus] = useState("draft");
-  const [featured, setFeatured] = useState(false);
   const [image, setImage] = useState(null);
 
-  function handleGenerateSlug() {
-    setSlug(generateSlug(title));
-  }
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    reset,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(createBlogSchema),
+    defaultValues: {
+      title: "",
+      slug: "",
+      category: "",
+      excerpt: "",
+      content: "",
+      published: false,
+      featured: false,
+    },
+  });
+
+  const title = watch("title");
+  const featured = watch("featured");
+  const published = watch("published");
+
+  const handleGenerateSlug = () => {
+    setValue("slug", generateSlug(title), {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
+  };
+
+  const onSubmit = (data) => {
+    const payload = {
+      ...data,
+      featuredImage: image,
+    };
+
+    console.log(payload);
+
+    toast.success("Blog post created successfully.");
+
+    reset();
+    setImage(null);
+  };
 
   return (
     <PageContainer>
@@ -49,127 +85,141 @@ export default function CreateBlogPostPage() {
         description="Create and publish a new blog post."
       />
 
-      <div className="grid gap-6 xl:grid-cols-3">
-        {/* Main Content */}
-        <div className="space-y-6 xl:col-span-2">
-          <Card title="Post Details">
-            <div className="space-y-5">
-              <InputField
-                id="title"
-                label="Post Title"
-                placeholder="Enter post title"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-              />
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="grid gap-6 xl:grid-cols-3">
+          {/* Main Content */}
+          <div className="space-y-6 xl:col-span-2">
+            <Card title="Post Details">
+              <div className="space-y-5">
+                <InputField
+                  id="title"
+                  label="Post Title"
+                  placeholder="Enter post title"
+                  error={errors.title?.message}
+                  {...register("title")}
+                />
 
-              <div className="flex gap-3 items-end">
-                <div className="flex-1">
-                  <InputField
-                    id="slug"
-                    label="Slug"
-                    placeholder="post-url-slug"
-                    value={slug}
-                    onChange={(e) => setSlug(e.target.value)}
-                  />
+                <div className="flex items-end gap-3">
+                  <div className="flex-1">
+                    <InputField
+                      id="slug"
+                      label="Slug"
+                      placeholder="post-url-slug"
+                      error={errors.slug?.message}
+                      {...register("slug")}
+                    />
+                  </div>
+
+                  <Button
+                    type="button"
+                    variant="secondary"
+                    onClick={handleGenerateSlug}
+                  >
+                    Generate
+                  </Button>
                 </div>
 
-                <Button
-                  type="button"
-                  variant="secondary"
-                  onClick={handleGenerateSlug}
-                >
-                  Generate
-                </Button>
+                <TextareaField
+                  id="excerpt"
+                  label="Excerpt"
+                  placeholder="Short summary of the post"
+                  rows={4}
+                  error={errors.excerpt?.message}
+                  {...register("excerpt")}
+                />
               </div>
+            </Card>
 
-              <TextareaField
-                id="excerpt"
-                label="Excerpt"
-                placeholder="Short summary of the post"
-                rows={4}
-                value={excerpt}
-                onChange={(e) => setExcerpt(e.target.value)}
+            <Card title="Content">
+              <RichTextEditor
+                label="Blog Content"
+                placeholder="Write your blog post..."
+                error={errors.content?.message}
+                {...register("content")}
               />
-            </div>
-          </Card>
+            </Card>
+          </div>
 
-          <Card title="Content">
-            <RichTextEditor
-              id="content"
-              label="Blog Content"
-              placeholder="Write your blog post..."
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-            />
-          </Card>
-        </div>
+          {/* Sidebar */}
+          <div className="space-y-6">
+            <Card title="Publish">
+              <div className="space-y-5">
+                <SelectField
+                  id="published"
+                  label="Status"
+                  error={errors.published?.message}
+                  value={published ? "published" : "draft"}
+                  onChange={(e) =>
+                    setValue("published", e.target.value === "published", {
+                      shouldDirty: true,
+                      shouldValidate: true,
+                    })
+                  }
+                  options={[
+                    {
+                      label: "Draft",
+                      value: "draft",
+                    },
+                    {
+                      label: "Published",
+                      value: "published",
+                    },
+                  ]}
+                />
 
-        {/* Sidebar */}
-        <div className="space-y-6">
-          <Card title="Publish">
-            <div className="space-y-5">
+                <SwitchField
+                  id="featured"
+                  label="Featured Post"
+                  description="Show this post in featured sections."
+                  checked={featured}
+                  onChange={(checked) =>
+                    setValue("featured", checked, {
+                      shouldDirty: true,
+                      shouldValidate: true,
+                    })
+                  }
+                />
+              </div>
+            </Card>
+
+            <Card title="Category">
               <SelectField
-                id="status"
-                label="Status"
-                value={status}
-                onChange={(e) => setStatus(e.target.value)}
+                id="category"
+                label="Post Category"
+                error={errors.category?.message}
+                {...register("category")}
                 options={[
                   {
-                    label: "Draft",
-                    value: "draft",
+                    label: "Select Category",
+                    value: "",
                   },
-                  {
-                    label: "Published",
-                    value: "published",
-                  },
+                  ...categories.map((item) => ({
+                    label: item,
+                    value: item,
+                  })),
                 ]}
               />
+            </Card>
 
-              <SwitchField
-                id="featured"
-                label="Featured Post"
-                description="Show this post in featured sections."
-                checked={featured}
-                onChange={setFeatured}
+            <Card title="Featured Image">
+              <ImageUploadField
+                id="featuredImage"
+                value={image}
+                onChange={setImage}
+                description="Recommended size: 1200 × 800 px"
               />
-            </div>
-          </Card>
-
-          <Card title="Category">
-            <SelectField
-              id="category"
-              label="Post Category"
-              value={category}
-              onChange={(e) => setCategory(e.target.value)}
-              options={[
-                {
-                  label: "Select Category",
-                  value: "",
-                },
-                ...categories.map((item) => ({
-                  label: item,
-                  value: item,
-                })),
-              ]}
-            />
-          </Card>
-
-          <Card title="Featured Image">
-            <ImageUploadField
-              id="featuredImage"
-              value={image}
-              onChange={setImage}
-              helperText="Recommended size: 1200 × 800 px"
-            />
-          </Card>
+            </Card>
+          </div>
         </div>
-      </div>
 
-      <PageActions>
-        <Button variant="secondary">Cancel</Button>
+        <PageActions>
+          <Button type="button" variant="secondary" onClick={() => reset()}>
+            Cancel
+          </Button>
 
-        <Button onClick={() => toast.info("Draft saved.")}>Publish Post</Button>
-      </PageActions>
+          <Button type="submit">Publish Post</Button>
+        </PageActions>
+      </form>
     </PageContainer>
   );
 }

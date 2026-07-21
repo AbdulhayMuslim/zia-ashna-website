@@ -9,6 +9,7 @@ export default function SwitchField({
   description,
   disabled = false,
   className,
+  ...props
 }) {
   return (
     <div className={cn("flex items-start justify-between gap-4", className)}>
@@ -29,29 +30,29 @@ export default function SwitchField({
         )}
       </div>
 
-      <button
-        id={id}
-        name={name}
-        type="button"
-        role="switch"
-        aria-checked={checked}
-        aria-disabled={disabled}
-        disabled={disabled}
-        onClick={() => onChange?.(!checked)}
-        className={cn(
-          "relative h-6 w-11 rounded-full transition-all",
-          "focus:outline-none focus:ring-2 focus:ring-brand-primary/20",
-          "disabled:cursor-not-allowed disabled:opacity-60",
-          checked ? "bg-brand-primary" : "bg-gray-300 dark:bg-gray-700",
-        )}
-      >
-        <span
+      <label className="relative inline-flex cursor-pointer items-center">
+        <input
+          id={id}
+          name={name}
+          type="checkbox"
+          checked={checked}
+          onChange={(e) => onChange?.(e.target.checked)}
+          disabled={disabled}
+          className="peer sr-only"
+          {...props}
+        />
+
+        <div
           className={cn(
-            "absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white transition-transform",
-            checked ? "translate-x-5" : "translate-x-0",
+            "h-6 w-11 rounded-full transition-all",
+            "peer-focus:ring-2 peer-focus:ring-brand-primary/20",
+            "peer-disabled:cursor-not-allowed peer-disabled:opacity-60",
+            "after:absolute after:left-0.5 after:top-0.5 after:h-5 after:w-5 after:rounded-full after:bg-white after:transition-transform",
+            "peer-checked:bg-brand-primary peer-checked:after:translate-x-5",
+            "bg-gray-300 dark:bg-gray-700",
           )}
         />
-      </button>
+      </label>
     </div>
   );
 }

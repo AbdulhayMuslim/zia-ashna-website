@@ -16,6 +16,7 @@ export default function SelectField({
   helperText,
   className,
   defaultValue,
+  registration,
   ...props
 }) {
   const controlled = value !== undefined;
@@ -53,6 +54,7 @@ export default function SelectField({
               "border-red-500 focus:border-red-500 focus:ring-red-500/20",
             className,
           )}
+          {...registration}
           {...props}
         >
           {placeholder && (

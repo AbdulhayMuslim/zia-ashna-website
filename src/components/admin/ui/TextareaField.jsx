@@ -15,6 +15,7 @@ export default function TextareaField({
   helperText,
   className,
   defaultValue,
+  registration,
   ...props
 }) {
   const controlled = value !== undefined;
@@ -52,8 +53,9 @@ export default function TextareaField({
           error && "border-red-500 focus:border-red-500 focus:ring-red-500/20",
           className,
         )}
+        {...registration}
         {...props}
-      />
+      ></textarea>
     </FormField>
   );
 }
