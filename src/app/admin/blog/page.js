@@ -1,5 +1,8 @@
 "use client";
 
+import ConfirmDialog from "@/components/admin/ui/ConfirmDialog";
+import { toast } from "@/components/admin/ui/Toast";
+
 import { useMemo, useState } from "react";
 import Link from "next/link";
 
@@ -65,7 +68,7 @@ export default function BlogPage() {
               className={`rounded-xl px-4 py-2 text-sm font-medium transition ${
                 statusFilter === "all"
                   ? "bg-brand-primary text-white"
-                  : "border border-border bg-background"
+                  : "border border-border bg-background dark:bg-background-dark dark:text-text-dark"
               }`}
             >
               All
@@ -76,7 +79,7 @@ export default function BlogPage() {
               className={`rounded-xl px-4 py-2 text-sm font-medium transition ${
                 statusFilter === "published"
                   ? "bg-brand-primary text-white"
-                  : "border border-border bg-background"
+                  : "border border-border bg-background dark:bg-background-dark dark:text-text-dark"
               }`}
             >
               Published
@@ -87,7 +90,7 @@ export default function BlogPage() {
               className={`rounded-xl px-4 py-2 text-sm font-medium transition ${
                 statusFilter === "draft"
                   ? "bg-brand-primary text-white"
-                  : "border border-border bg-background"
+                  : "border border-border bg-background dark:bg-background-dark dark:text-text-dark"
               }`}
             >
               Drafts
@@ -118,73 +121,77 @@ export default function BlogPage() {
       {/* Posts Table */}
       <Card>
         <div className="overflow-x-auto">
-          <table className="w-full min-w-212">
-            <thead>
-              <tr className="border-b border-border">
-                <th className="px-4 py-4 text-left text-sm font-semibold">
+          <table className="min-w-full divide-y divide-border">
+            <thead className="bg-muted dark:bg-muted-dark">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-text dark:text-text-dark">
                   Title
                 </th>
 
-                <th className="px-4 py-4 text-left text-sm font-semibold">
+                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-text dark:text-text-dark">
                   Category
                 </th>
 
-                <th className="px-4 py-4 text-left text-sm font-semibold">
-                  Date
-                </th>
-
-                <th className="px-4 py-4 text-left text-sm font-semibold">
+                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-text dark:text-text-dark">
                   Status
                 </th>
 
-                <th className="px-4 py-4 text-right text-sm font-semibold">
+                <th className="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wider text-text dark:text-text-dark">
                   Actions
                 </th>
               </tr>
             </thead>
 
-            <tbody>
+            <tbody className="divide-y divide-border bg-background dark:bg-background-dark">
               {filteredPosts.map((post) => (
                 <tr
                   key={post.id}
-                  className="border-b border-border last:border-0"
+                  className="transition-colors hover:bg-muted/50 dark:hover:bg-muted-dark/50"
                 >
-                  <td className="px-4 py-4">
-                    <div>
-                      <p className="font-medium text-heading dark:text-heading-dark">
-                        {post.title}
-                      </p>
+                  <td className="px-6 py-4">
+                    <div className="font-medium text-heading dark:text-heading-dark">
+                      {post.title}
+                    </div>
 
-                      <p className="mt-1 text-xs text-text dark:text-text-dark">
-                        {post.slug}
-                      </p>
+                    <div className="text-sm text-text dark:text-text-dark">
+                      {post.slug}
                     </div>
                   </td>
 
-                  <td className="px-4 py-4">{post.category}</td>
+                  <td className="px-6 py-4 text-text dark:text-text-dark">
+                    {post.category}
+                  </td>
 
-                  <td className="px-4 py-4">{post.date}</td>
-
-                  <td className="px-4 py-4">
+                  <td className="px-6 py-4">
                     <StatusBadge status={post.status} />
                   </td>
 
-                  <td className="px-4 py-4">
+                  <td className="px-6 py-4">
                     <div className="flex justify-end gap-2">
                       <Link href={`/admin/blog/${post.id}`}>
-                        <Button variant="secondary">Edit</Button>
+                        <Button variant="secondary" size="sm">
+                          Edit
+                        </Button>
                       </Link>
 
-                      <Button
-                        variant="danger"
-                        onClick={() => console.log("Delete Post:", post.id)}
-                      >
+                      <Button variant="danger" size="sm">
                         Delete
                       </Button>
                     </div>
                   </td>
                 </tr>
               ))}
+
+              {filteredPosts.length === 0 && (
+                <tr>
+                  <td
+                    colSpan={4}
+                    className="px-6 py-12 text-center text-text dark:text-text-dark"
+                  >
+                    No blog posts found.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

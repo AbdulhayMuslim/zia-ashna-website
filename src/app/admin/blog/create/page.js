@@ -1,5 +1,6 @@
 "use client";
 
+import { toast } from "@/components/admin/ui/Toast";
 import { useState } from "react";
 
 import { categories } from "@/data/posts";
@@ -167,7 +168,7 @@ export default function CreateBlogPostPage() {
       <PageActions>
         <Button variant="secondary">Cancel</Button>
 
-        <Button>Publish Post</Button>
+        <Button onClick={() => toast.info("Draft saved.")}>Publish Post</Button>
       </PageActions>
     </PageContainer>
   );
