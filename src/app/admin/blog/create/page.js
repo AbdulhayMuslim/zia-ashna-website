@@ -134,8 +134,14 @@ export default function CreateBlogPostPage() {
               <RichTextEditor
                 label="Blog Content"
                 placeholder="Write your blog post..."
+                value={watch("content")}
                 error={errors.content?.message}
-                {...register("content")}
+                onChange={(value) =>
+                  setValue("content", value, {
+                    shouldDirty: true,
+                    shouldValidate: true,
+                  })
+                }
               />
             </Card>
           </div>
