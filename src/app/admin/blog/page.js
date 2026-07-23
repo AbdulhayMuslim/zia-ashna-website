@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import { posts, categories } from "@/data/posts";
 
@@ -22,9 +23,19 @@ import DataTablePagination from "@/components/admin/ui/DataTable/DataTablePagina
 import { toast } from "@/components/admin/ui/Toast";
 
 export default function BlogPage() {
+  const router = useRouter();
+
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("");
+
+  const handleDelete = async (id) => {
+    // Backend API call goes here.
+    // Example:
+    // await deleteBlog(id);
+
+    toast.success("Blog post deleted.");
+  };
 
   const filteredPosts = useMemo(() => {
     return posts.filter((post) => {
@@ -80,17 +91,11 @@ export default function BlogPage() {
             title="Delete Blog Post"
             description={`Delete "${row.title}"? This action cannot be undone.`}
             confirmText="Delete"
-            onConfirm={() => {
-              toast.success("Blog post deleted.");
-            }}
+            onConfirm={() => handleDelete(row.id)}
           >
             <ActionMenu
-              onEdit={() => {
-                window.location.href = `/admin/blog/${row.id}`;
-              }}
-              onDelete={(e) => {
-                e?.preventDefault?.();
-              }}
+              onEdit={() => router.push(`/admin/blog/${row.id}`)}
+              onDelete={(e) => e?.preventDefault?.()}
             />
           </ConfirmDialog>
         </div>
@@ -109,6 +114,7 @@ export default function BlogPage() {
           </Link>
         }
       />
+
       <Card>
         <DataTableToolbar
           search={search}

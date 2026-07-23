@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useParams } from "next/navigation";
 
 import { posts, categories } from "@/data/posts";
+import { toast } from "@/components/admin/ui/Toast";
 
 import PageContainer from "@/components/admin/layout/PageContainer";
 import PageActions from "@/components/admin/layout/PageActions";
@@ -109,7 +110,7 @@ export default function EditBlogPostPage() {
               id="content"
               label="Blog Content"
               value={content}
-              onChange={(e) => setContent(e.target.value)}
+              onChange={setContent}
             />
           </Card>
         </div>
@@ -169,7 +170,7 @@ export default function EditBlogPostPage() {
               id="featuredImage"
               value={image}
               onChange={setImage}
-              helperText="Recommended size: 1200 × 800 px"
+              description="Recommended size: 1200 × 800 px"
             />
           </Card>
         </div>
@@ -178,7 +179,13 @@ export default function EditBlogPostPage() {
       <PageActions>
         <Button variant="secondary">Cancel</Button>
 
-        <Button>Save Changes</Button>
+        <Button
+          onClick={() => {
+            toast.success("Blog post updated successfully.");
+          }}
+        >
+          Save Changes
+        </Button>
       </PageActions>
     </PageContainer>
   );
