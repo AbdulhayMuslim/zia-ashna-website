@@ -28,6 +28,7 @@
 .ProseMirror a {
   color: #2563eb;
   text-decoration: underline;
+  cursor: pointer;
 }
 
 .ProseMirror img {

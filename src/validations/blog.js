@@ -23,7 +23,7 @@ export const createBlogSchema = z.object({
 
   content: z.string().trim().min(50, "Content must be at least 50 characters."),
 
-  published: z.boolean(),
+  status: z.enum(["draft", "published"]),
 
   featured: z.boolean(),
 });

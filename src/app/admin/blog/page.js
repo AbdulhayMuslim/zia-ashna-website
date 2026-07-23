@@ -1,8 +1,5 @@
 "use client";
 
-import ConfirmDialog from "@/components/admin/ui/ConfirmDialog";
-import { toast } from "@/components/admin/ui/Toast";
-
 import { useMemo, useState } from "react";
 import Link from "next/link";
 
@@ -14,23 +11,92 @@ import PageHeader from "@/components/admin/ui/PageHeader";
 import Card from "@/components/admin/ui/Card";
 import Button from "@/components/admin/ui/Button";
 import SelectField from "@/components/admin/ui/SelectField";
+import ConfirmDialog from "@/components/admin/ui/ConfirmDialog";
 import StatusBadge from "@/components/admin/ui/StatusBadge";
+import ActionMenu from "@/components/admin/ui/ActionMenu";
+
+import DataTable from "@/components/admin/ui/DataTable/DataTable";
+import DataTableToolbar from "@/components/admin/ui/DataTable/DataTableToolbar";
+import DataTablePagination from "@/components/admin/ui/DataTable/DataTablePagination";
+
+import { toast } from "@/components/admin/ui/Toast";
 
 export default function BlogPage() {
+  const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("");
 
   const filteredPosts = useMemo(() => {
     return posts.filter((post) => {
-      const statusMatch =
+      const matchesSearch =
+        post.title.toLowerCase().includes(search.toLowerCase()) ||
+        post.slug.toLowerCase().includes(search.toLowerCase());
+
+      const matchesStatus =
         statusFilter === "all" || post.status === statusFilter;
 
-      const categoryMatch =
+      const matchesCategory =
         categoryFilter === "" || post.category === categoryFilter;
 
-      return statusMatch && categoryMatch;
+      return matchesSearch && matchesStatus && matchesCategory;
     });
-  }, [statusFilter, categoryFilter]);
+  }, [search, statusFilter, categoryFilter]);
+
+  const columns = [
+    {
+      key: "title",
+      label: "Title",
+      render: (row) => (
+        <div>
+          <div className="font-medium text-heading dark:text-heading-dark">
+            {row.title}
+          </div>
+
+          <div className="text-sm text-text dark:text-text-dark">
+            {row.slug}
+          </div>
+        </div>
+      ),
+    },
+
+    {
+      key: "category",
+      label: "Category",
+    },
+
+    {
+      key: "status",
+      label: "Status",
+      render: (row) => <StatusBadge status={row.status} />,
+    },
+
+    {
+      key: "actions",
+      label: "Actions",
+      align: "right",
+      render: (row) => (
+        <div className="flex justify-end">
+          <ConfirmDialog
+            title="Delete Blog Post"
+            description={`Delete "${row.title}"? This action cannot be undone.`}
+            confirmText="Delete"
+            onConfirm={() => {
+              toast.success("Blog post deleted.");
+            }}
+          >
+            <ActionMenu
+              onEdit={() => {
+                window.location.href = `/admin/blog/${row.id}`;
+              }}
+              onDelete={(e) => {
+                e?.preventDefault?.();
+              }}
+            />
+          </ConfirmDialog>
+        </div>
+      ),
+    },
+  ];
 
   return (
     <PageContainer>
@@ -43,64 +109,41 @@ export default function BlogPage() {
           </Link>
         }
       />
-
-      {/* Stats */}
       <Card>
-        <div className="flex items-center justify-between">
-          <div>
-            <h3 className="font-heading text-lg font-semibold text-heading dark:text-heading-dark">
-              Posts Overview
-            </h3>
-
-            <p className="mt-1 text-sm text-text dark:text-text-dark">
-              {filteredPosts.length} posts found
-            </p>
-          </div>
-        </div>
-      </Card>
-
-      {/* Filters */}
-      <Card>
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+        <DataTableToolbar
+          search={search}
+          onSearchChange={setSearch}
+          searchPlaceholder="Search blog posts..."
+        >
           <div className="flex flex-wrap gap-2">
-            <button
+            <Button
+              size="sm"
+              variant={statusFilter === "all" ? "primary" : "secondary"}
               onClick={() => setStatusFilter("all")}
-              className={`rounded-xl px-4 py-2 text-sm font-medium transition ${
-                statusFilter === "all"
-                  ? "bg-brand-primary text-white"
-                  : "border border-border bg-background dark:bg-background-dark dark:text-text-dark"
-              }`}
             >
               All
-            </button>
+            </Button>
 
-            <button
+            <Button
+              size="sm"
+              variant={statusFilter === "published" ? "primary" : "secondary"}
               onClick={() => setStatusFilter("published")}
-              className={`rounded-xl px-4 py-2 text-sm font-medium transition ${
-                statusFilter === "published"
-                  ? "bg-brand-primary text-white"
-                  : "border border-border bg-background dark:bg-background-dark dark:text-text-dark"
-              }`}
             >
               Published
-            </button>
+            </Button>
 
-            <button
+            <Button
+              size="sm"
+              variant={statusFilter === "draft" ? "primary" : "secondary"}
               onClick={() => setStatusFilter("draft")}
-              className={`rounded-xl px-4 py-2 text-sm font-medium transition ${
-                statusFilter === "draft"
-                  ? "bg-brand-primary text-white"
-                  : "border border-border bg-background dark:bg-background-dark dark:text-text-dark"
-              }`}
             >
-              Drafts
-            </button>
+              Draft
+            </Button>
           </div>
 
-          <div className="w-full lg:w-72">
+          <div className="w-full md:w-64">
             <SelectField
               id="categoryFilter"
-              label="Category"
               value={categoryFilter}
               onChange={(e) => setCategoryFilter(e.target.value)}
               options={[
@@ -115,86 +158,31 @@ export default function BlogPage() {
               ]}
             />
           </div>
-        </div>
-      </Card>
+        </DataTableToolbar>
 
-      {/* Posts Table */}
-      <Card>
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-border">
-            <thead className="bg-muted dark:bg-muted-dark">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-text dark:text-text-dark">
-                  Title
-                </th>
+        <DataTable
+          columns={columns}
+          data={filteredPosts}
+          emptyTitle="No blog posts found"
+          emptyDescription="Create your first blog post to get started."
+        />
 
-                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-text dark:text-text-dark">
-                  Category
-                </th>
+        <DataTablePagination>
+          <p className="text-sm text-text dark:text-text-dark">
+            Showing {filteredPosts.length} post
+            {filteredPosts.length !== 1 ? "s" : ""}
+          </p>
 
-                <th className="px-6 py-3 text-left text-xs font-semibold uppercase tracking-wider text-text dark:text-text-dark">
-                  Status
-                </th>
+          <div className="flex items-center gap-2">
+            <Button variant="secondary" size="sm" disabled>
+              Previous
+            </Button>
 
-                <th className="px-6 py-3 text-right text-xs font-semibold uppercase tracking-wider text-text dark:text-text-dark">
-                  Actions
-                </th>
-              </tr>
-            </thead>
-
-            <tbody className="divide-y divide-border bg-background dark:bg-background-dark">
-              {filteredPosts.map((post) => (
-                <tr
-                  key={post.id}
-                  className="transition-colors hover:bg-muted/50 dark:hover:bg-muted-dark/50"
-                >
-                  <td className="px-6 py-4">
-                    <div className="font-medium text-heading dark:text-heading-dark">
-                      {post.title}
-                    </div>
-
-                    <div className="text-sm text-text dark:text-text-dark">
-                      {post.slug}
-                    </div>
-                  </td>
-
-                  <td className="px-6 py-4 text-text dark:text-text-dark">
-                    {post.category}
-                  </td>
-
-                  <td className="px-6 py-4">
-                    <StatusBadge status={post.status} />
-                  </td>
-
-                  <td className="px-6 py-4">
-                    <div className="flex justify-end gap-2">
-                      <Link href={`/admin/blog/${post.id}`}>
-                        <Button variant="secondary" size="sm">
-                          Edit
-                        </Button>
-                      </Link>
-
-                      <Button variant="danger" size="sm">
-                        Delete
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-
-              {filteredPosts.length === 0 && (
-                <tr>
-                  <td
-                    colSpan={4}
-                    className="px-6 py-12 text-center text-text dark:text-text-dark"
-                  >
-                    No blog posts found.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+            <Button variant="secondary" size="sm" disabled>
+              Next
+            </Button>
+          </div>
+        </DataTablePagination>
       </Card>
     </PageContainer>
   );

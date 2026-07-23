@@ -13,12 +13,37 @@ import {
   AlignLeft,
   AlignCenter,
   AlignRight,
+  Link2,
 } from "lucide-react";
 
 import MenuButton from "./MenuButton";
 
 export default function Toolbar({ editor }) {
   if (!editor) return null;
+
+  const setLink = () => {
+    const previousUrl = editor.getAttributes("link").href;
+
+    const url = window.prompt("Enter URL", previousUrl || "");
+
+    if (url === null) return;
+
+    if (url.trim() === "") {
+      editor.chain().focus().unsetLink().run();
+      return;
+    }
+
+    editor
+      .chain()
+      .focus()
+      .extendMarkRange("link")
+      .setLink({
+        href: url,
+        target: "_blank",
+        rel: "noopener noreferrer",
+      })
+      .run();
+  };
 
   return (
     <div className="flex flex-wrap gap-2 rounded-t-xl border-b border-border bg-card p-3 dark:border-border-dark dark:bg-card-dark">
@@ -41,6 +66,13 @@ export default function Toolbar({ editor }) {
         label="Underline"
         active={editor.isActive("underline")}
         onClick={() => editor.chain().focus().toggleUnderline().run()}
+      />
+
+      <MenuButton
+        icon={Link2}
+        label="Link"
+        active={editor.isActive("link")}
+        onClick={setLink}
       />
 
       <MenuButton

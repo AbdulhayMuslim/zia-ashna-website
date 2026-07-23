@@ -48,14 +48,14 @@ export default function CreateBlogPostPage() {
       category: "",
       excerpt: "",
       content: "",
-      published: false,
+      status: "draft",
       featured: false,
     },
   });
 
   const title = watch("title");
   const featured = watch("featured");
-  const published = watch("published");
+  const status = watch("status");
 
   const handleGenerateSlug = () => {
     setValue("slug", generateSlug(title), {
@@ -87,7 +87,6 @@ export default function CreateBlogPostPage() {
 
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="grid gap-6 xl:grid-cols-3">
-          {/* Main Content */}
           <div className="space-y-6 xl:col-span-2">
             <Card title="Post Details">
               <div className="space-y-5">
@@ -146,17 +145,16 @@ export default function CreateBlogPostPage() {
             </Card>
           </div>
 
-          {/* Sidebar */}
           <div className="space-y-6">
             <Card title="Publish">
               <div className="space-y-5">
                 <SelectField
-                  id="published"
+                  id="status"
                   label="Status"
-                  error={errors.published?.message}
-                  value={published ? "published" : "draft"}
+                  value={status}
+                  error={errors.status?.message}
                   onChange={(e) =>
-                    setValue("published", e.target.value === "published", {
+                    setValue("status", e.target.value, {
                       shouldDirty: true,
                       shouldValidate: true,
                     })
