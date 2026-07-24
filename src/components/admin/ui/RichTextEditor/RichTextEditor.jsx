@@ -1,9 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
-
 import { EditorContent, useEditor } from "@tiptap/react";
-
 import extensions from "./extensions";
 import Toolbar from "./Toolbar";
 import "./styles.css";
