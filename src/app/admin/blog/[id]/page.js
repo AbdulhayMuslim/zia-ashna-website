@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useParams } from "next/navigation";
-
 import { posts, categories } from "@/data/posts";
 import { toast } from "@/components/admin/ui/Toast";
 
