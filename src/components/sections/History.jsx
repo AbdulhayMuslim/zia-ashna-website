@@ -8,7 +8,7 @@ const journey = [
   {
     icon: Rocket,
     title: "Founded Asan Technology",
-    metric: "100+ Projects",
+    metric: "20+ Projects",
     description:
       "Started a technology company focused on helping businesses grow through modern digital solutions, software development, and digital transformation.",
   },
