@@ -38,8 +38,8 @@ export default function Hero() {
 
             <FadeLeft delay={0.2}>
               <p className="text-center text-md lg:text-start text-text dark:text-text-dark/60">
-                Co-Founder @ Asan Technology, Tawangar Educational Consultancy
-                and Hamkar Educational Consultancy.
+                Co-Founder @ Asan Technology, Microasan Technology, Tawangar
+                Educational Consultancy and Hamkar Educational Consultancy.
               </p>
             </FadeLeft>
 
