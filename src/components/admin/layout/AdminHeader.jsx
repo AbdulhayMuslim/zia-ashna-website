@@ -78,7 +78,7 @@ export default function AdminHeader({ setSidebarOpen }) {
             />
           </div>
 
-          <ThemeToggle />
+          <ThemeToggle className="rounded-xl" />
 
           <button
             className="
@@ -87,10 +87,9 @@ export default function AdminHeader({ setSidebarOpen }) {
               w-10
               items-center
               justify-center
-              rounded-full
+              rounded-xl
               border
               border-gray-200
-              bg-gray-50
               text-gray-600
               transition
               hover:bg-gray-100

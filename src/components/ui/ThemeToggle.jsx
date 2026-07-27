@@ -1,10 +1,10 @@
 "use client";
-
+import cn from "@/utils/cn";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
-export default function ThemeToggle() {
+export default function ThemeToggle({ className }) {
   const [mounted, setMounted] = useState(false);
 
   const { theme, setTheme } = useTheme();
@@ -18,7 +18,10 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-      className="bg-brand-primary/10 dark:bg-gray-800 outline-none px-1.5 py-1 rounded-full border border-brand-primary/30 dark:border-gray-700 shadow-sm"
+      className={cn(
+        "outline-none px-1.5 py-1 rounded-full border border-brand-primary/30 dark:border-gray-700 shadow-sm",
+        className,
+      )}
       aria-label="Toggle theme"
     >
       {theme === "dark" ? (
