@@ -99,11 +99,7 @@ export default function Hero() {
           {/* Right Section */}
           <div className="lg:w-[50%] flex items-center justify-center lg:justify-end -mb-10">
             <FadeRight className="flex justify-center lg:justify-end">
-              <Image
-                src={zia}
-                alt="Sayed Zia Ashna Image"
-                className="w-[90%]"
-              />
+              <Image src={zia} alt="Zia Ashna Image" className="w-[90%]" />
             </FadeRight>
           </div>
         </div>
