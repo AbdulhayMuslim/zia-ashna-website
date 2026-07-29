@@ -68,7 +68,7 @@ export default function Hero() {
               bg-bg dark:bg-gray-600 rounded-xl shadow-[0_0_30px_rgba(0,0,0,0.12)]
               hover:-translate-y-2 duration-300"
                 >
-                  <Image src={tawangar} alt="Tawangar Logo" />
+                  <Image src={tawangar} alt="Tawangar consultancy Logo" />
                 </a>
 
                 <a
@@ -79,7 +79,7 @@ export default function Hero() {
               bg-bg dark:bg-gray-600 rounded-xl shadow-[0_0_30px_rgba(0,0,0,0.12)]
               hover:-translate-y-2 duration-300"
                 >
-                  <Image src={hamkar} alt="Hamkar Logo" />
+                  <Image src={hamkar} alt="Hamkar consultancy Logo" />
                 </a>
 
                 <a
@@ -90,7 +90,7 @@ export default function Hero() {
               bg-bg dark:bg-gray-600 rounded-xl shadow-[0_0_30px_rgba(0,0,0,0.12)]
               hover:-translate-y-2 duration-300"
                 >
-                  <Image src={asantech} alt="asan tech logo" />
+                  <Image src={asantech} alt="asantech logo" />
                 </a>
               </div>
             </ZoomIn>
