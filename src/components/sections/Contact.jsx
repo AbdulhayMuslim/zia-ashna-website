@@ -52,7 +52,7 @@ export default function Contact() {
 
               <div className="rounded-xl bg-brand-primary/10 text-brand-primary p-4 flex flex-col justify-center items-center h-full w-full gap-2">
                 <CheckCircle />
-                <h4 className="text-brand-primary">Intern</h4>
+                <h4 className="text-brand-primary">Internship</h4>
               </div>
 
               <div className="rounded-xl bg-brand-primary/10 text-brand-primary p-4 flex flex-col justify-center items-center h-full w-full gap-2">

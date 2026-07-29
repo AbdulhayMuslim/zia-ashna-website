@@ -15,7 +15,7 @@ const journey = [
   {
     icon: GraduationCap,
     title: "Educational Impact",
-    metric: "1000+ Students Reached",
+    metric: "500+ Students Reached",
     description:
       "Built educational consultancy ventures dedicated to helping students discover better academic and career opportunities.",
   },
@@ -24,7 +24,7 @@ const journey = [
     title: "Strategic Partnerships",
     metric: "Growing Business Network",
     description:
-      "Established long-term partnerships and collaborations across industries, creating sustainable opportunities and growth.",
+      "Established long term partnerships and collaborations across industries, creating sustainable opportunities and growth.",
   },
   {
     icon: Sparkles,
