@@ -201,7 +201,7 @@ Companies with strong cultures attract talented people and create environments w
     content: `
 Products and services can be copied, but exceptional customer experiences are much harder to replicate.
 
-Successful businesses listen carefully to customer feedback and continuously improve every interaction, from the first conversation to after-sales support.
+Successful businesses listen carefully to customer feedback and continuously improve every interaction, from the first conversation to after sales support.
 
 When customers feel valued, they become loyal advocates who recommend your business to others.
 
