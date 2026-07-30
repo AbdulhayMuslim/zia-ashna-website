@@ -300,7 +300,7 @@ Businesses that promote knowledge sharing are better prepared to adapt to changi
     title: "Small Daily Habits That Produce Big Results",
 
     excerpt:
-      "Consistent routines and intentional work habits often lead to greater productivity than working longer hours.",
+      "Consistent routines and intentional work habits lead to greater productivity than working longer hours.",
 
     content: `
 Productivity is about making better use of time rather than simply working harder.
