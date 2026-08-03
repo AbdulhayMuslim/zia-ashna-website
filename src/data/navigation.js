@@ -9,7 +9,7 @@ import {
 
 export const navigationLinks = [
   {
-    href: "/#home",
+    href: "/",
     icon: House,
     label: "Home",
   },
