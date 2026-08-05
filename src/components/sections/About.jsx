@@ -10,6 +10,8 @@ import {
   GraduationCap,
   BriefcaseBusiness,
   Award,
+
+
   Building2,
 } from "lucide-react";
 
@@ -18,6 +20,9 @@ export default function About() {
 
   const experiences = [
     {
+
+      
+      
       title: "University Professor",
       period: "5+ Years",
       description:
