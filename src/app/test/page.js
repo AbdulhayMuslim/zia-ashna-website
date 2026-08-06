@@ -4,15 +4,25 @@ import { useEffect } from "react";
 
 export default function TestPage() {
   useEffect(() => {
-    async function load() {
-      const response = await fetch("/api/hello");
-      const data = await response.json();
+    async function sendData() {
+      const response = await fetch("/api/hello", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: "Ahmad",
+          age: 22,
+        }),
+      });
 
-      console.log(data);
+      const result = await response.json();
+
+      console.log(result);
     }
 
-    load();
+    sendData();
   }, []);
 
-  return <h1>Testing API...</h1>;
+  return <h1>Sending Data...</h1>;
 }

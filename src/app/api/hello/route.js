@@ -1,8 +1,9 @@
-export async function GET() {
+export async function POST(request) {
+  const data = await request.json();
+
+  console.log(data);
+
   return Response.json({
-    message: "Hello from backend!",
-    framework: "Next.js",
-    year: 2026,
-    learning: true,
+    received: data,
   });
 }
