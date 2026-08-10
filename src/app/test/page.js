@@ -1,8 +1,10 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function TestPage() {
+  const [message, setMessage] = useState("Waiting for backend...");
+
   useEffect(() => {
     async function sendData() {
       const response = await fetch("/api/hello", {
@@ -18,11 +20,16 @@ export default function TestPage() {
 
       const result = await response.json();
 
-      console.log(result);
+      setMessage(JSON.stringify(result));
     }
 
     sendData();
   }, []);
 
-  return <h1>Sending Data...</h1>;
+  return (
+    <div>
+      <h1>Testing API</h1>
+      <p>{message}</p>
+    </div>
+  );
 }
