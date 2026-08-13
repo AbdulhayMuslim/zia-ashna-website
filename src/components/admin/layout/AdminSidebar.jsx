@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { X, LogOut } from "lucide-react";
 
 import { adminNav, cmsConfig } from "@/data/admin-nav";
@@ -9,6 +9,14 @@ import cn from "@/utils/cn";
 
 export default function AdminSidebar({ sidebarOpen, setSidebarOpen }) {
   const pathname = usePathname();
+  const router = useRouter();
+
+  async function handleLogout() {
+    await fetch("/api/auth/logout", { method: "POST" });
+    setSidebarOpen(false);
+    router.replace("/admin/login");
+    router.refresh();
+  }
 
   return (
     <>
@@ -42,7 +50,9 @@ export default function AdminSidebar({ sidebarOpen, setSidebarOpen }) {
           </p>
 
           <button
+            type="button"
             onClick={() => setSidebarOpen(false)}
+            aria-label="Close navigation"
             className="
               absolute
               right-4
@@ -89,6 +99,8 @@ export default function AdminSidebar({ sidebarOpen, setSidebarOpen }) {
         {/* Footer */}
         <div className="border-t border-gray-200 p-4 dark:border-gray-800">
           <button
+            type="button"
+            onClick={handleLogout}
             className="
               flex
               w-full

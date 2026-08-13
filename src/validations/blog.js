@@ -11,7 +11,11 @@ export const createBlogSchema = z.object({
     .string()
     .trim()
     .min(3, "Slug is required.")
-    .max(200, "Slug cannot exceed 200 characters."),
+    .max(200, "Slug cannot exceed 200 characters.")
+    .regex(
+      /^[a-z0-9]+(?:-[a-z0-9]+)*$/,
+      "Use lowercase letters, numbers, and single hyphens only.",
+    ),
 
   category: z.string().min(1, "Please select a category."),
 

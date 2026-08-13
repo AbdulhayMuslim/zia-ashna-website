@@ -1,10 +1,4 @@
 import Container from "../ui/Container";
-import {
-  FaFacebook,
-  FaInstagram,
-  FaLinkedin,
-  FaXTwitter,
-} from "react-icons/fa6";
 
 export default function Footer() {
   return (
@@ -14,22 +8,6 @@ export default function Footer() {
           Copyright © {new Date().getFullYear()} Sayed Zia Ashna. All rights
           reserved.
         </p>
-
-        {/* Social Links */}
-        <div className="flex items-center gap-6 pr-4 text-xl text-gray-600 dark:text-gray-300">
-          <a href="#" target="_blank" rel="noreferrer">
-            <FaFacebook className="hover:text-brand-primary dark:hover:text-brand-secondary hover:scale-115 duration-300" />
-          </a>
-          <a href="#" target="_blank" rel="noreferrer">
-            <FaInstagram className="hover:text-brand-primary dark:hover:text-brand-secondary hover:scale-115 duration-300" />
-          </a>
-          <a href="#" target="_blank" rel="noreferrer">
-            <FaLinkedin className="hover:text-brand-primary dark:hover:text-brand-secondary hover:scale-115 duration-300" />
-          </a>
-          <a href="#" target="_blank" rel="noreferrer">
-            <FaXTwitter className="hover:text-brand-primary dark:hover:text-brand-secondary hover:scale-115 duration-300" />
-          </a>
-        </div>
       </Container>
     </footer>
   );

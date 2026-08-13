@@ -3,33 +3,22 @@
 import cn from "@/utils/cn";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
 
 export default function ThemeToggle({ className }) {
-  const [mounted, setMounted] = useState(false);
-
-  const { theme, setTheme } = useTheme();
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  if (!mounted) return null;
+  const { resolvedTheme, setTheme } = useTheme();
 
   return (
     <button
-      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+      type="button"
+      onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
       className={cn(
         "outline-none px-1.5 py-1 rounded-full border border-brand-primary/30 dark:border-gray-700 shadow-sm",
         className,
       )}
       aria-label="Toggle theme"
     >
-      {theme === "dark" ? (
-        <Sun className="h-5 sm:h-6 lg:h-7 w-5 sm:w-6 lg:-w-7 text-yellow-500" />
-      ) : (
-        <Moon className="h-5 sm:h-6 lg:h-7 w-5 sm:w-6 lg:-w-7 text-gray-400" />
-      )}
+      <Sun className="hidden h-5 w-5 text-yellow-500 dark:block sm:h-6 sm:w-6 lg:h-7 lg:w-7" />
+      <Moon className="h-5 w-5 text-gray-400 dark:hidden sm:h-6 sm:w-6 lg:h-7 lg:w-7" />
     </button>
   );
 }

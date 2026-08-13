@@ -80,11 +80,6 @@ export default function ContactForm() {
     try {
       setLoading(true);
 
-      const endpoint = import.meta.env.VITE_CONTACT_FORM_ENDPOINT;
-      if (!endpoint) {
-        throw new Error("Form configuration missing.");
-      }
-
       // Explicitly reconstruct the payload so the key sent to Formspree is exactly "_subject"
       const payload = {
         name: formData.name,
@@ -93,7 +88,7 @@ export default function ContactForm() {
         message: formData.message,
       };
 
-      const response = await fetch(endpoint, {
+      const response = await fetch("/api/contact", {
         method: "POST",
         body: JSON.stringify(payload),
         headers: {

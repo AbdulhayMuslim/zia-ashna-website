@@ -5,6 +5,28 @@ import BackButton from "@/components/ui/BackButton";
 import Container from "@/components/ui/Container";
 import { posts } from "@/data/posts";
 
+export function generateStaticParams() {
+  return posts.map(({ slug }) => ({ slug }));
+}
+
+export async function generateMetadata({ params }) {
+  const { slug } = await params;
+  const post = posts.find((item) => item.slug === slug);
+
+  if (!post) return { title: "Post not found" };
+
+  return {
+    title: post.title,
+    description: post.excerpt,
+    openGraph: {
+      type: "article",
+      title: post.title,
+      description: post.excerpt,
+      images: [{ url: post.image.src, alt: post.title }],
+    },
+  };
+}
+
 export default async function BlogPost({ params }) {
   const { slug } = await params;
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useParams } from "next/navigation";
 
 import { categories } from "@/data/categories";
@@ -29,25 +29,11 @@ function generateSlug(text) {
 export default function EditCategoryPage() {
   const { id } = useParams();
 
-  const [form, setForm] = useState({
-    name: "",
-    slug: "",
-    description: "",
-    status: "published",
-  });
-
-  useEffect(() => {
-    const category = categories.find((item) => item.id === Number(id));
-
-    if (category) {
-      setForm({
-        name: category.name,
-        slug: category.slug,
-        description: category.description,
-        status: category.status,
-      });
-    }
-  }, [id]);
+  const category = categories.find((item) => item.id === Number(id));
+  const initialForm = category
+    ? { ...category }
+    : { name: "", slug: "", description: "", status: "published" };
+  const [form, setForm] = useState(initialForm);
 
   const updateField = (key, value) => {
     setForm((prev) => ({
@@ -134,18 +120,7 @@ export default function EditCategoryPage() {
             type="button"
             variant="secondary"
             onClick={() => {
-              const category = categories.find(
-                (item) => item.id === Number(id),
-              );
-
-              if (category) {
-                setForm({
-                  name: category.name,
-                  slug: category.slug,
-                  description: category.description,
-                  status: category.status,
-                });
-              }
+              setForm(initialForm);
             }}
           >
             Reset

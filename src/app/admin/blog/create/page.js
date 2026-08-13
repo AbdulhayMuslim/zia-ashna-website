@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { toast } from "@/components/admin/ui/Toast";
@@ -36,9 +36,9 @@ export default function CreateBlogPostPage() {
   const {
     register,
     handleSubmit,
-    watch,
     setValue,
     reset,
+    control,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(createBlogSchema),
@@ -53,9 +53,10 @@ export default function CreateBlogPostPage() {
     },
   });
 
-  const title = watch("title");
-  const featured = watch("featured");
-  const status = watch("status");
+  const title = useWatch({ control, name: "title" });
+  const featured = useWatch({ control, name: "featured" });
+  const status = useWatch({ control, name: "status" });
+  const content = useWatch({ control, name: "content" });
 
   const handleGenerateSlug = () => {
     setValue("slug", generateSlug(title), {
@@ -133,7 +134,7 @@ export default function CreateBlogPostPage() {
               <RichTextEditor
                 label="Blog Content"
                 placeholder="Write your blog post..."
-                value={watch("content")}
+                value={content}
                 error={errors.content?.message}
                 onChange={(value) =>
                   setValue("content", value, {

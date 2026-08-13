@@ -1,6 +1,7 @@
 "use client";
 
-import { Menu, Search, UserCircle2 } from "lucide-react";
+import { Menu, UserCircle2 } from "lucide-react";
+import Link from "next/link";
 
 import Breadcrumbs from "./Breadcrumbs";
 import ThemeToggle from "@/components/ui/ThemeToggle";
@@ -20,13 +21,15 @@ export default function AdminHeader({ setSidebarOpen }) {
         dark:bg-gray-900
       "
     >
-      <div className="flex h-full items-center justify-between px-4 sm:px-6 lg:px-8">
+      <div className="flex h-full min-w-0 items-center justify-between gap-2 px-3 sm:gap-4 sm:px-6 lg:px-8">
         {/* Left */}
-        <div className="flex items-center gap-4">
+        <div className="flex min-w-0 flex-1 items-center gap-2 sm:gap-4">
           <button
             type="button"
             onClick={() => setSidebarOpen(true)}
+            aria-label="Open navigation"
             className="
+              shrink-0
               rounded-lg
               p-2
               transition
@@ -42,45 +45,13 @@ export default function AdminHeader({ setSidebarOpen }) {
         </div>
 
         {/* Right */}
-        <div className="flex items-center gap-3">
-          <div className="relative hidden lg:block">
-            <Search
-              className="
-                absolute
-                left-3
-                top-1/2
-                h-4
-                w-4
-                -translate-y-1/2
-                text-gray-400
-              "
-            />
-
-            <input
-              type="text"
-              placeholder="Search..."
-              className="
-                h-10
-                w-64
-                rounded-xl
-                border
-                border-gray-200
-                bg-gray-50
-                pl-10
-                pr-4
-                text-sm
-                outline-none
-                transition
-                focus:border-brand-primary
-                dark:border-gray-700
-                dark:bg-gray-800
-              "
-            />
-          </div>
-
+        <div className="flex shrink-0 items-center gap-2 sm:gap-3">
           <ThemeToggle className="rounded-xl" />
 
-          <button
+          <Link
+            href="/admin/profile"
+            aria-label="Profile and account settings"
+            title="Profile and account settings"
             className="
               flex
               h-10
@@ -100,7 +71,7 @@ export default function AdminHeader({ setSidebarOpen }) {
             "
           >
             <UserCircle2 className="h-6 w-6" />
-          </button>
+          </Link>
         </div>
       </div>
     </header>

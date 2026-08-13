@@ -2,12 +2,6 @@ import Container from "@/components/ui/Container";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 import { navigationLinks } from "@/data/navigation";
 
-import {
-  FaFacebook,
-  FaInstagram,
-  FaLinkedin,
-  FaXTwitter,
-} from "react-icons/fa6";
 
 export default function Header() {
   return (
@@ -103,45 +97,6 @@ export default function Header() {
             </ul>
           </nav>
 
-          {/* Social Links */}
-          <div
-            className="
-              hidden lg:flex
-
-              items-center
-              gap-4
-
-              rounded-full
-
-              border border-black/5
-              dark:border-white/10
-
-              bg-gray-200/60
-              dark:bg-black/30
-
-              backdrop-blur-sm
-
-              px-5
-              py-3
-              md:py-4
-            "
-          >
-            <a href="#" target="_blank" rel="noreferrer">
-              <FaFacebook className="text-gray-400 hover:text-brand-primary dark:hover:text-brand-secondary hover:scale-110 duration-300" />
-            </a>
-
-            <a href="#" target="_blank" rel="noreferrer">
-              <FaInstagram className="text-gray-400 hover:text-brand-primary dark:hover:text-brand-secondary hover:scale-110 duration-300" />
-            </a>
-
-            <a href="#" target="_blank" rel="noreferrer">
-              <FaLinkedin className="text-gray-400 hover:text-brand-primary dark:hover:text-brand-secondary hover:scale-110 duration-300" />
-            </a>
-
-            <a href="#" target="_blank" rel="noreferrer">
-              <FaXTwitter className="text-gray-400 hover:text-brand-primary dark:hover:text-brand-secondary hover:scale-110 duration-300" />
-            </a>
-          </div>
         </div>
       </Container>
     </header>

@@ -15,22 +15,13 @@ export default function ImageUploadField({
   disabled = false,
   accept = "image/*",
   maxSize = 5 * 1024 * 1024,
+  compact = false,
 }) {
   const inputRef = useRef(null);
 
-  const [preview, setPreview] = useState(
-    typeof value === "string" ? value : value?.preview || null,
-  );
-
-  useEffect(() => {
-    if (typeof value === "string") {
-      setPreview(value);
-    } else if (value?.preview) {
-      setPreview(value.preview);
-    } else {
-      setPreview(null);
-    }
-  }, [value]);
+  const [localPreview, setLocalPreview] = useState(null);
+  const preview = localPreview ??
+    (typeof value === "string" ? value : value?.preview || null);
 
   const handleFileChange = (e) => {
     const file = e.target.files?.[0];
@@ -44,7 +35,7 @@ export default function ImageUploadField({
 
     const previewUrl = URL.createObjectURL(file);
 
-    setPreview((oldPreview) => {
+    setLocalPreview((oldPreview) => {
       if (oldPreview?.startsWith("blob:")) {
         URL.revokeObjectURL(oldPreview);
       }
@@ -63,7 +54,7 @@ export default function ImageUploadField({
       URL.revokeObjectURL(preview);
     }
 
-    setPreview(null);
+    setLocalPreview(null);
 
     if (inputRef.current) {
       inputRef.current.value = "";
@@ -104,10 +95,10 @@ export default function ImageUploadField({
       <div className="relative overflow-hidden rounded-3xl border-2 border-dashed border-border bg-background">
         <div
           onClick={() => !disabled && inputRef.current?.click()}
-          className="flex min-h-72 cursor-pointer items-center justify-center transition hover:border-brand-primary"
+          className={`${compact ? "min-h-36" : "min-h-72"} flex cursor-pointer items-center justify-center transition hover:border-brand-primary`}
         >
           {preview ? (
-            <div className="relative h-72 w-full">
+            <div className={`relative w-full ${compact ? "h-36" : "h-72"}`}>
               <Image
                 src={preview}
                 alt="Preview"
@@ -116,7 +107,7 @@ export default function ImageUploadField({
               />
             </div>
           ) : (
-            <div className="space-y-3 text-center">
+            <div className="space-y-3 px-3 text-center">
               <ImagePlus className="mx-auto h-10 w-10 text-brand-primary" />
 
               <div>
@@ -132,7 +123,7 @@ export default function ImageUploadField({
           )}
         </div>
 
-        {preview && (
+        {preview && !compact && (
           <div className="absolute bottom-4 right-4 flex gap-2">
             <Button
               type="button"

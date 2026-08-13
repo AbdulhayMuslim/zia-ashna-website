@@ -1,21 +1,20 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import Card from "@/components/admin/ui/Card";
 import Button from "@/components/admin/ui/Button";
 import InputField from "@/components/admin/ui/InputField";
-import { toast } from "@/components/admin/ui/Toast";
+import { Toaster, toast } from "@/components/admin/ui/Toast";
 
 export default function LoginPage() {
   const router = useRouter();
+  const [submitting, setSubmitting] = useState(false);
 
   const [form, setForm] = useState({
-    email: "",
+    username: "",
     password: "",
-    remember: false,
   });
 
   const updateField = (key, value) => {
@@ -25,19 +24,44 @@ export default function LoginPage() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setSubmitting(true);
 
-    // Backend authentication
+    try {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username: form.username, password: form.password }),
+      });
+      const result = await response.json();
+      if (!response.ok) {
+        toast.error(result.message || "Unable to sign in.");
+        return;
+      }
 
-    toast.success("Login successful.");
-
-    router.push("/admin");
+      toast.success("Login successful.");
+      router.replace("/admin");
+      router.refresh();
+    } catch {
+      toast.error("Unable to sign in. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-6 dark:bg-background-dark">
-      <div className="w-full max-w-md">
+    <main className="relative flex min-h-dvh w-full items-center justify-center overflow-hidden bg-gray-100 px-5 py-10 dark:bg-gray-950 sm:px-6">
+      <div
+        aria-hidden="true"
+        className="absolute -left-32 -top-32 h-96 w-96 rounded-full bg-brand-primary/15 blur-3xl"
+      />
+      <div
+        aria-hidden="true"
+        className="absolute -bottom-40 -right-32 h-96 w-96 rounded-full bg-brand-secondary/20 blur-3xl"
+      />
+
+      <div className="relative z-10 w-full max-w-md">
         <Card>
           <div className="mb-8 text-center">
             <h1 className="text-3xl font-bold text-heading dark:text-heading-dark">
@@ -51,12 +75,13 @@ export default function LoginPage() {
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <InputField
-              id="email"
-              type="email"
-              label="Email"
-              value={form.email}
-              onChange={(e) => updateField("email", e.target.value)}
-              placeholder="admin@example.com"
+              id="username"
+              type="text"
+              label="Username"
+              value={form.username}
+              onChange={(e) => updateField("username", e.target.value)}
+              placeholder="admin"
+              autoComplete="username"
             />
 
             <InputField
@@ -66,35 +91,16 @@ export default function LoginPage() {
               value={form.password}
               onChange={(e) => updateField("password", e.target.value)}
               placeholder="••••••••"
+              autoComplete="current-password"
             />
 
-            <label className="flex items-center gap-3">
-              <input
-                type="checkbox"
-                checked={form.remember}
-                onChange={(e) => updateField("remember", e.target.checked)}
-              />
-
-              <span className="text-sm text-text dark:text-text-dark">
-                Remember me
-              </span>
-            </label>
-
-            <Button type="submit" className="w-full">
-              Sign In
+            <Button type="submit" className="w-full" disabled={submitting}>
+              {submitting ? "Signing in…" : "Sign In"}
             </Button>
-
-            <div className="text-center">
-              <Link
-                href="#"
-                className="text-sm text-brand-primary hover:underline"
-              >
-                Forgot your password?
-              </Link>
-            </div>
           </form>
         </Card>
       </div>
-    </div>
+      <Toaster />
+    </main>
   );
 }

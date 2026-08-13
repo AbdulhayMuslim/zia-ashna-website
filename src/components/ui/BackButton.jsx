@@ -2,19 +2,11 @@
 
 import { ArrowLeftCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
 
 export default function BackButton() {
   const router = useRouter();
-  const [canGoBack, setCanGoBack] = useState(false);
-
-  useEffect(() => {
-    // Check if there is history to go back to
-    setCanGoBack(window.history.length > 1);
-  }, []);
-
   const handleClick = () => {
-    if (canGoBack) {
+    if (window.history.length > 1) {
       router.back();
     } else {
       window.scrollTo({ top: 0, behavior: "smooth" });

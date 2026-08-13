@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useParams } from "next/navigation";
 
 import { tags } from "@/data/tags";
@@ -29,25 +29,11 @@ function generateSlug(text) {
 export default function EditTagPage() {
   const { id } = useParams();
 
-  const [form, setForm] = useState({
-    name: "",
-    slug: "",
-    description: "",
-    status: "published",
-  });
-
-  useEffect(() => {
-    const tag = tags.find((item) => item.id === Number(id));
-
-    if (tag) {
-      setForm({
-        name: tag.name,
-        slug: tag.slug,
-        description: tag.description,
-        status: tag.status,
-      });
-    }
-  }, [id]);
+  const tag = tags.find((item) => item.id === Number(id));
+  const initialForm = tag
+    ? { ...tag }
+    : { name: "", slug: "", description: "", status: "published" };
+  const [form, setForm] = useState(initialForm);
 
   const updateField = (key, value) => {
     setForm((prev) => ({
@@ -131,16 +117,7 @@ export default function EditTagPage() {
             type="button"
             variant="secondary"
             onClick={() => {
-              const tag = tags.find((item) => item.id === Number(id));
-
-              if (tag) {
-                setForm({
-                  name: tag.name,
-                  slug: tag.slug,
-                  description: tag.description,
-                  status: tag.status,
-                });
-              }
+              setForm(initialForm);
             }}
           >
             Reset
