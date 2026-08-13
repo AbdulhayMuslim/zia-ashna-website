@@ -24,6 +24,7 @@ function generateSlug(text) {
 }
 
 export default function CreateCategoryPage() {
+  const [submitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({
     name: "",
     slug: "",
@@ -38,19 +39,27 @@ export default function CreateCategoryPage() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setSubmitting(true);
 
-    // Backend API call
+    try {
+      const response = await fetch("/api/admin/categories", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      const result = await response.json();
 
-    toast.success("Category created successfully.");
+      if (!response.ok) throw new Error(result.message || "Unable to create category.");
 
-    setForm({
-      name: "",
-      slug: "",
-      description: "",
-      status: "published",
-    });
+      toast.success("Category created successfully.");
+      setForm({ name: "", slug: "", description: "", status: "published" });
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -134,7 +143,9 @@ export default function CreateCategoryPage() {
             Cancel
           </Button>
 
-          <Button type="submit">Create Category</Button>
+          <Button type="submit" disabled={submitting}>
+            {submitting ? "Saving..." : "Create Category"}
+          </Button>
         </PageActions>
       </form>
     </PageContainer>

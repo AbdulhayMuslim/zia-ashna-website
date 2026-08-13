@@ -24,6 +24,7 @@ function generateSlug(text) {
 }
 
 export default function CreateTagPage() {
+  const [submitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({
     name: "",
     slug: "",
@@ -38,19 +39,27 @@ export default function CreateTagPage() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setSubmitting(true);
 
-    // Backend API call
+    try {
+      const response = await fetch("/api/admin/tags", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      const result = await response.json();
 
-    toast.success("Tag created successfully.");
+      if (!response.ok) throw new Error(result.message || "Unable to create tag.");
 
-    setForm({
-      name: "",
-      slug: "",
-      description: "",
-      status: "published",
-    });
+      toast.success("Tag created successfully.");
+      setForm({ name: "", slug: "", description: "", status: "published" });
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -131,7 +140,9 @@ export default function CreateTagPage() {
             Cancel
           </Button>
 
-          <Button type="submit">Create Tag</Button>
+          <Button type="submit" disabled={submitting}>
+            {submitting ? "Saving..." : "Create Tag"}
+          </Button>
         </PageActions>
       </form>
     </PageContainer>

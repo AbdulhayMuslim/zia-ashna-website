@@ -32,6 +32,7 @@ function generateSlug(text) {
 
 export default function CreateBlogPostPage() {
   const [image, setImage] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
 
   const {
     register,
@@ -65,18 +66,31 @@ export default function CreateBlogPostPage() {
     });
   };
 
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
+    setSubmitting(true);
     const payload = {
       ...data,
-      featuredImage: image,
+      featuredImage: typeof image === "string" ? image : null,
     };
 
-    console.log(payload);
+    try {
+      const response = await fetch("/api/admin/posts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      const result = await response.json();
 
-    toast.success("Blog post created successfully.");
+      if (!response.ok) throw new Error(result.message || "Unable to create post.");
 
-    reset();
-    setImage(null);
+      toast.success("Blog post created successfully.");
+      reset();
+      setImage(null);
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -200,7 +214,7 @@ export default function CreateBlogPostPage() {
                   },
                   ...categories.map((item) => ({
                     label: item,
-                    value: item,
+                    value: generateSlug(item),
                   })),
                 ]}
               />
@@ -222,7 +236,9 @@ export default function CreateBlogPostPage() {
             Cancel
           </Button>
 
-          <Button type="submit">Publish Post</Button>
+          <Button type="submit" disabled={submitting}>
+            {submitting ? "Saving..." : "Publish Post"}
+          </Button>
         </PageActions>
       </form>
     </PageContainer>

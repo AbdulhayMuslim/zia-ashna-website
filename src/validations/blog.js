@@ -17,7 +17,7 @@ export const createBlogSchema = z.object({
       "Use lowercase letters, numbers, and single hyphens only.",
     ),
 
-  category: z.string().min(1, "Please select a category."),
+  category: z.string().trim().min(1, "Please select a category."),
 
   excerpt: z
     .string()
@@ -30,4 +30,10 @@ export const createBlogSchema = z.object({
   status: z.enum(["draft", "published"]),
 
   featured: z.boolean(),
+
+  featuredImage: z.string().trim().max(2048).nullable().optional(),
+});
+
+export const createPostApiSchema = createBlogSchema.extend({
+  tagIds: z.array(z.coerce.number().int().positive()).max(20).default([]),
 });
