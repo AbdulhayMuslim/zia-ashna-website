@@ -123,7 +123,7 @@ Leadership is not measured by authority. It is measured by the ability to inspir
     content: `
 Artificial intelligence is becoming part of everyday business operations.
 
-Organizations are using AI to automate repetitive work, analyze data faster, and deliver personalized customer experiences.
+Organizations are using Artificail intelligence to automate repetitive work, analyze data faster, and deliver personalized customer experiences.
 
 The greatest value of AI is not replacing people but enabling them to focus on creativity, innovation, and strategic thinking.
 
