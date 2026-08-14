@@ -92,10 +92,10 @@ export default function ImageUploadField({
         className="hidden"
       />
 
-      <div className="relative overflow-hidden rounded-3xl border-2 border-dashed border-border bg-background">
+      <div className="group relative overflow-hidden rounded-3xl border-2 border-dashed border-border bg-background transition-colors hover:border-brand-primary focus-within:border-brand-primary">
         <div
           onClick={() => !disabled && inputRef.current?.click()}
-          className={`${compact ? "min-h-36" : "min-h-72"} flex cursor-pointer items-center justify-center transition hover:border-brand-primary`}
+          className={`${compact ? "min-h-36" : "min-h-72"} flex cursor-pointer items-center justify-center`}
         >
           {preview ? (
             <div className={`relative w-full ${compact ? "h-36" : "h-72"}`}>

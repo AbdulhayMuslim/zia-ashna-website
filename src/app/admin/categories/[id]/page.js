@@ -1,9 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-
-import { categories } from "@/data/categories";
 
 import { toast } from "@/components/admin/ui/Toast";
 
@@ -29,11 +27,16 @@ function generateSlug(text) {
 export default function EditCategoryPage() {
   const { id } = useParams();
 
-  const category = categories.find((item) => item.id === Number(id));
-  const initialForm = category
-    ? { ...category }
-    : { name: "", slug: "", description: "", status: "published" };
+  const initialForm = { name: "", slug: "", description: "", status: "published" };
   const [form, setForm] = useState(initialForm);
+
+  useEffect(() => {
+    fetch(`/api/admin/categories/${id}`).then(async (response) => {
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.message);
+      setForm(result.data);
+    }).catch((error) => toast.error(error.message));
+  }, [id]);
 
   const updateField = (key, value) => {
     setForm((prev) => ({
@@ -42,12 +45,12 @@ export default function EditCategoryPage() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Backend API call
-
-    toast.success("Category updated successfully.");
+    const response = await fetch(`/api/admin/categories/${id}`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(form) });
+    const result = await response.json();
+    if (!response.ok) return toast.error(result.message || "Unable to update category.");
+    setForm(result.data); toast.success("Category updated successfully.");
   };
 
   return (
@@ -120,7 +123,7 @@ export default function EditCategoryPage() {
             type="button"
             variant="secondary"
             onClick={() => {
-              setForm(initialForm);
+              window.location.reload();
             }}
           >
             Reset

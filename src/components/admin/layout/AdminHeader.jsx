@@ -17,8 +17,8 @@ export default function AdminHeader({ setSidebarOpen }) {
         border-b
         border-gray-200
         bg-white
-        dark:border-gray-800
-        dark:bg-gray-900
+        dark:border-gray-700
+        dark:bg-gray-800
       "
     >
       <div className="flex h-full min-w-0 items-center justify-between gap-2 px-3 sm:gap-4 sm:px-6 lg:px-8">
@@ -61,13 +61,23 @@ export default function AdminHeader({ setSidebarOpen }) {
               rounded-xl
               border
               border-gray-200
+              bg-gray-50
               text-gray-600
-              transition
-              hover:bg-gray-100
-              dark:hover:bg-gray-700
-              dark:border-gray-700
-              dark:bg-gray-800
-              dark:text-gray-300
+              shadow-sm
+              outline-none
+              transition-colors
+              hover:border-brand-primary/40
+              hover:bg-brand-primary/10
+              hover:text-brand-primary
+              focus-visible:ring-2
+              focus-visible:ring-brand-primary/30
+              dark:border-gray-600
+              dark:bg-gray-900
+              dark:text-gray-200
+              dark:hover:border-brand-secondary/50
+              dark:hover:bg-brand-secondary/10
+              dark:hover:text-brand-secondary
+              dark:focus-visible:ring-brand-secondary/30
             "
           >
             <UserCircle2 className="h-6 w-6" />

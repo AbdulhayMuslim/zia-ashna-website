@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { categories } from "@/data/categories";
+import { useAdminCollection } from "@/hooks/useAdminCollection";
 
 import PageContainer from "@/components/admin/layout/PageContainer";
 import PageHeader from "@/components/admin/ui/PageHeader";
@@ -20,6 +20,7 @@ import { toast } from "@/components/admin/ui/Toast";
 
 export default function CategoriesPage() {
   const router = useRouter();
+  const { items: categories, remove } = useAdminCollection("categories");
 
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -35,12 +36,11 @@ export default function CategoriesPage() {
 
       return matchesSearch && matchesStatus;
     });
-  }, [search, statusFilter]);
+  }, [categories, search, statusFilter]);
 
   const handleDelete = async (id) => {
-    // Backend API call
-
-    toast.success("Category deleted.");
+    try { await remove(id); toast.success("Category deleted."); }
+    catch (error) { toast.error(error.message); }
   };
 
   const columns = [

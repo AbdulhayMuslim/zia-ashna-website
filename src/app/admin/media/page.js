@@ -1,9 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-
-import { media } from "@/data/media";
 
 import PageContainer from "@/components/admin/layout/PageContainer";
 
@@ -16,12 +14,21 @@ import { toast } from "@/components/admin/ui/Toast";
 
 export default function MediaPage() {
   const [search, setSearch] = useState("");
+  const [media, setMedia] = useState([]);
+
+  useEffect(() => {
+    fetch("/api/admin/media").then(async (response) => {
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.message);
+      setMedia(result.data ?? []);
+    }).catch((error) => toast.error(error.message));
+  }, []);
 
   const filteredMedia = useMemo(() => {
     return media.filter((item) =>
       item.name.toLowerCase().includes(search.toLowerCase()),
     );
-  }, [search]);
+  }, [media, search]);
 
   const handleCopy = async (url) => {
     await navigator.clipboard.writeText(url);
@@ -29,8 +36,9 @@ export default function MediaPage() {
   };
 
   const handleDelete = async (id) => {
-    // Backend API call
-
+    const response = await fetch(`/api/admin/media/${id}`, { method: "DELETE" });
+    if (!response.ok) return toast.error("Unable to delete media.");
+    setMedia((items) => items.filter((item) => item.id !== id));
     toast.success("Media deleted.");
   };
 
@@ -77,11 +85,11 @@ export default function MediaPage() {
                     </h3>
 
                     <p className="mt-1 text-sm text-text dark:text-text-dark">
-                      {item.size}
+                      {Math.round(item.sizeBytes / 1024)} KB
                     </p>
 
                     <p className="text-xs text-text-muted dark:text-text-dark">
-                      {item.uploadedAt}
+                      {new Date(item.uploadedAt).toLocaleDateString("en-US")}
                     </p>
                   </div>
 

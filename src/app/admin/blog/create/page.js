@@ -1,12 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { toast } from "@/components/admin/ui/Toast";
 import { createBlogSchema } from "@/validations/blog";
-import { categories } from "@/data/posts";
 
 import PageContainer from "@/components/admin/layout/PageContainer";
 import PageActions from "@/components/admin/layout/PageActions";
@@ -33,6 +32,14 @@ function generateSlug(text) {
 export default function CreateBlogPostPage() {
   const [image, setImage] = useState(null);
   const [submitting, setSubmitting] = useState(false);
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    fetch("/api/admin/categories")
+      .then((response) => response.json())
+      .then((result) => setCategories(result.data ?? []))
+      .catch(() => toast.error("Unable to load categories."));
+  }, []);
 
   const {
     register,
@@ -213,8 +220,8 @@ export default function CreateBlogPostPage() {
                     value: "",
                   },
                   ...categories.map((item) => ({
-                    label: item,
-                    value: generateSlug(item),
+                    label: item.name,
+                    value: item.slug,
                   })),
                 ]}
               />

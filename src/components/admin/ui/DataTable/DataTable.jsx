@@ -1,12 +1,14 @@
 "use client";
 
 import DataTableEmptyState from "./DataTableEmptyState";
+import cn from "@/utils/cn";
 
 export default function DataTable({
   columns = [],
   data = [],
   keyField = "id",
   loading = false,
+  fixedLayout = false,
   emptyTitle = "No records found",
   emptyDescription = "There are no records to display.",
 }) {
@@ -35,15 +37,18 @@ export default function DataTable({
 
   return (
     <div className="overflow-hidden rounded-2xl border border-border bg-card dark:border-border-dark dark:bg-card-dark">
-      <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-border dark:divide-border-dark">
+      <div className={cn("overflow-x-auto", fixedLayout && "lg:overflow-x-hidden")}>
+        <table className={cn(
+          "min-w-full divide-y divide-border dark:divide-border-dark",
+          fixedLayout && "min-w-[760px] lg:table-fixed lg:min-w-full",
+        )}>
           <thead className="bg-muted dark:bg-muted-dark">
             <tr>
               {columns.map((column) => (
                 <th
                   key={column.key}
                   style={{ width: column.width || "auto" }}
-                  className={`px-6 py-4 text-xs font-semibold uppercase tracking-wider text-heading dark:text-heading-dark ${
+                  className={`${fixedLayout ? "px-3" : "px-6"} py-4 text-xs font-semibold uppercase tracking-wider text-heading dark:text-heading-dark ${
                     column.align === "center"
                       ? "text-center"
                       : column.align === "right"
@@ -66,7 +71,7 @@ export default function DataTable({
                 {columns.map((column) => (
                   <td
                     key={column.key}
-                    className={`px-6 py-4 text-sm text-body dark:text-body-dark ${
+                    className={`${fixedLayout ? "px-3" : "px-6"} py-4 text-sm text-body dark:text-body-dark ${
                       column.align === "center"
                         ? "text-center"
                         : column.align === "right"

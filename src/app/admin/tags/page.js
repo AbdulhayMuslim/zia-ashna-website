@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { tags } from "@/data/tags";
+import { useAdminCollection } from "@/hooks/useAdminCollection";
 
 import PageContainer from "@/components/admin/layout/PageContainer";
 import PageHeader from "@/components/admin/ui/PageHeader";
@@ -20,6 +20,7 @@ import { toast } from "@/components/admin/ui/Toast";
 
 export default function TagsPage() {
   const router = useRouter();
+  const { items: tags, remove } = useAdminCollection("tags");
 
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
@@ -35,12 +36,11 @@ export default function TagsPage() {
 
       return matchesSearch && matchesStatus;
     });
-  }, [search, statusFilter]);
+  }, [tags, search, statusFilter]);
 
   const handleDelete = async (id) => {
-    // Backend API call
-
-    toast.success("Tag deleted.");
+    try { await remove(id); toast.success("Tag deleted."); }
+    catch (error) { toast.error(error.message); }
   };
 
   const columns = [

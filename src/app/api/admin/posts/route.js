@@ -1,6 +1,15 @@
 import { isAdminAuthenticated } from "@/lib/admin-auth";
+import { databaseErrorResponse } from "@/lib/api-error";
 import { prisma } from "@/lib/prisma";
 import { createPostApiSchema } from "@/validations/blog";
+
+export async function GET() {
+  if (!(await isAdminAuthenticated())) return Response.json({ message: "Unauthorized." }, { status: 401 });
+  try {
+    const data = await prisma.post.findMany({ orderBy: { createdAt: "desc" }, include: { category: true, tags: { include: { tag: true } } } });
+    return Response.json({ data });
+  } catch (error) { return databaseErrorResponse(error); }
+}
 
 export async function POST(request) {
   if (!(await isAdminAuthenticated())) {
@@ -42,6 +51,6 @@ export async function POST(request) {
     if (error?.code === "P2025") {
       return Response.json({ message: "The selected category or tag does not exist." }, { status: 400 });
     }
-    throw error;
+    return databaseErrorResponse(error);
   }
 }

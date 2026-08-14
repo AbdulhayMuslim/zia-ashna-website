@@ -1,6 +1,13 @@
 import { isAdminAuthenticated } from "@/lib/admin-auth";
+import { databaseErrorResponse } from "@/lib/api-error";
 import { prisma } from "@/lib/prisma";
 import { createTagSchema } from "@/validations/taxonomy";
+
+export async function GET() {
+  if (!(await isAdminAuthenticated())) return Response.json({ message: "Unauthorized." }, { status: 401 });
+  try { return Response.json({ data: await prisma.tag.findMany({ orderBy: { name: "asc" } }) }); }
+  catch (error) { return databaseErrorResponse(error); }
+}
 
 export async function POST(request) {
   if (!(await isAdminAuthenticated())) {
@@ -19,6 +26,6 @@ export async function POST(request) {
     if (error?.code === "P2002") {
       return Response.json({ message: "That tag name or slug already exists." }, { status: 409 });
     }
-    throw error;
+    return databaseErrorResponse(error);
   }
 }

@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { posts, categories } from "@/data/posts";
 import { toast } from "@/components/admin/ui/Toast";
 
 import PageContainer from "@/components/admin/layout/PageContainer";
@@ -30,17 +29,40 @@ function generateSlug(text) {
 export default function EditBlogPostPage() {
   const { id } = useParams();
 
-  const post = posts.find((item) => String(item.id) === String(id));
+  const [post, setPost] = useState(null);
+  const [categories, setCategories] = useState([]);
+  const [title, setTitle] = useState("");
+  const [slug, setSlug] = useState("");
+  const [category, setCategory] = useState("");
+  const [excerpt, setExcerpt] = useState("");
+  const [content, setContent] = useState("");
+  const [image, setImage] = useState(null);
+  const [status, setStatus] = useState("draft");
+  const [featured, setFeatured] = useState(false);
 
-  const [title, setTitle] = useState(post?.title || "");
-  const [slug, setSlug] = useState(post?.slug || "");
-  const [category, setCategory] = useState(post?.category || "");
-  const [excerpt, setExcerpt] = useState(post?.excerpt || "");
-  const [content, setContent] = useState(post?.content || "");
-  const [image, setImage] = useState(post?.image || null);
+  useEffect(() => {
+    Promise.all([
+      fetch(`/api/admin/posts/${id}`).then((response) => response.json().then((body) => ({ response, body }))),
+      fetch("/api/admin/categories").then((response) => response.json()),
+    ]).then(([postResult, categoryResult]) => {
+      if (!postResult.response.ok) throw new Error(postResult.body.message);
+      const data = postResult.body.data;
+      setPost(data); setTitle(data.title); setSlug(data.slug); setCategory(data.category.slug);
+      setExcerpt(data.excerpt); setContent(data.content); setImage(data.featuredImage);
+      setStatus(data.status); setFeatured(data.featured); setCategories(categoryResult.data ?? []);
+    }).catch((error) => toast.error(error.message));
+  }, [id]);
 
-  const [status, setStatus] = useState(post?.status || "draft");
-  const [featured, setFeatured] = useState(post?.featured || false);
+  async function save() {
+    const response = await fetch(`/api/admin/posts/${id}`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({
+      title, slug, category, excerpt, content, status, featured,
+      featuredImage: typeof image === "string" ? image : null,
+      tagIds: post.tags?.map((entry) => entry.tagId) ?? [],
+    }) });
+    const result = await response.json();
+    if (!response.ok) return toast.error(result.message || "Unable to update post.");
+    setPost(result.data); toast.success("Blog post updated successfully.");
+  }
 
   function handleGenerateSlug() {
     setSlug(generateSlug(title));
@@ -157,8 +179,8 @@ export default function EditBlogPostPage() {
                   value: "",
                 },
                 ...categories.map((item) => ({
-                  label: item,
-                  value: item,
+                  label: item.name,
+                  value: item.slug,
                 })),
               ]}
             />
@@ -179,9 +201,7 @@ export default function EditBlogPostPage() {
         <Button variant="secondary">Cancel</Button>
 
         <Button
-          onClick={() => {
-            toast.success("Blog post updated successfully.");
-          }}
+          onClick={save}
         >
           Save Changes
         </Button>

@@ -1,4 +1,6 @@
 import { z } from "zod";
+import { prisma } from "@/lib/prisma";
+import { databaseErrorResponse } from "@/lib/api-error";
 
 const contactSchema = z.object({
   name: z.string().trim().min(3).max(100),
@@ -48,13 +50,21 @@ export async function POST(request) {
     return Response.json({ message: "Please check the form fields." }, { status: 400 });
   }
 
-  const endpoint = process.env.CONTACT_FORM_ENDPOINT;
-  if (!endpoint) {
-    return Response.json(
-      { message: "Contact delivery is not configured." },
-      { status: 503 },
-    );
+  try {
+    await prisma.contactSubmission.create({
+      data: {
+        name: result.data.name,
+        email: result.data.email,
+        subject: result.data._subject,
+        message: result.data.message,
+      },
+    });
+  } catch (error) {
+    return databaseErrorResponse(error);
   }
+
+  const endpoint = process.env.CONTACT_FORM_ENDPOINT;
+  if (!endpoint) return Response.json({ message: "Message received." }, { status: 201 });
 
   const response = await fetch(endpoint, {
     method: "POST",
@@ -67,5 +77,5 @@ export async function POST(request) {
     return Response.json({ message: "Message delivery failed." }, { status: 502 });
   }
 
-  return Response.json({ message: "Message sent." });
+  return Response.json({ message: "Message sent and saved." }, { status: 201 });
 }

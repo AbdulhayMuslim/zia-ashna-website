@@ -63,3 +63,205 @@ model PostTag {
   @@id([postId, tagId])
   @@index([tagId])
 }
+
+model HeroSection {
+  id           Int        @id @default(1)
+  sectionTitle String     @default("Entrepreneur | Founder") @db.VarChar(120)
+  name         String     @default("Sayed Zia Ashna") @db.VarChar(160)
+  designation  String     @default("") @db.VarChar(240)
+  description  String     @default("")
+  buttonLabel  String     @default("Get In Touch") @db.VarChar(80)
+  buttonUrl    String     @default("#contact") @db.VarChar(500)
+  heroImageUrl String?    @db.VarChar(1000)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  logos        HeroLogo[]
+}
+
+model HeroLogo {
+  id        Int         @id @default(autoincrement())
+  name      String      @default("") @db.VarChar(120)
+  imageUrl  String      @db.VarChar(1000)
+  linkUrl   String?     @db.VarChar(1000)
+  sortOrder Int         @default(0)
+  heroId    Int         @default(1)
+  hero      HeroSection @relation(fields: [heroId], references: [id], onDelete: Cascade)
+
+  @@index([heroId, sortOrder])
+}
+
+model AboutSection {
+  id           Int              @id @default(1)
+  sectionTitle String           @default("About Me") @db.VarChar(120)
+  role         String           @default("") @db.VarChar(160)
+  heading      String           @default("") @db.VarChar(240)
+  description  String           @default("")
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+  experiences  ExperienceCard[]
+  education    EducationItem[]
+  certificates Certificate[]
+}
+
+model ExperienceCard {
+  id        Int          @id @default(autoincrement())
+  number    String       @db.VarChar(40)
+  title     String       @db.VarChar(160)
+  sortOrder Int          @default(0)
+  aboutId   Int          @default(1)
+  about     AboutSection @relation(fields: [aboutId], references: [id], onDelete: Cascade)
+
+  @@index([aboutId, sortOrder])
+}
+
+model EducationItem {
+  id          Int          @id @default(autoincrement())
+  degree      String       @db.VarChar(200)
+  institution String       @db.VarChar(200)
+  year        String       @db.VarChar(40)
+  sortOrder   Int          @default(0)
+  aboutId     Int          @default(1)
+  about       AboutSection @relation(fields: [aboutId], references: [id], onDelete: Cascade)
+
+  @@index([aboutId, sortOrder])
+}
+
+model Certificate {
+  id        Int          @id @default(autoincrement())
+  name      String       @db.VarChar(200)
+  sortOrder Int          @default(0)
+  aboutId   Int          @default(1)
+  about     AboutSection @relation(fields: [aboutId], references: [id], onDelete: Cascade)
+
+  @@index([aboutId, sortOrder])
+}
+
+model ActivitySection {
+  id           Int            @id @default(1)
+  sectionTitle String         @default("Activity") @db.VarChar(120)
+  heading      String         @default("") @db.VarChar(240)
+  description  String         @default("")
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  cards        ActivityCard[]
+}
+
+model ActivityCard {
+  id          Int             @id @default(autoincrement())
+  icon        String          @default("Rocket") @db.VarChar(80)
+  number      String          @db.VarChar(40)
+  heading     String          @db.VarChar(160)
+  description String
+  sortOrder   Int             @default(0)
+  sectionId   Int             @default(1)
+  section     ActivitySection @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+
+  @@index([sectionId, sortOrder])
+}
+
+model HistorySection {
+  id           Int           @id @default(1)
+  sectionTitle String        @default("History") @db.VarChar(120)
+  heading      String        @default("") @db.VarChar(240)
+  description  String        @default("")
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  cards        HistoryCard[]
+}
+
+model HistoryCard {
+  id          Int            @id @default(autoincrement())
+  icon        String         @default("Rocket") @db.VarChar(80)
+  number      String         @db.VarChar(80)
+  heading     String         @db.VarChar(200)
+  description String
+  sortOrder   Int            @default(0)
+  sectionId   Int            @default(1)
+  section     HistorySection @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+
+  @@index([sectionId, sortOrder])
+}
+
+model ContactSection {
+  id           Int           @id @default(1)
+  sectionTitle String        @default("Contact") @db.VarChar(120)
+  heading      String        @default("") @db.VarChar(240)
+  description  String        @default("")
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  cards        ContactCard[]
+}
+
+model ContactCard {
+  id        Int            @id @default(autoincrement())
+  title     String         @db.VarChar(200)
+  value     String         @default("") @db.VarChar(500)
+  linkUrl   String?        @db.VarChar(1000)
+  icon      String?        @db.VarChar(80)
+  sortOrder Int            @default(0)
+  sectionId Int            @default(1)
+  section   ContactSection @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+
+  @@index([sectionId, sortOrder])
+}
+
+model ContactSubmission {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(100)
+  email     String   @db.VarChar(254)
+  subject   String   @db.VarChar(150)
+  message   String
+  status    String   @default("new") @db.VarChar(20)
+  createdAt DateTime @default(now())
+
+  @@index([status, createdAt])
+  @@index([email])
+}
+
+model SiteSettings {
+  id              Int      @id @default(1)
+  siteName        String   @default("Sayed Zia Ashna") @db.VarChar(160)
+  siteDescription String   @default("")
+  logoUrl         String?  @db.VarChar(1000)
+  faviconUrl      String?  @db.VarChar(1000)
+  contactEmail    String?  @db.VarChar(254)
+  phone           String?  @db.VarChar(60)
+  address         String?
+  seoTitle        String?  @db.VarChar(200)
+  seoDescription  String?
+  facebook        String?  @db.VarChar(1000)
+  twitter         String?  @db.VarChar(1000)
+  instagram       String?  @db.VarChar(1000)
+  linkedin        String?  @db.VarChar(1000)
+  youtube         String?  @db.VarChar(1000)
+  copyright       String?  @db.VarChar(300)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model AdminProfile {
+  id             Int      @id @default(1)
+  fullName       String   @default("") @db.VarChar(160)
+  username       String   @default("admin") @db.VarChar(100)
+  email          String?  @db.VarChar(254)
+  phone          String?  @db.VarChar(60)
+  jobTitle       String?  @db.VarChar(160)
+  avatarUrl      String?  @db.VarChar(1000)
+  loginAlerts    Boolean  @default(true)
+  twoFactor      Boolean  @default(false)
+  contentUpdates Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model MediaAsset {
+  id         Int      @id @default(autoincrement())
+  name       String   @db.VarChar(255)
+  url        String   @unique @db.VarChar(1000)
+  mimeType   String   @db.VarChar(120)
+  sizeBytes  Int
+  altText    String?  @db.VarChar(300)
+  uploadedAt DateTime @default(now())
+
+  @@index([uploadedAt])
+}

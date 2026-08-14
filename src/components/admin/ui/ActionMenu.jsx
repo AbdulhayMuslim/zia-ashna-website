@@ -1,9 +1,9 @@
 "use client";
 
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, Pencil, Trash2 } from "lucide-react";
 
-export default function ActionMenu({ children }) {
+export default function ActionMenu({ children, onEdit, onDelete }) {
   return (
     <DropdownMenu.Root>
       <DropdownMenu.Trigger asChild>
@@ -21,6 +21,16 @@ export default function ActionMenu({ children }) {
           sideOffset={6}
           className="min-w-44 rounded-xl border border-border bg-card p-1 shadow-lg dark:border-border-dark dark:bg-card-dark"
         >
+          {onEdit && (
+            <DropdownMenu.Item onSelect={onEdit} className="flex cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-sm outline-none hover:bg-muted">
+              <Pencil className="h-4 w-4" /> Edit
+            </DropdownMenu.Item>
+          )}
+          {onDelete && (
+            <DropdownMenu.Item onSelect={onDelete} className="flex cursor-pointer items-center gap-2 rounded-lg px-3 py-2 text-sm text-red-600 outline-none hover:bg-red-50">
+              <Trash2 className="h-4 w-4" /> Delete
+            </DropdownMenu.Item>
+          )}
           {children}
         </DropdownMenu.Content>
       </DropdownMenu.Portal>

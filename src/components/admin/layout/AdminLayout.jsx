@@ -11,6 +11,11 @@ import { Toaster } from "@/components/admin/ui/Toast";
 export default function AdminLayout({ children }) {
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+
+  function toggleSidebarCollapsed() {
+    setSidebarCollapsed((current) => !current);
+  }
 
   // Authentication has its own full-screen presentation and must not inherit
   // dashboard navigation, spacing, or header controls.
@@ -19,11 +24,16 @@ export default function AdminLayout({ children }) {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-950">
-      <AdminSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+    <div className="min-h-screen bg-bg dark:bg-bg-dark">
+      <AdminSidebar
+        sidebarOpen={sidebarOpen}
+        setSidebarOpen={setSidebarOpen}
+        collapsed={sidebarCollapsed}
+        onToggleCollapsed={toggleSidebarCollapsed}
+      />
 
       {/* Content Area */}
-      <div className="lg:ml-72">
+      <div className={sidebarCollapsed ? "transition-[margin] duration-300 lg:ml-20" : "transition-[margin] duration-300 lg:ml-72"}>
         <AdminHeader setSidebarOpen={setSidebarOpen} />
 
         <main className="p-4 sm:p-6 lg:p-8">{children}</main>

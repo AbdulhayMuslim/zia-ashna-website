@@ -9,7 +9,7 @@ export default function DataTableToolbar({
   children,
 }) {
   return (
-    <div className="mb-6 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+    <div className="mb-6 flex min-w-0 flex-col gap-4 md:flex-row md:flex-wrap md:items-center md:justify-between">
       <div className="w-full md:max-w-sm">
         <InputField
           id="datatable-search"
@@ -19,7 +19,7 @@ export default function DataTableToolbar({
         />
       </div>
 
-      {children && <div className="flex items-center gap-2">{children}</div>}
+      {children && <div className="flex min-w-0 flex-wrap items-center gap-2 md:justify-end">{children}</div>}
     </div>
   );
 }

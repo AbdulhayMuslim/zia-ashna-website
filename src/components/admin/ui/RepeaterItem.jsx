@@ -1,4 +1,4 @@
-export default function RepeaterItem({ title, children }) {
+export default function RepeaterItem({ title, children, onDelete }) {
   return (
     <div
       className="
@@ -16,6 +16,7 @@ export default function RepeaterItem({ title, children }) {
 
         <button
           type="button"
+          onClick={onDelete}
           className="
             text-sm
             font-medium
@@ -23,6 +24,7 @@ export default function RepeaterItem({ title, children }) {
             transition
             hover:opacity-80
           "
+          disabled={!onDelete}
         >
           Delete
         </button>
