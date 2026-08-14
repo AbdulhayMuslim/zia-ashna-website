@@ -135,7 +135,7 @@ Businesses that embrace AI responsibly today will be better positioned for tomor
 
   {
     id: 5,
-    slug: "education-drives-innovation",
+    slug: "learning-drives-innovation",
 
     image: post5,
     category: "Education",
