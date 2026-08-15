@@ -205,7 +205,7 @@ Successful businesses listen carefully to customer feedback and continuously imp
 
 When customers feel valued, they become loyal advocates who recommend your business to others.
 
-Long-term success is built by creating meaningful experiences that encourage people to return again and again.
+Long-term success is built by creating meaningful experiences, that encourage people to return again and again.
     `,
     status: "published",
     featured: false,
