@@ -231,7 +231,7 @@ Today's audiences value useful content, authentic communication, and brands that
 
 Organizations that consistently share valuable insights and engage with their communities build stronger relationships than those focused only on selling.
 
-Trust is earned through consistency, transparency, and delivering on every promise.
+Trust is earned through consistency, transparency and delivering on every promise.
     `,
     status: "published",
     featured: false,
