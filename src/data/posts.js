@@ -179,7 +179,7 @@ Great cultures encourage people to take ownership, communicate openly, and learn
 
 As businesses grow, maintaining those values becomes just as important as achieving financial results.
 
-Companies with strong cultures attract talented people and create environments where innovation naturally thrives.
+Companies with strong cultures attracts talented people and create environments where innovation naturally thrives.
     `,
     status: "published",
     featured: false,
