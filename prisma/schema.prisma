@@ -68,13 +68,10 @@ model HeroSection {
   id           Int        @id @default(1)
   sectionTitle String     @default("Entrepreneur | Founder") @db.VarChar(120)
   name         String     @default("Sayed Zia Ashna") @db.VarChar(160)
-  designation  String     @default("") @db.VarChar(240)
   description  String     @default("")
   buttonLabel  String     @default("Get In Touch") @db.VarChar(80)
   buttonUrl    String     @default("#contact") @db.VarChar(500)
   heroImageUrl String?    @db.VarChar(1000)
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
   logos        HeroLogo[]
 }
 
