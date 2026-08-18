@@ -8,7 +8,6 @@ const ordered = { sortOrder: z.coerce.number().int().min(0).optional() };
 export const heroSchema = z.object({
   sectionTitle: requiredText(120),
   name: requiredText(160),
-  designation: text(240),
   description: text(5000),
   buttonLabel: text(80),
   buttonUrl: text(500),
@@ -37,7 +36,7 @@ export const historySchema = z.object({
 
 export const contactSchema = z.object({
   sectionTitle: requiredText(120), heading: text(240), description: text(5000),
-  cards: z.array(z.object({ title: requiredText(200), value: text(500), linkUrl: nullableUrl, icon: text(80).optional(), ...ordered })).max(30),
+  cards: z.array(z.object({ title: requiredText(200), icon: text(80).optional(), ...ordered })).max(30),
 });
 
 export const settingsSchema = z.object({

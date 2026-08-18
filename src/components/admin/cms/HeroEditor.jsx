@@ -24,7 +24,6 @@ import { toast } from "@/components/admin/ui/Toast";
 const INITIAL_VALUE = {
   sectionTitle: "Entrepreneur | Founder",
   name: "Sayed Zia Ashna",
-  designation: "",
   description: "",
   buttonLabel: "Get In Touch",
   buttonUrl: "#contact",
@@ -149,7 +148,6 @@ export default function HeroEditor() {
                   <InputField id="sectionTitle" label="Section Title" value={form.sectionTitle} onChange={(event) => update("sectionTitle", event.target.value)} />
                   <InputField id="name" label="Name" value={form.name} onChange={(event) => update("name", event.target.value)} />
                 </div>
-                <InputField id="designation" label="Designation" value={form.designation} onChange={(event) => update("designation", event.target.value)} />
                 <TextareaField id="description" label="Description" rows={6} value={form.description} onChange={(event) => update("description", event.target.value)} />
               </Card>
 

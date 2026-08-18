@@ -1,6 +1,5 @@
-"use client";
-import CmsEditor from "@/components/admin/cms/CmsEditor";
-import { cmsConfigs } from "@/components/admin/cms/config";
+import ContactEditor from "@/components/admin/cms/ContactEditor";
+
 export default function ContactPage() {
-  return <CmsEditor section="contact" title="Contact Section" description="Manage contact content and contact cards." {...cmsConfigs.contact} />;
+  return <ContactEditor />;
 }

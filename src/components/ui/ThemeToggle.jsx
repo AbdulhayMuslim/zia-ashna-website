@@ -12,10 +12,10 @@ export default function ThemeToggle({ className }) {
       type="button"
       onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
       className={cn(
-        "flex h-10 w-10 items-center justify-center border border-gray-200 bg-gray-50 text-gray-600 shadow-sm outline-none transition-colors",
+        "flex h-10 w-10 items-center justify-center border border-gray-300 bg-transparent text-gray-600 shadow-sm outline-none transition-colors rounded-xl",
         "hover:border-brand-primary/40 hover:bg-brand-primary/10 hover:text-brand-primary",
         "focus-visible:ring-2 focus-visible:ring-brand-primary/30",
-        "dark:border-gray-600 dark:bg-gray-900 dark:text-gray-200",
+        "dark:border-gray-600 dark:bg-gray-800 dark:text-orange-400",
         "dark:hover:border-brand-secondary/50 dark:hover:bg-brand-secondary/10 dark:hover:text-brand-secondary",
         "dark:focus-visible:ring-brand-secondary/30",
         className,

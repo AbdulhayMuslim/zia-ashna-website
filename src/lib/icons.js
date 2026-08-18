@@ -16,9 +16,13 @@ import {
   HeartHandshake,
   Laptop,
   Lightbulb,
+  Mail,
+  MapPin,
   Medal,
+  MessageCircle,
   Monitor,
   PenTool,
+  Phone,
   Rocket,
   Shield,
   Sparkles,
@@ -49,9 +53,13 @@ export const ICONS = {
   HeartHandshake,
   Laptop,
   Lightbulb,
+  Mail,
+  MapPin,
   Medal,
+  MessageCircle,
   Monitor,
   PenTool,
+  Phone,
   Rocket,
   Shield,
   Sparkles,
@@ -64,9 +72,8 @@ export const ICONS = {
   Zap,
 };
 
-export const ICON_LIST = Object.entries(ICONS).map(([name, Icon]) => ({
-  name,
-  Icon,
-}));
+export const ICON_LIST = Object.entries(ICONS)
+  .filter(([, Icon]) => Boolean(Icon))
+  .map(([name, Icon]) => ({ name, Icon }));
 
 export const ICON_OPTIONS = ICON_LIST.map(({ name }) => name);

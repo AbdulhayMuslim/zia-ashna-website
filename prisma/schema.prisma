@@ -192,8 +192,6 @@ model ContactSection {
 model ContactCard {
   id        Int            @id @default(autoincrement())
   title     String         @db.VarChar(200)
-  value     String         @default("") @db.VarChar(500)
-  linkUrl   String?        @db.VarChar(1000)
   icon      String?        @db.VarChar(80)
   sortOrder Int            @default(0)
   sectionId Int            @default(1)

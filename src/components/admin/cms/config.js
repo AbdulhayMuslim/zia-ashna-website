@@ -1,8 +1,8 @@
 export const cmsConfigs = {
   hero: {
-    initialValue: { sectionTitle: "Entrepreneur | Founder", name: "Sayed Zia Ashna", designation: "", description: "", buttonLabel: "Get In Touch", buttonUrl: "#contact", heroImageUrl: "", logos: [] },
+    initialValue: { sectionTitle: "Entrepreneur | Founder", name: "Sayed Zia Ashna", description: "", buttonLabel: "Get In Touch", buttonUrl: "#contact", heroImageUrl: "", logos: [] },
     fields: [
-      { key: "sectionTitle", label: "Section Title" }, { key: "name", label: "Name" }, { key: "designation", label: "Designation" },
+      { key: "sectionTitle", label: "Section Title" }, { key: "name", label: "Name" },
       { key: "description", label: "Description", type: "textarea" }, { key: "buttonLabel", label: "Button Label" },
       { key: "buttonUrl", label: "Button URL" }, { key: "heroImageUrl", label: "Hero Image URL" },
     ],
@@ -30,7 +30,7 @@ export const cmsConfigs = {
   contact: {
     initialValue: { sectionTitle: "Contact", heading: "", description: "", cards: [] },
     fields: [{ key: "sectionTitle", label: "Section Title" }, { key: "heading", label: "Heading" }, { key: "description", label: "Description", type: "textarea" }],
-    groups: [{ key: "cards", title: "Contact Cards", itemTitle: "Contact Card", empty: { title: "", value: "", linkUrl: "", icon: "Mail" }, fields: [{ key: "title", label: "Title" }, { key: "value", label: "Value" }, { key: "linkUrl", label: "Link URL" }, { key: "icon", label: "Icon", type: "icon" }] }],
+    groups: [{ key: "cards", title: "Contact Cards", itemTitle: "Contact Card", empty: { title: "", icon: "Mail" }, fields: [{ key: "title", label: "Title" }, { key: "icon", label: "Icon", type: "icon" }] }],
   },
   settings: {
     initialValue: { siteName: "Sayed Zia Ashna", siteDescription: "", logoUrl: "", faviconUrl: "", contactEmail: "", phone: "", address: "", seoTitle: "", seoDescription: "", facebook: "", twitter: "", instagram: "", linkedin: "", youtube: "", copyright: "" },
