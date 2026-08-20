@@ -1,7 +1,7 @@
 import Container from "@/components/ui/Container";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 import { navigationLinks } from "@/data/navigation";
-
+import SocialMedia from "../ui/SocialMedia";
 
 export default function Header() {
   return (
@@ -97,6 +97,7 @@ export default function Header() {
             </ul>
           </nav>
 
+          <SocialMedia />
         </div>
       </Container>
     </header>

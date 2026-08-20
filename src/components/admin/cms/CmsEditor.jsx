@@ -20,7 +20,16 @@ function Field({ field, value, onChange, id }) {
   return <InputField id={id} label={field.label} type={field.type === "email" ? "email" : "text"} value={value ?? ""} placeholder={field.placeholder} onChange={(event) => onChange(event.target.value)} />;
 }
 
-export default function CmsEditor({ section, title, description, initialValue, fields, groups = [] }) {
+export default function CmsEditor({
+  section,
+  title,
+  description,
+  contentTitle = "Content Settings",
+  contentDescription = "This content is stored in PostgreSQL.",
+  initialValue,
+  fields,
+  groups = [],
+}) {
   const [form, setForm] = useState(initialValue);
   const [saved, setSaved] = useState(initialValue);
   const [loading, setLoading] = useState(true);
@@ -73,7 +82,7 @@ export default function CmsEditor({ section, title, description, initialValue, f
   return (
     <PageContainer>
       <PageHeader title={title} description={description} />
-      <FormSection title="Content Settings" description="This content is stored in PostgreSQL.">
+      <FormSection title={contentTitle} description={contentDescription}>
         <div className="grid gap-6">
           {fields.map((field) => <Field key={field.key} field={field} id={`${section}-${field.key}`} value={form[field.key]} onChange={(value) => setField(field.key, value)} />)}
         </div>

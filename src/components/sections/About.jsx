@@ -10,8 +10,6 @@ import {
   GraduationCap,
   BriefcaseBusiness,
   Award,
-
-
   Building2,
 } from "lucide-react";
 
@@ -20,25 +18,19 @@ export default function About() {
 
   const experiences = [
     {
-
-      
-      
       title: "University Professor",
       period: "5+ Years",
-      description:
-        "Delivered higher education courses across Khana Noor University, Mashal University, Jahan University, and Kabul Education University.",
+      description: "4+ Universites.",
     },
     {
       title: "Advisor, IT Administration",
       period: "2018 — 2020",
-      description:
-        "Served at the National Statistics & Information Authority, providing strategic guidance for IT administration and digital initiatives.",
+      description: "National Statistics & Information Authority",
     },
     {
       title: "Director of Telecommunications",
       period: "2021",
-      description:
-        "Led telecommunications operations and development initiatives for Panjshir Province, Afghanistan.",
+      description: "Panjshir Province, Afghanistan.",
     },
   ];
 
@@ -144,18 +136,27 @@ export default function About() {
 
               <div className="flex flex-col gap-6">
                 <div className="border-l-2 border-brand-primary pl-4">
-                  <h4 className="font-semibold text-heading-soft dark:text-heading-dark/90">
-                    Master of Science (MSc) in Data Science
-                  </h4>
+                  <div className="flex items-center justify-between gap-4 mb-2">
+                    <h4 className="font-semibold text-heading-soft dark:text-heading-dark/90">
+                      Master of Science (MSc) in Data Science
+                    </h4>
+
+                    <p className="text-sm text-brand-primary">2026</p>
+                  </div>
+
                   <p className="text-text dark:text-text-dark/70">
                     University of East London (UEL)
                   </p>
                 </div>
 
                 <div className="border-l-2 border-brand-secondary pl-4">
-                  <h4 className="font-semibold text-heading-soft dark:text-heading-dark/90">
-                    Bachelor of Computer Science
-                  </h4>
+                  <div className="flex items-center justify-between gap-4 mb-2">
+                    <h4 className="font-semibold text-heading-soft dark:text-heading-dark/90">
+                      Bachelor of Computer Science
+                    </h4>
+
+                    <p className="text-sm text-brand-primary">2015</p>
+                  </div>
                   <p className="text-text dark:text-text-dark/70">
                     Balkh University, Afghanistan
                   </p>
@@ -219,7 +220,7 @@ export default function About() {
                       </span>
                     </div>
 
-                    <p className="text-sm leading-relaxed text-text dark:text-text-dark/70">
+                    <p className="leading-relaxed text-text dark:text-text-dark/70">
                       {item.description}
                     </p>
                   </div>

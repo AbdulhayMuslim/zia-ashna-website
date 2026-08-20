@@ -1,9 +1,20 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Image from "next/image";
 import { ImagePlus, Trash2 } from "lucide-react";
 import Button from "./Button";
+
+function isValidPreviewSource(source) {
+  if (typeof source !== "string" || !source.trim()) return false;
+  if (source.startsWith("/") || source.startsWith("blob:") || source.startsWith("data:image/")) return true;
+
+  try {
+    const url = new URL(source);
+    return url.protocol === "http:" || url.protocol === "https:";
+  } catch {
+    return false;
+  }
+}
 
 export default function ImageUploadField({
   id,
@@ -22,6 +33,7 @@ export default function ImageUploadField({
   const [localPreview, setLocalPreview] = useState(null);
   const preview = localPreview ??
     (typeof value === "string" ? value : value?.preview || null);
+  const validPreview = isValidPreviewSource(preview);
 
   const handleFileChange = (e) => {
     const file = e.target.files?.[0];
@@ -97,13 +109,14 @@ export default function ImageUploadField({
           onClick={() => !disabled && inputRef.current?.click()}
           className={`${compact ? "min-h-36" : "min-h-72"} flex cursor-pointer items-center justify-center`}
         >
-          {preview ? (
+          {validPreview ? (
             <div className={`relative w-full ${compact ? "h-36" : "h-72"}`}>
-              <Image
+              {/* Upload previews can be blob URLs or user-configured remote URLs. */}
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
                 src={preview}
                 alt="Preview"
-                fill
-                className="object-cover"
+                className="h-full w-full object-cover"
               />
             </div>
           ) : (
@@ -111,7 +124,7 @@ export default function ImageUploadField({
               <ImagePlus className="mx-auto h-10 w-10 text-brand-primary" />
 
               <div>
-                <p className="font-medium">Click to upload an image</p>
+                <p className="font-medium">{preview ? "Current image path is invalid" : "Click to upload an image"}</p>
 
                 {description && (
                   <p className="mt-1 text-sm text-text dark:text-text-dark">

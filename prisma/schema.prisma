@@ -88,16 +88,17 @@ model HeroLogo {
 }
 
 model AboutSection {
-  id           Int              @id @default(1)
-  sectionTitle String           @default("About Me") @db.VarChar(120)
-  role         String           @default("") @db.VarChar(160)
-  heading      String           @default("") @db.VarChar(240)
-  description  String           @default("")
-  createdAt    DateTime         @default(now())
-  updatedAt    DateTime         @updatedAt
-  experiences  ExperienceCard[]
-  education    EducationItem[]
-  certificates Certificate[]
+  id             Int             @id @default(1)
+  sectionTitle   String          @default("About Me") @db.VarChar(120)
+  role           String          @default("") @db.VarChar(160)
+  heading        String          @default("") @db.VarChar(240)
+  description    String          @default("")
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  experiences    ExperienceCard[]
+  jobExperiences JobExperience[]
+  education      EducationItem[]
+  certificates   Certificate[]
 }
 
 model ExperienceCard {
@@ -107,6 +108,18 @@ model ExperienceCard {
   sortOrder Int          @default(0)
   aboutId   Int          @default(1)
   about     AboutSection @relation(fields: [aboutId], references: [id], onDelete: Cascade)
+
+  @@index([aboutId, sortOrder])
+}
+
+model JobExperience {
+  id          Int          @id @default(autoincrement())
+  role        String       @db.VarChar(160)
+  institution String       @db.VarChar(200)
+  year        String       @db.VarChar(80)
+  sortOrder   Int          @default(0)
+  aboutId     Int          @default(1)
+  about       AboutSection @relation(fields: [aboutId], references: [id], onDelete: Cascade)
 
   @@index([aboutId, sortOrder])
 }

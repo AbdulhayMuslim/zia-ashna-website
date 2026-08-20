@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import Image from "next/image";
 import Link from "next/link";
-import { Check, ChevronDown, ExternalLink, FileText, FolderOpen, Loader2, Pencil, Plus, Save, Trash2, X } from "lucide-react";
+import { Check, ChevronDown, ChevronLeft, ChevronRight, ExternalLink, FileText, FolderOpen, Loader2, Pencil, Plus, Save, Trash2, X } from "lucide-react";
 
 import { useAdminCollection } from "@/hooks/useAdminCollection";
 import { posts as demoPosts } from "@/data/posts";
@@ -31,6 +31,7 @@ import { toast } from "@/components/admin/ui/Toast";
 
 const shorten = (value, limit) => value.length > limit ? `${value.slice(0, limit).trimEnd()}…` : value;
 const generateSlug = (value) => value.toLowerCase().trim().replace(/['"]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+const POSTS_PER_PAGE = 10;
 
 function EditPostDrawer({ editor, onClose, onSaved }) {
   const { post, categories, demo } = editor;
@@ -256,6 +257,7 @@ export default function BlogPage() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
 
   const handleDelete = async (post) => {
     if (post._demo) {
@@ -309,6 +311,11 @@ export default function BlogPage() {
       return matchesSearch && matchesStatus && matchesCategory;
     });
   }, [posts, search, statusFilter, categoryFilter]);
+
+  const totalPages = Math.max(1, Math.ceil(filteredPosts.length / POSTS_PER_PAGE));
+  const visiblePage = Math.min(currentPage, totalPages);
+  const pageStart = (visiblePage - 1) * POSTS_PER_PAGE;
+  const paginatedPosts = filteredPosts.slice(pageStart, pageStart + POSTS_PER_PAGE);
 
   const columns = [
     {
@@ -388,19 +395,19 @@ export default function BlogPage() {
       />
 
       <Card
-        title="Content library"
-        description={usingDemoPosts ? "Previewing sample posts from your project. These rows are not stored in the database." : `${posts.length} post${posts.length === 1 ? "" : "s"} in your content library.`}
+        title="Blog post library"
+        description="Review, filter, and manage the posts available in your blog."
       >
         <DataTableToolbar
           search={search}
-          onSearchChange={setSearch}
+          onSearchChange={(value) => { setSearch(value); setCurrentPage(1); }}
           searchPlaceholder="Search blog posts..."
         >
           <div className="flex flex-wrap gap-2 rounded-2xl bg-background p-1 dark:bg-gray-900">
             <Button
               size="sm"
               variant={statusFilter === "all" ? "primary" : "secondary"}
-              onClick={() => setStatusFilter("all")}
+              onClick={() => { setStatusFilter("all"); setCurrentPage(1); }}
             >
               All
             </Button>
@@ -408,7 +415,7 @@ export default function BlogPage() {
             <Button
               size="sm"
               variant={statusFilter === "published" ? "primary" : "secondary"}
-              onClick={() => setStatusFilter("published")}
+              onClick={() => { setStatusFilter("published"); setCurrentPage(1); }}
             >
               Published
             </Button>
@@ -416,39 +423,46 @@ export default function BlogPage() {
             <Button
               size="sm"
               variant={statusFilter === "draft" ? "primary" : "secondary"}
-              onClick={() => setStatusFilter("draft")}
+              onClick={() => { setStatusFilter("draft"); setCurrentPage(1); }}
             >
               Draft
             </Button>
           </div>
 
-          <CategoryFilter value={categoryFilter} categories={categories} counts={categoryCounts} onChange={setCategoryFilter} />
+          <CategoryFilter value={categoryFilter} categories={categories} counts={categoryCounts} onChange={(value) => { setCategoryFilter(value); setCurrentPage(1); }} />
         </DataTableToolbar>
 
         <DataTable
           columns={columns}
-          data={filteredPosts}
+          data={paginatedPosts}
           loading={loading}
           fixedLayout
           emptyTitle="No blog posts found"
           emptyDescription="Create your first blog post to get started."
         />
 
-        <DataTablePagination>
+        <DataTablePagination className="rounded-b-2xl border-border bg-card dark:bg-gray-800">
           <p className="text-sm text-text dark:text-text-dark">
-            Showing {filteredPosts.length} post
-            {filteredPosts.length !== 1 ? "s" : ""}
+            {filteredPosts.length
+              ? `Showing ${pageStart + 1}–${Math.min(pageStart + POSTS_PER_PAGE, filteredPosts.length)} of ${filteredPosts.length} posts`
+              : "No posts to show"}
           </p>
 
-          <div className="flex items-center gap-2">
-            <Button variant="secondary" size="sm" disabled>
-              Previous
-            </Button>
-
-            <Button variant="secondary" size="sm" disabled>
-              Next
-            </Button>
-          </div>
+          {totalPages > 1 && (
+            <nav aria-label="Blog post pagination" className="flex flex-wrap items-center justify-center gap-2">
+              <button type="button" aria-label="Previous page" onClick={() => setCurrentPage((page) => Math.max(1, page - 1))} disabled={visiblePage === 1} className="flex h-11 w-11 items-center justify-center rounded-xl border border-brand-primary/20 bg-bg text-brand-primary duration-300 hover:bg-brand-primary hover:text-white disabled:pointer-events-none disabled:opacity-40 dark:bg-bg-dark dark:text-brand-secondary">
+                <ChevronLeft size={18} />
+              </button>
+              {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
+                <button key={page} type="button" aria-label={`Go to page ${page}`} aria-current={visiblePage === page ? "page" : undefined} onClick={() => setCurrentPage(page)} className={`h-11 w-11 rounded-xl border text-sm font-medium duration-300 ${visiblePage === page ? "border-brand-primary bg-brand-primary text-white" : "border-brand-primary/20 bg-bg text-brand-primary hover:bg-brand-primary hover:text-white dark:bg-bg-dark dark:text-brand-secondary"}`}>
+                  {page}
+                </button>
+              ))}
+              <button type="button" aria-label="Next page" onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))} disabled={visiblePage === totalPages} className="flex h-11 w-11 items-center justify-center rounded-xl border border-brand-primary/20 bg-bg text-brand-primary duration-300 hover:bg-brand-primary hover:text-white disabled:pointer-events-none disabled:opacity-40 dark:bg-bg-dark dark:text-brand-secondary">
+                <ChevronRight size={18} />
+              </button>
+            </nav>
+          )}
         </DataTablePagination>
       </Card>
 

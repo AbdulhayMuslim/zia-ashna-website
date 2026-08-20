@@ -20,6 +20,7 @@ export const heroSchema = z.object({
 export const aboutSchema = z.object({
   sectionTitle: requiredText(120), role: text(160), heading: text(240), description: text(10000),
   experiences: z.array(z.object({ number: requiredText(40), title: requiredText(160), ...ordered })).max(30),
+  jobExperiences: z.array(z.object({ role: requiredText(160), institution: requiredText(200), year: requiredText(80), ...ordered })).max(50),
   education: z.array(z.object({ degree: requiredText(200), institution: requiredText(200), year: requiredText(40), ...ordered })).max(30),
   certificates: z.array(z.object({ name: requiredText(200), ...ordered })).max(50),
 });

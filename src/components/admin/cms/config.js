@@ -9,10 +9,11 @@ export const cmsConfigs = {
     groups: [{ key: "logos", title: "Brand Logos", description: "Logos displayed below the hero.", itemTitle: "Logo", empty: { name: "", imageUrl: "", linkUrl: "" }, fields: [{ key: "name", label: "Name" }, { key: "imageUrl", label: "Image URL" }, { key: "linkUrl", label: "Website URL" }] }],
   },
   about: {
-    initialValue: { sectionTitle: "About Me", role: "", heading: "", description: "", experiences: [], education: [], certificates: [] },
+    initialValue: { sectionTitle: "About Me", role: "", heading: "", description: "", experiences: [], jobExperiences: [], education: [], certificates: [] },
     fields: [{ key: "sectionTitle", label: "Section Title" }, { key: "role", label: "Role" }, { key: "heading", label: "Heading" }, { key: "description", label: "Description", type: "textarea" }],
     groups: [
       { key: "experiences", title: "Experience Cards", itemTitle: "Experience Card", empty: { number: "", title: "" }, fields: [{ key: "number", label: "Number" }, { key: "title", label: "Title" }] },
+      { key: "jobExperiences", title: "Job Experience", itemTitle: "Job", empty: { role: "", institution: "", year: "" }, fields: [{ key: "role", label: "Role" }, { key: "institution", label: "Institution" }, { key: "year", label: "Year" }] },
       { key: "education", title: "Education Degrees", itemTitle: "Degree", empty: { degree: "", institution: "", year: "" }, fields: [{ key: "degree", label: "Degree" }, { key: "institution", label: "Institution" }, { key: "year", label: "Year" }] },
       { key: "certificates", title: "Certificates", itemTitle: "Certificate", empty: { name: "" }, fields: [{ key: "name", label: "Name" }] },
     ],

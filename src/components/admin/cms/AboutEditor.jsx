@@ -28,6 +28,7 @@ const INITIAL_VALUE = {
   heading: "",
   description: "",
   experiences: [],
+  jobExperiences: [],
   education: [],
   certificates: [],
 };
@@ -105,6 +106,7 @@ export default function AboutEditor() {
           ...INITIAL_VALUE,
           ...data,
           experiences: data.experiences ?? [],
+          jobExperiences: data.jobExperiences ?? [],
           education: data.education ?? [],
           certificates: data.certificates ?? [],
         };
@@ -142,6 +144,7 @@ export default function AboutEditor() {
         ...INITIAL_VALUE,
         ...result.data,
         experiences: result.data.experiences ?? [],
+        jobExperiences: result.data.jobExperiences ?? [],
         education: result.data.education ?? [],
         certificates: result.data.certificates ?? [],
       };
@@ -201,6 +204,23 @@ export default function AboutEditor() {
                 ))}
               </div>
             ) : <EmptyCollection icon={BriefcaseBusiness} title="No experience highlights yet" description="Add your first career number or achievement." actionLabel="Add first experience" onAdd={() => addItem("experiences", { number: "", title: "" })} />}
+          </Card>
+
+          <Card header={<CollectionHeader icon={BriefcaseBusiness} title="Job Experience" description="Add the roles, institutions, and years that make up your professional history." actionLabel="Add job" onAdd={() => addItem("jobExperiences", { role: "", institution: "", year: "" })} />}>
+            {form.jobExperiences.length ? (
+              <div className="grid gap-4 lg:grid-cols-2">
+                {form.jobExperiences.map((item, index) => (
+                  <div key={item.id ?? index} className="rounded-2xl border border-border bg-background p-5 dark:bg-gray-900">
+                    <ItemHeading title={item.role || `Job ${index + 1}`} meta={`Position ${index + 1} of ${form.jobExperiences.length}`} onRemove={() => removeItem("jobExperiences", index)} removeLabel={`Delete job ${index + 1}`} />
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      <InputField id={`job-${index}-role`} label="Role" className="sm:col-span-2" value={item.role ?? ""} onChange={(event) => updateItem("jobExperiences", index, "role", event.target.value)} />
+                      <InputField id={`job-${index}-institution`} label="Institution" value={item.institution ?? ""} onChange={(event) => updateItem("jobExperiences", index, "institution", event.target.value)} />
+                      <InputField id={`job-${index}-year`} label="Year" value={item.year ?? ""} onChange={(event) => updateItem("jobExperiences", index, "year", event.target.value)} />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : <EmptyCollection icon={BriefcaseBusiness} title="No job experience yet" description="Add your first role, institution, and year." actionLabel="Add first job" onAdd={() => addItem("jobExperiences", { role: "", institution: "", year: "" })} />}
           </Card>
 
           <Card header={<CollectionHeader icon={GraduationCap} title="Education" description="Keep your academic background clear and easy to scan." actionLabel="Add education" onAdd={() => addItem("education", { degree: "", institution: "", year: "" })} />}>
