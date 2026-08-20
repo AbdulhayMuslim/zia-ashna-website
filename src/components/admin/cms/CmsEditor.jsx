@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import PageContainer from "@/components/admin/layout/PageContainer";
 import PageActions from "@/components/admin/layout/PageActions";
 import PageHeader from "@/components/admin/ui/PageHeader";
@@ -54,6 +54,7 @@ export default function CmsEditor({
     return () => { active = false; };
   }, [section, initialValue]);
 
+  const dirty = useMemo(() => JSON.stringify(form) !== JSON.stringify(saved), [form, saved]);
   const setField = (key, value) => setForm((current) => ({ ...current, [key]: value }));
   const setItem = (groupKey, index, key, value) => setForm((current) => ({
     ...current,
@@ -102,8 +103,8 @@ export default function CmsEditor({
         </FormSection>
       ))}
       <PageActions>
-        <Button type="button" variant="secondary" onClick={() => setForm(saved)}>Reset</Button>
-        <Button type="button" onClick={save} disabled={loading || submitting}>{submitting ? "Saving..." : "Save Changes"}</Button>
+        <Button type="button" variant="secondary" onClick={() => setForm(saved)} disabled={!dirty || submitting}>Reset</Button>
+        <Button type="button" onClick={save} disabled={loading || !dirty || submitting}>{submitting ? "Saving..." : "Save Changes"}</Button>
       </PageActions>
     </PageContainer>
   );

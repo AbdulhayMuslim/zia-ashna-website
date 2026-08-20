@@ -14,6 +14,13 @@ import InputField from "@/components/admin/ui/InputField";
 import TextareaField from "@/components/admin/ui/TextareaField";
 import SelectField from "@/components/admin/ui/SelectField";
 
+const INITIAL_FORM = {
+  name: "",
+  slug: "",
+  description: "",
+  status: "published",
+};
+
 function generateSlug(text) {
   return text
     .toLowerCase()
@@ -25,12 +32,8 @@ function generateSlug(text) {
 
 export default function CreateCategoryPage() {
   const [submitting, setSubmitting] = useState(false);
-  const [form, setForm] = useState({
-    name: "",
-    slug: "",
-    description: "",
-    status: "published",
-  });
+  const [form, setForm] = useState(INITIAL_FORM);
+  const dirty = JSON.stringify(form) !== JSON.stringify(INITIAL_FORM);
 
   const updateField = (key, value) => {
     setForm((prev) => ({
@@ -54,7 +57,7 @@ export default function CreateCategoryPage() {
       if (!response.ok) throw new Error(result.message || "Unable to create category.");
 
       toast.success("Category created successfully.");
-      setForm({ name: "", slug: "", description: "", status: "published" });
+      setForm(INITIAL_FORM);
     } catch (error) {
       toast.error(error.message);
     } finally {
@@ -131,19 +134,13 @@ export default function CreateCategoryPage() {
           <Button
             type="button"
             variant="secondary"
-            onClick={() =>
-              setForm({
-                name: "",
-                slug: "",
-                description: "",
-                status: "published",
-              })
-            }
+            onClick={() => setForm(INITIAL_FORM)}
+            disabled={!dirty || submitting}
           >
             Cancel
           </Button>
 
-          <Button type="submit" disabled={submitting}>
+          <Button type="submit" disabled={!dirty || submitting}>
             {submitting ? "Saving..." : "Create Category"}
           </Button>
         </PageActions>

@@ -17,11 +17,13 @@ export default function MediaPage() {
   const [media, setMedia] = useState([]);
 
   useEffect(() => {
-    fetch("/api/admin/media").then(async (response) => {
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.message);
-      setMedia(result.data ?? []);
-    }).catch((error) => toast.error(error.message));
+    fetch("/api/admin/media")
+      .then(async (response) => {
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.message);
+        setMedia(result.data ?? []);
+      })
+      .catch((error) => toast.error(error.message));
   }, []);
 
   const filteredMedia = useMemo(() => {
@@ -36,7 +38,9 @@ export default function MediaPage() {
   };
 
   const handleDelete = async (id) => {
-    const response = await fetch(`/api/admin/media/${id}`, { method: "DELETE" });
+    const response = await fetch(`/api/admin/media/${id}`, {
+      method: "DELETE",
+    });
     if (!response.ok) return toast.error("Unable to delete media.");
     setMedia((items) => items.filter((item) => item.id !== id));
     toast.success("Media deleted.");
@@ -57,7 +61,7 @@ export default function MediaPage() {
             placeholder="Search media..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full rounded-lg border border-border bg-background px-4 py-2 outline-none focus:ring-2 focus:ring-primary dark:border-border-dark dark:bg-background-dark"
+            className="w-full rounded-lg border border-border bg-background px-4 py-2 outline-none focus:border-brand-primary dark:border-border-dark dark:bg-background-dark"
           />
         </div>
 
@@ -94,22 +98,17 @@ export default function MediaPage() {
                   </div>
 
                   <div className="flex gap-2">
-                    <Button
-                      variant="secondary"
-                      size="sm"
-                      className="flex-1"
-                      onClick={() => handleCopy(item.url)}
-                    >
-                      Copy URL
-                    </Button>
-
                     <ConfirmDialog
                       title="Delete Media"
                       description={`Delete "${item.name}"? This action cannot be undone.`}
                       confirmText="Delete"
                       onConfirm={() => handleDelete(item.id)}
                     >
-                      <Button size="sm" variant="destructive">
+                      <Button
+                        size="sm"
+                        variant="destructive"
+                        className="w-full text-red-400 px-4 py-2 rounded-lg border border-red-200 dark:border-gray-600 hover:border-red-400"
+                      >
                         Delete
                       </Button>
                     </ConfirmDialog>

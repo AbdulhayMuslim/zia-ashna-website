@@ -47,7 +47,7 @@ export default function CreateBlogPostPage() {
     setValue,
     reset,
     control,
-    formState: { errors },
+    formState: { errors, isDirty },
   } = useForm({
     resolver: zodResolver(createBlogSchema),
     defaultValues: {
@@ -65,6 +65,7 @@ export default function CreateBlogPostPage() {
   const featured = useWatch({ control, name: "featured" });
   const status = useWatch({ control, name: "status" });
   const content = useWatch({ control, name: "content" });
+  const hasChanges = isDirty || image !== null;
 
   const handleGenerateSlug = () => {
     setValue("slug", generateSlug(title), {
@@ -239,11 +240,19 @@ export default function CreateBlogPostPage() {
         </div>
 
         <PageActions>
-          <Button type="button" variant="secondary" onClick={() => reset()}>
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={() => {
+              reset();
+              setImage(null);
+            }}
+            disabled={!hasChanges || submitting}
+          >
             Cancel
           </Button>
 
-          <Button type="submit" disabled={submitting}>
+          <Button type="submit" disabled={!hasChanges || submitting}>
             {submitting ? "Saving..." : "Publish Post"}
           </Button>
         </PageActions>
