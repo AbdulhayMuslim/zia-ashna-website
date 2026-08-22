@@ -9,6 +9,7 @@ import {
   BookOpen,
   Images,
   Mail,
+  MessagesSquare,
 } from "lucide-react";
 
 export const adminNav = [
@@ -58,6 +59,12 @@ export const adminNav = [
     href: "/admin/contact",
     icon: Mail,
     description: "Manage contact content and images.",
+  },
+  {
+    title: "Messages",
+    href: "/admin/messages",
+    icon: MessagesSquare,
+    description: "Review contact form submissions.",
   },
   {
     title: "Media Library",

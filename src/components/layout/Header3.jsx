@@ -2,12 +2,15 @@ import Container from "@/components/ui/Container";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 import { navigationLinks } from "@/data/navigation";
 import SocialMedia from "../ui/SocialMedia";
+import Image from "next/image";
+import Link from "next/link";
 
-export default function Header() {
+export default function Header({ settings }) {
   return (
     <header className="fixed inset-x-0 top-0 z-50 overflow-x-clip py-3 sm:py-4">
       <Container className="px-3 sm:px-6 lg:px-8">
         <div className="flex w-full items-center gap-4">
+          {settings?.logoUrl && <Link href="/" aria-label={settings.siteName || "Home"} className="hidden shrink-0 lg:block"><Image src={settings.logoUrl} alt={settings.siteName || "Site logo"} width={120} height={48} className="h-12 w-auto object-contain" priority /></Link>}
           {/* Navigation */}
           <nav
             className="
@@ -97,7 +100,7 @@ export default function Header() {
             </ul>
           </nav>
 
-          <SocialMedia />
+          <SocialMedia settings={settings} />
         </div>
       </Container>
     </header>

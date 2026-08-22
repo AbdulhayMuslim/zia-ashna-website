@@ -16,14 +16,14 @@ export const heroSchema = z.object({
   description: text(5000),
   buttonLabel: text(80),
   buttonUrl: text(500),
-  heroImageUrl: nullableUrl,
+  heroImageUrl: nullableAssetUrl,
   logos: z.array(z.object({
     name: text(120), imageUrl: requiredText(1000), linkUrl: nullableUrl, ...ordered,
   })).max(20),
 });
 
 export const aboutSchema = z.object({
-  sectionTitle: requiredText(120), role: text(160), heading: text(240), description: text(10000),
+  sectionTitle: requiredText(120), role: text(160), heading: text(240), description: text(10000), imageUrl: nullableAssetUrl,
   experiences: z.array(z.object({ number: requiredText(40), title: requiredText(160), ...ordered })).max(30),
   jobExperiences: z.array(z.object({ role: requiredText(160), institution: requiredText(200), year: requiredText(80), ...ordered })).max(50),
   education: z.array(z.object({ degree: requiredText(200), institution: requiredText(200), year: requiredText(40), ...ordered })).max(30),
@@ -50,12 +50,12 @@ export const settingsSchema = z.object({
   contactEmail: z.union([z.literal(""), z.email().max(254)]).optional().nullable(), phone: text(60).optional(), address: text(2000).optional(),
   seoTitle: text(200).optional(), seoDescription: text(1000).optional(), facebook: nullableUrl, twitter: nullableUrl,
   instagram: nullableUrl, linkedin: nullableUrl, youtube: nullableUrl, copyright: text(300).optional(),
+  whatsapp: nullableUrl,
 });
 
 export const profileSchema = z.object({
   fullName: text(160), username: requiredText(100), email: z.union([z.literal(""), z.email().max(254)]).optional().nullable(),
   phone: text(60).optional(), jobTitle: text(160).optional(), avatarUrl: nullableAssetUrl,
-  loginAlerts: z.boolean(), twoFactor: z.boolean(), contentUpdates: z.boolean(),
 });
 
 export const mediaSchema = z.object({

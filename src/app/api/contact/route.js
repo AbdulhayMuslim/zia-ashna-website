@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { databaseErrorResponse } from "@/lib/api-error";
+import { consumeRateLimit, getClientKey } from "@/lib/rate-limit";
 
 const contactSchema = z.object({
   name: z.string().trim().min(3).max(100),
@@ -9,29 +10,14 @@ const contactSchema = z.object({
   message: z.string().trim().min(10).max(5000),
 });
 
-const attempts = new Map();
-const WINDOW_MS = 10 * 60 * 1000;
-const MAX_ATTEMPTS = 5;
-
-function isRateLimited(key) {
-  const now = Date.now();
-  const recent = (attempts.get(key) ?? []).filter(
-    (timestamp) => now - timestamp < WINDOW_MS,
-  );
-  recent.push(now);
-  attempts.set(key, recent);
-  return recent.length > MAX_ATTEMPTS;
-}
-
 export async function POST(request) {
   const contentType = request.headers.get("content-type") ?? "";
   if (!contentType.includes("application/json")) {
     return Response.json({ message: "Unsupported content type." }, { status: 415 });
   }
 
-  const forwardedFor = request.headers.get("x-forwarded-for");
-  const clientKey = forwardedFor?.split(",")[0]?.trim() || "local";
-  if (isRateLimited(clientKey)) {
+  const rateLimit = await consumeRateLimit({ scope: "contact", key: getClientKey(request), limit: 5, windowMs: 10 * 60 * 1000 });
+  if (!rateLimit.allowed) {
     return Response.json(
       { message: "Too many requests. Please try again later." },
       { status: 429 },

@@ -39,23 +39,22 @@ npm start       # serve a completed production build
 
 `npm run check` uses webpack because restricted/container environments can prevent Turbopack from opening the internal port used by its CSS worker.
 
-## Current architecture
+## Architecture
 
 - Public pages are server-rendered or statically generated through the App Router.
-- Blog detail routes are statically generated from `src/data/posts.js`.
+- Public pages, blog posts, metadata, settings, and sitemap entries read from PostgreSQL through Prisma.
 - Admin routes use a signed, HTTP-only, eight-hour session and are guarded by `src/proxy.js`.
-- Contact messages are validated and rate-limited by `src/app/api/contact/route.js`; the third-party endpoint is never exposed to the browser.
+- Contact messages are validated, saved, and database-rate-limited by `src/app/api/contact/route.js`; the third-party endpoint is never exposed to the browser.
+- CMS uploads are compressed and stored in S3-compatible object storage in production. Post featured images are converted to WebP and capped at 2 MB.
 - Metadata, Open Graph values, sitemap, robots rules, manifest, loading, error, and not-found states are implemented under `src/app`.
 
 ## Content persistence
 
-The public content and most admin tables currently use files in `src/data`. Admin editor screens are UI-ready, but their content mutations must be connected to a persistent database before the CMS is considered complete. Use a transactional database such as PostgreSQL and object storage for uploaded media. Every server mutation must verify the admin session, validate its input, and revalidate the affected public route.
-
-Suggested models are `User`, `Post`, `Category`, `Tag`, `Media`, `SiteSettings`, and `SectionContent`. Do not use in-memory state or repository JSON files as production persistence.
+All public content and admin collections use PostgreSQL. Run `npx prisma migrate deploy` during deployment. Configure the S3 variables from `.env.example`; production intentionally rejects uploads when object storage is missing.
 
 ## Deployment checklist
 
-1. Provision the database and object storage, then connect all admin CRUD actions.
+1. Provision PostgreSQL and S3-compatible object storage, then run `npx prisma migrate deploy`.
 2. Set every environment variable in the deployment platform.
 3. Replace or remove social links until verified profile URLs are available.
 4. Run `npm run check`.

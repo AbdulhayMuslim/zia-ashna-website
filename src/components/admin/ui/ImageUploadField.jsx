@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { HardDriveUpload, ImagePlus, Images, Loader2, Trash2, X } from "lucide-react";
 import Button from "./Button";
+import { formatMediaSize, formatMediaType } from "@/lib/media-format";
 
 function isValidPreviewSource(source) {
   if (typeof source !== "string" || !source.trim()) return false;
@@ -25,8 +26,8 @@ export default function ImageUploadField({
   onChange,
   error,
   disabled = false,
-  accept = "image/*",
-  maxSize = 5 * 1024 * 1024,
+  accept = "image/jpeg,image/png,image/webp",
+  maxSize = 2 * 1024 * 1024,
   compact = false,
 }) {
   const inputRef = useRef(null);
@@ -36,9 +37,11 @@ export default function ImageUploadField({
   const [library, setLibrary] = useState([]);
   const [libraryLoading, setLibraryLoading] = useState(false);
   const [libraryError, setLibraryError] = useState("");
+  const [validationError, setValidationError] = useState("");
   const preview = localPreview ??
     (typeof value === "string" ? value : value?.preview || null);
   const validPreview = isValidPreviewSource(preview);
+  const acceptedTypes = accept.split(",").map((type) => type.trim()).filter((type) => type && type !== "image/*");
 
   const handleFileChange = (e) => {
     const file = e.target.files?.[0];
@@ -46,9 +49,18 @@ export default function ImageUploadField({
     if (!file) return;
 
     if (file.size > maxSize) {
-      alert("Image is too large.");
+      setValidationError(`The selected image is too large. Maximum file upload size is ${Math.round(maxSize / 1024 / 1024)} MB.`);
+      e.target.value = "";
       return;
     }
+
+    if (acceptedTypes.length && !acceptedTypes.includes(file.type)) {
+      setValidationError("Unsupported image format. Please upload a PNG, JPG, or WebP image.");
+      e.target.value = "";
+      return;
+    }
+
+    setValidationError("");
 
     const previewUrl = URL.createObjectURL(file);
 
@@ -97,6 +109,15 @@ export default function ImageUploadField({
   };
 
   const chooseLibraryImage = (item) => {
+    if (acceptedTypes.length && !acceptedTypes.includes(item.mimeType)) {
+      setValidationError("Unsupported image format. Please choose a PNG, JPG, or WebP image.");
+      return;
+    }
+    if (item.sizeBytes > maxSize) {
+      setValidationError(`This library image is too large. Maximum file upload size is ${Math.round(maxSize / 1024 / 1024)} MB.`);
+      return;
+    }
+    setValidationError("");
     setLocalPreview(null);
     if (inputRef.current) inputRef.current.value = "";
     onChange?.({ url: item.url, preview: item.url, media: item });
@@ -115,6 +136,7 @@ export default function ImageUploadField({
     }
 
     onChange?.(null);
+    setValidationError("");
   };
 
   useEffect(() => {
@@ -168,11 +190,6 @@ export default function ImageUploadField({
               <div>
                 <p className="font-medium">{preview ? "Current image path is invalid" : "Click to upload an image"}</p>
 
-                {description && (
-                  <p className="mt-1 text-sm text-text dark:text-text-dark">
-                    {description}
-                  </p>
-                )}
               </div>
             </div>
           )}
@@ -208,7 +225,7 @@ export default function ImageUploadField({
         )}
       </div>
 
-      {error && <p className="text-sm text-red-500">{error}</p>}
+      {(error || validationError) && <p role="alert" className="text-sm font-medium text-red-500">{error || validationError}</p>}
 
       <Dialog.Root open={chooserOpen} onOpenChange={setChooserOpen}>
         <Dialog.Portal>
@@ -227,7 +244,7 @@ export default function ImageUploadField({
             <div className="overflow-y-auto p-5 sm:p-6">
               <button type="button" onClick={chooseLocalFile} className="mb-6 flex w-full items-center gap-4 rounded-2xl border border-dashed border-brand-primary/40 bg-brand-primary/5 p-4 text-left transition hover:border-brand-primary hover:bg-brand-primary/10">
                 <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-brand-primary text-white"><HardDriveUpload className="h-5 w-5" /></span>
-                <span><span className="block font-medium text-heading dark:text-heading-dark">Choose from computer</span><span className="mt-1 block text-sm text-text dark:text-text-dark">Upload a new image from local storage.</span></span>
+                <span><span className="block font-medium text-heading dark:text-heading-dark">Choose from computer</span><span className="mt-1 block text-sm text-text dark:text-text-dark">{description || "Upload a new image from local storage."}</span></span>
               </button>
 
               <div className="mb-4 flex items-center gap-2">
@@ -243,10 +260,11 @@ export default function ImageUploadField({
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
                   {library.map((item) => (
                     <button key={item.id} type="button" onClick={() => chooseLibraryImage(item)} className="group/library overflow-hidden rounded-2xl border border-border bg-card text-left transition hover:border-brand-primary hover:ring-2 hover:ring-brand-primary/20 dark:bg-gray-800">
-                      <span className="block aspect-4/3 overflow-hidden bg-muted">
+                      <span className="relative block aspect-4/3 overflow-hidden bg-muted">
                         {/* Media URLs can point to user-uploaded files. */}
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src={item.url} alt={item.name} className="h-full w-full object-cover transition duration-300 group-hover/library:scale-105" />
+                        <span className="absolute inset-x-0 bottom-0 flex translate-y-full items-center justify-between bg-black/75 px-2.5 py-2 text-xs font-medium text-white backdrop-blur-sm transition-transform group-hover/library:translate-y-0 group-focus-visible/library:translate-y-0"><span>{formatMediaType(item.mimeType)}</span><span>{formatMediaSize(item.sizeBytes)}</span></span>
                       </span>
                       <span className="block truncate px-3 py-2 text-sm text-heading dark:text-heading-dark">{item.name}</span>
                     </button>

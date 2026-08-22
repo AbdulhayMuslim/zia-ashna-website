@@ -88,13 +88,14 @@ model HeroLogo {
 }
 
 model AboutSection {
-  id             Int             @id @default(1)
-  sectionTitle   String          @default("About Me") @db.VarChar(120)
-  role           String          @default("") @db.VarChar(160)
-  heading        String          @default("") @db.VarChar(240)
-  description    String          @default("")
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
+  id             Int              @id @default(1)
+  sectionTitle   String           @default("About Me") @db.VarChar(120)
+  role           String           @default("") @db.VarChar(160)
+  heading        String           @default("") @db.VarChar(240)
+  description    String           @default("")
+  imageUrl       String?          @db.VarChar(1000)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
   experiences    ExperienceCard[]
   jobExperiences JobExperience[]
   education      EducationItem[]
@@ -242,6 +243,7 @@ model SiteSettings {
   instagram       String?  @db.VarChar(1000)
   linkedin        String?  @db.VarChar(1000)
   youtube         String?  @db.VarChar(1000)
+  whatsapp        String?  @db.VarChar(1000)
   copyright       String?  @db.VarChar(300)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
@@ -272,4 +274,14 @@ model MediaAsset {
   uploadedAt DateTime @default(now())
 
   @@index([uploadedAt])
+}
+
+model RateLimitEvent {
+  id        BigInt   @id @default(autoincrement())
+  scope     String   @db.VarChar(80)
+  keyHash   String   @db.VarChar(64)
+  createdAt DateTime @default(now())
+
+  @@index([scope, keyHash, createdAt])
+  @@index([createdAt])
 }

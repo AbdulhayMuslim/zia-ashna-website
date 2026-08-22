@@ -18,12 +18,15 @@ import TaxonomyEditDrawer from "@/components/admin/ui/TaxonomyEditDrawer";
 
 import { toast } from "@/components/admin/ui/Toast";
 
+const ITEMS_PER_PAGE = 10;
+
 export default function TagsPage() {
   const { items: tags, remove, replace } = useAdminCollection("tags");
 
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [editingTag, setEditingTag] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
   const filteredTags = useMemo(() => {
     return tags.filter((tag) => {
@@ -37,10 +40,18 @@ export default function TagsPage() {
       return matchesSearch && matchesStatus;
     });
   }, [tags, search, statusFilter]);
+  const totalPages = Math.max(1, Math.ceil(filteredTags.length / ITEMS_PER_PAGE));
+  const visiblePage = Math.min(currentPage, totalPages);
+  const pageStart = (visiblePage - 1) * ITEMS_PER_PAGE;
+  const paginatedTags = filteredTags.slice(pageStart, pageStart + ITEMS_PER_PAGE);
 
   const handleDelete = async (id) => {
-    try { await remove(id); toast.success("Tag deleted."); }
-    catch (error) { toast.error(error.message); }
+    try {
+      await remove(id);
+      toast.success("Tag deleted.");
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   const columns = [
@@ -58,10 +69,6 @@ export default function TagsPage() {
           </div>
         </div>
       ),
-    },
-    {
-      key: "description",
-      label: "Description",
     },
     {
       key: "status",
@@ -118,14 +125,14 @@ export default function TagsPage() {
       <Card>
         <DataTableToolbar
           search={search}
-          onSearchChange={setSearch}
+          onSearchChange={(value) => { setSearch(value); setCurrentPage(1); }}
           searchPlaceholder="Search tags..."
         >
           <div className="flex flex-wrap gap-2">
             <Button
               size="sm"
               variant={statusFilter === "all" ? "primary" : "secondary"}
-              onClick={() => setStatusFilter("all")}
+              onClick={() => { setStatusFilter("all"); setCurrentPage(1); }}
             >
               All
             </Button>
@@ -133,7 +140,7 @@ export default function TagsPage() {
             <Button
               size="sm"
               variant={statusFilter === "published" ? "primary" : "secondary"}
-              onClick={() => setStatusFilter("published")}
+              onClick={() => { setStatusFilter("published"); setCurrentPage(1); }}
             >
               Published
             </Button>
@@ -141,7 +148,7 @@ export default function TagsPage() {
             <Button
               size="sm"
               variant={statusFilter === "draft" ? "primary" : "secondary"}
-              onClick={() => setStatusFilter("draft")}
+              onClick={() => { setStatusFilter("draft"); setCurrentPage(1); }}
             >
               Draft
             </Button>
@@ -150,23 +157,34 @@ export default function TagsPage() {
 
         <DataTable
           columns={columns}
-          data={filteredTags}
+          data={paginatedTags}
           emptyTitle="No tags found"
           emptyDescription="Create your first tag to get started."
         />
 
         <DataTablePagination>
           <p className="text-sm text-text dark:text-text-dark">
-            Showing {filteredTags.length} tag
-            {filteredTags.length === 1 ? "" : "s"}
+            {filteredTags.length ? `Showing ${pageStart + 1}–${Math.min(pageStart + ITEMS_PER_PAGE, filteredTags.length)} of ${filteredTags.length} tags` : "No tags to show"}
           </p>
 
           <div className="flex items-center gap-2">
-            <Button variant="secondary" size="sm" disabled>
+            <Button
+              variant="secondary"
+              size="sm"
+              disabled={visiblePage === 1}
+              onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
+              className="border-gray-400 dark:border-gray-600"
+            >
               Previous
             </Button>
 
-            <Button variant="secondary" size="sm" disabled>
+            <Button
+              variant="secondary"
+              size="sm"
+              disabled={visiblePage === totalPages}
+              onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
+              className="border-gray-400 dark:border-gray-600"
+            >
               Next
             </Button>
           </div>

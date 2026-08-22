@@ -162,7 +162,7 @@ export default function HeroEditor() {
                 </Card>
 
                 <Card title="Hero image" description="Choose the main portrait or artwork from your computer.">
-                  <ImageUploadField id="heroImage" label="Hero Image" description={uploading ? "Uploading image..." : "JPG, PNG, WebP, GIF, or SVG · maximum 5 MB"} value={form.heroImageUrl} onChange={selectHeroImage} disabled={uploading} />
+                  <ImageUploadField id="heroImage" label="Hero Image" description="Max size: 2MB · JPG, PNG, WEBP" value={form.heroImageUrl} onChange={selectHeroImage} disabled={uploading} />
                 </Card>
               </div>
             </div>

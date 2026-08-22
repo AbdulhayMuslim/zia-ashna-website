@@ -2,56 +2,24 @@ import Section from "@/components/ui/Section";
 import Container from "@/components/ui/Container";
 import SectionTitle from "@/components/ui/SectionTitle";
 import FadeUp from "@/components/animations/FadeUp";
-import { Rocket, GraduationCap, Handshake, Sparkles } from "lucide-react";
+import { ICONS } from "@/lib/icons";
 
-const journey = [
-  {
-    icon: Rocket,
-    title: "Founded Asan Technology",
-    metric: "20+ Projects",
-
-    description:
-      "Started a technology company focused on helping businesses grow through modern digital solutions, software development, and digital transformation.",
-  },
-  {
-    icon: GraduationCap,
-    title: "Educational Impact",
-    metric: "500+ Students Reached",
-    description:
-      "Built educational consultancy ventures dedicated to helping students discover better academic and career opportunities.",
-  },
-  {
-    icon: Handshake,
-    title: "Strategic Partnerships",
-    metric: "Growing Business Network",
-    description:
-      "Established long term partnerships and collaborations across industries, creating sustainable opportunities and growth.",
-  },
-  {
-    icon: Sparkles,
-    title: "Building The Future",
-    metric: "Innovation & New Ventures",
-    description:
-      "Continuously exploring new opportunities, investing in innovation, and creating ventures that generate long-term impact.",
-  },
-];
-
-export default function History() {
+export default function History({ data }) {
+  if (!data) return null;
   return (
     <Section id="history">
       <Container>
         <div className="flex flex-col items-center gap-12 lg:gap-16">
           {/* Header */}
           <div className="flex flex-col items-center gap-4 text-center max-w-3xl">
-            <SectionTitle title="History" />
+            <SectionTitle title={data.sectionTitle} />
 
             <h2 className="font-heading text-3xl lg:text-4xl font-bold text-brand-primary dark:text-brand-secondary">
-              Founder Journey
+              {data.heading}
             </h2>
 
             <p className="text-md text-text dark:text-text-dark/70">
-              A path shaped by entrepreneurship, innovation, technology, and
-              creating opportunities for others.
+              {data.description}
             </p>
           </div>
 
@@ -64,12 +32,12 @@ export default function History() {
             <div className="absolute left-1/2 top-0 hidden h-full w-0.75 -translate-x-1/2 rounded-full bg-linear-to-b from-brand-primary via-brand-secondary to-brand-primary lg:block" />
 
             <div className="flex flex-col gap-10">
-              {journey.map((item, index) => {
-                const Icon = item.icon;
+              {data.cards.map((item, index) => {
+                const Icon = ICONS[item.icon] || ICONS.Rocket;
                 const isLeft = index % 2 === 0;
 
                 return (
-                  <FadeUp key={item.title}>
+                  <FadeUp key={item.id}>
                     <div
                       className={`relative flex ${
                         isLeft ? "lg:justify-start" : "lg:justify-end"
@@ -124,12 +92,12 @@ export default function History() {
                           </div>
 
                           <span className="text-sm font-semibold text-brand-primary dark:text-brand-secondary">
-                            {item.metric}
+                            {item.number}
                           </span>
                         </div>
 
                         <h3 className="mb-3 text-xl lg:text-2xl font-bold text-brand-primary dark:text-brand-secondary">
-                          {item.title}
+                          {item.heading}
                         </h3>
 
                         <p className="leading-relaxed text-text dark:text-text-dark/70">

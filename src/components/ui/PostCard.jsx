@@ -56,13 +56,14 @@ export default function PostCard({
       "
     >
       {/* Image */}
-      <div className="overflow-hidden">
-        <Image
+      <div className="relative h-60 overflow-hidden">
+        {image ? <Image
           src={image}
           alt={title || "Blog post"}
           sizes="(max-width:768px)100vw,(max-width:1024px)50vw,400px"
-          className="w-full h-60 object-cover duration-400 group-hover:scale-110"
-        />
+          fill
+          className="object-cover duration-400 group-hover:scale-110"
+        /> : <div className="flex h-full items-center justify-center bg-brand-primary/10 text-sm text-brand-primary">No featured image</div>}
       </div>
 
       {/* Content */}

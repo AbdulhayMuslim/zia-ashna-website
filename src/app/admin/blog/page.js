@@ -7,7 +7,6 @@ import Link from "next/link";
 import { Check, ChevronDown, ChevronLeft, ChevronRight, ExternalLink, FileText, FolderOpen, Loader2, Pencil, Plus, Save, Tags, Trash2, X } from "lucide-react";
 
 import { useAdminCollection } from "@/hooks/useAdminCollection";
-import { posts as demoPosts } from "@/data/posts";
 
 import PageContainer from "@/components/admin/layout/PageContainer";
 
@@ -97,7 +96,7 @@ function DrawerSelect({ id, label, value, options, onChange, icon: Icon }) {
 }
 
 function EditPostDrawer({ editor, onClose, onSaved }) {
-  const { post, categories, tags, demo } = editor;
+  const { post, categories, tags } = editor;
   const initialForm = {
     title: post.title ?? "",
     slug: post.slug ?? "",
@@ -131,15 +130,11 @@ function EditPostDrawer({ editor, onClose, onSaved }) {
       update("featuredImage", null);
       return;
     }
-    if (demo) {
-      update("featuredImage", value.preview);
-      return;
-    }
-
     setUploading(true);
     try {
       const body = new FormData();
       body.append("file", value.file);
+      body.append("purpose", "post");
       const response = await fetch("/api/admin/uploads", { method: "POST", body });
       const result = await response.json();
       if (!response.ok) throw new Error(result.message || "Unable to upload image.");
@@ -154,20 +149,6 @@ function EditPostDrawer({ editor, onClose, onSaved }) {
 
   async function save() {
     if (!dirty) return;
-
-    if (demo) {
-      onSaved({
-        ...post,
-        ...form,
-        tags: form.tagIds.map((tagId) => ({
-          tagId,
-          tag: tags.find((tag) => tag.id === tagId),
-        })),
-      });
-      toast.success("Demo post updated for this preview.");
-      setOpen(false);
-      return;
-    }
 
     setSubmitting(true);
     try {
@@ -256,12 +237,12 @@ function EditPostDrawer({ editor, onClose, onSaved }) {
 
             <section className="space-y-5 rounded-3xl border border-border bg-card p-5 dark:bg-gray-800">
               <div><h3 className="font-semibold text-heading dark:text-heading-dark">Featured image</h3><p className="mt-1 text-sm text-text dark:text-text-dark">Choose the image displayed with this post.</p></div>
-              <ImageUploadField id="drawer-post-image" value={form.featuredImage} onChange={selectFeaturedImage} disabled={uploading} description={uploading ? "Uploading image..." : "JPG, PNG, WebP, GIF, or SVG · maximum 5 MB"} />
+              <ImageUploadField id="drawer-post-image" value={form.featuredImage} onChange={selectFeaturedImage} disabled={uploading} description="Max size: 2MB · JPG, PNG, WEBP" />
             </section>
           </div>
 
           <div className="flex shrink-0 flex-col-reverse gap-3 border-t border-border bg-card p-4 dark:bg-gray-800 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-            {!demo && <Link href={`/admin/blog/${post.id}`} className="inline-flex h-11 items-center justify-center gap-2 rounded-2xl px-4 text-sm font-medium text-text transition hover:bg-brand-primary/10 hover:text-brand-primary dark:text-text-dark"><ExternalLink className="h-4 w-4" /> Open full editor</Link>}
+            <Link href={`/admin/blog/${post.id}`} className="inline-flex h-11 items-center justify-center gap-2 rounded-2xl px-4 text-sm font-medium text-text transition hover:bg-brand-primary/10 hover:text-brand-primary dark:text-text-dark"><ExternalLink className="h-4 w-4" /> Open full editor</Link>
             <div className="flex justify-end gap-2">
               <Button type="button" variant="secondary" onClick={() => setOpen(false)}>Cancel</Button>
               <Button type="button" leftIcon={Save} onClick={save} loading={submitting} disabled={!dirty || uploading}>Save Changes</Button>
@@ -407,7 +388,7 @@ function PostDetailsDialog({ post, onClose, onEdit, onDelete }) {
             <Button type="button" variant="secondary" leftIcon={Pencil} onClick={() => onEdit(post)}>Edit Post</Button>
             <ConfirmDialog
               title="Delete Blog Post"
-              description={post._demo ? `Remove "${post.title}" from this demo preview?` : `Delete "${post.title}"? This action cannot be undone.`}
+              description={`Delete "${post.title}"? This action cannot be undone.`}
               confirmText="Delete"
               onConfirm={() => onDelete(post)}
             >
@@ -424,21 +405,11 @@ export default function BlogPage() {
   const { items: rawPosts, loading, remove, replace } = useAdminCollection("posts");
   const [editor, setEditor] = useState(null);
   const [openingEditor, setOpeningEditor] = useState(null);
-  const [removedDemoPosts, setRemovedDemoPosts] = useState([]);
-  const [editedDemoPosts, setEditedDemoPosts] = useState({});
+  const [updatingStatus, setUpdatingStatus] = useState(null);
   const [selectedPost, setSelectedPost] = useState(null);
-  const usingDemoPosts = !loading && rawPosts.length === 0;
   const posts = useMemo(() => {
-    if (!rawPosts.length && !loading) {
-      return demoPosts
-        .map((post) => {
-          const id = `demo-${post.id}`;
-          return { ...post, ...editedDemoPosts[id], id, _demo: true };
-        })
-        .filter((post) => !removedDemoPosts.includes(post.id));
-    }
     return rawPosts.map((post) => ({ ...post, category: post.category?.name ?? "" }));
-  }, [rawPosts, loading, removedDemoPosts, editedDemoPosts]);
+  }, [rawPosts]);
   const categories = useMemo(() => [...new Set(posts.map((post) => post.category).filter(Boolean))], [posts]);
   const categoryCounts = useMemo(() => posts.reduce((counts, post) => {
     counts.all += 1;
@@ -452,11 +423,6 @@ export default function BlogPage() {
   const [currentPage, setCurrentPage] = useState(1);
 
   const handleDelete = async (post) => {
-    if (post._demo) {
-      setRemovedDemoPosts((current) => [...current, post.id]);
-      toast.success("Demo post removed from this preview.");
-      return true;
-    }
     try {
       await remove(post.id);
       toast.success("Blog post deleted.");
@@ -468,27 +434,6 @@ export default function BlogPage() {
   };
 
   async function openEditor(row) {
-    if (row._demo) {
-      try {
-        const tagResponse = await fetch("/api/admin/tags");
-        const tagResult = await tagResponse.json();
-        setEditor({
-          post: row,
-          demo: true,
-          categories: [...new Set(demoPosts.map((post) => post.category))].map((name) => ({ name, slug: name })),
-          tags: tagResponse.ok ? (tagResult.data ?? []) : [],
-        });
-      } catch {
-        setEditor({
-          post: row,
-          demo: true,
-          categories: [...new Set(demoPosts.map((post) => post.category))].map((name) => ({ name, slug: name })),
-          tags: [],
-        });
-      }
-      return;
-    }
-
     setOpeningEditor(row.id);
     try {
       const [postResponse, categoryResponse, tagResponse] = await Promise.all([
@@ -500,7 +445,7 @@ export default function BlogPage() {
       if (!postResponse.ok) throw new Error(postResult.message || "Unable to load post.");
       if (!categoryResponse.ok) throw new Error(categoryResult.message || "Unable to load categories.");
       if (!tagResponse.ok) throw new Error(tagResult.message || "Unable to load tags.");
-      setEditor({ post: postResult.data, categories: categoryResult.data ?? [], tags: tagResult.data ?? [], demo: false });
+      setEditor({ post: postResult.data, categories: categoryResult.data ?? [], tags: tagResult.data ?? [] });
     } catch (error) {
       toast.error(error.message);
     } finally {
@@ -509,11 +454,50 @@ export default function BlogPage() {
   }
 
   function handleSavedPost(nextPost) {
-    if (nextPost._demo) {
-      setEditedDemoPosts((current) => ({ ...current, [nextPost.id]: nextPost }));
-      return;
-    }
     replace(nextPost);
+  }
+
+  async function togglePostStatus(post) {
+    const status = post.status === "published" ? "draft" : "published";
+
+    setUpdatingStatus(post.id);
+    try {
+      const response = await fetch(`/api/admin/posts/${post.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status }),
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.message || "Unable to update post status.");
+      replace(result.data);
+      toast.success(`Post changed to ${status}.`);
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setUpdatingStatus(null);
+    }
+  }
+
+  function statusToggle(post) {
+    const nextStatus = post.status === "published" ? "draft" : "published";
+    const isUpdating = updatingStatus === post.id;
+
+    return (
+      <button
+        type="button"
+        disabled={isUpdating}
+        aria-label={`Change ${post.title} to ${nextStatus}`}
+        title={`Change to ${nextStatus}`}
+        onClick={(event) => {
+          event.stopPropagation();
+          togglePostStatus(post);
+        }}
+        onKeyDown={(event) => event.stopPropagation()}
+        className="rounded-full outline-none transition hover:brightness-95 focus-visible:ring-2 focus-visible:ring-brand-primary/40 disabled:cursor-wait disabled:opacity-60"
+      >
+        {isUpdating ? <span className="inline-flex items-center rounded-full bg-muted px-3 py-1 text-xs text-text-muted"><Loader2 className="mr-1.5 h-3 w-3 animate-spin" />Updating</span> : <StatusBadge status={post.status} />}
+      </button>
+    );
   }
 
   const filteredPosts = useMemo(() => {
@@ -576,7 +560,7 @@ export default function BlogPage() {
       key: "status",
       label: "Status",
       width: "12%",
-      render: (row) => <StatusBadge status={row.status} />,
+      render: (row) => statusToggle(row),
     },
 
     {
@@ -591,7 +575,7 @@ export default function BlogPage() {
           </button>
           <ConfirmDialog
             title="Delete Blog Post"
-            description={row._demo ? `Remove "${row.title}" from this demo preview?` : `Delete "${row.title}"? This action cannot be undone.`}
+            description={`Delete "${row.title}"? This action cannot be undone.`}
             confirmText="Delete"
             onConfirm={() => handleDelete(row)}
           >
@@ -652,7 +636,7 @@ export default function BlogPage() {
           <CategoryFilter value={categoryFilter} categories={categories} counts={categoryCounts} onChange={(value) => { setCategoryFilter(value); setCurrentPage(1); }} />
         </DataTableToolbar>
 
-        <div className="space-y-3 md:hidden">
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:hidden">
           {loading ? (
             [...Array(3)].map((_, index) => <div key={index} className="h-40 animate-pulse rounded-2xl border border-border bg-muted dark:bg-gray-800" />)
           ) : paginatedPosts.length ? (
@@ -682,19 +666,21 @@ export default function BlogPage() {
                   <h3 className="line-clamp-2 min-h-10 min-w-0 flex-1 text-sm font-semibold leading-5 text-heading dark:text-heading-dark">{post.title}</h3>
                 </div>
 
-                <div className="grid grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-2">
+                <div className="flex items-center justify-between gap-2">
                   <span className="truncate rounded-full bg-brand-primary/10 px-2.5 py-1 text-xs font-medium text-brand-primary">{post.category || "Uncategorized"}</span>
                   <span className="whitespace-nowrap rounded-full bg-muted px-2.5 py-1 text-xs text-text dark:bg-gray-900 dark:text-text-dark">{formatPostDate(post)}</span>
-                  <StatusBadge status={post.status} />
                 </div>
 
-                <div className="flex items-center justify-end gap-2 border-t border-border pt-3" onClick={(event) => event.stopPropagation()} onKeyDown={(event) => event.stopPropagation()}>
-                  <button type="button" onClick={() => openEditor(post)} disabled={openingEditor === post.id} aria-label={`Edit ${post.title}`} title="Edit post" className="flex h-9 w-9 items-center justify-center rounded-xl border border-border text-text transition hover:border-brand-primary/40 hover:bg-brand-primary/10 hover:text-brand-primary disabled:opacity-60 dark:text-text-dark">
-                    {openingEditor === post.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <Pencil className="h-4 w-4" />}
-                  </button>
-                  <ConfirmDialog title="Delete Blog Post" description={post._demo ? `Remove "${post.title}" from this demo preview?` : `Delete "${post.title}"? This action cannot be undone.`} confirmText="Delete" onConfirm={() => handleDelete(post)}>
-                    <button type="button" aria-label={`Delete ${post.title}`} title="Delete post" className="flex h-9 w-9 items-center justify-center rounded-xl border border-border text-red-500 transition hover:border-red-500/30 hover:bg-red-500/10"><Trash2 className="h-4 w-4" /></button>
-                  </ConfirmDialog>
+                <div className="flex items-center justify-between gap-2 border-t border-border pt-3">
+                  {statusToggle(post)}
+                  <div className="flex items-center gap-2" onClick={(event) => event.stopPropagation()} onKeyDown={(event) => event.stopPropagation()}>
+                    <button type="button" onClick={() => openEditor(post)} disabled={openingEditor === post.id} aria-label={`Edit ${post.title}`} title="Edit post" className="flex h-9 w-9 items-center justify-center rounded-xl border border-border text-text transition hover:border-brand-primary/40 hover:bg-brand-primary/10 hover:text-brand-primary disabled:opacity-60 dark:text-text-dark">
+                      {openingEditor === post.id ? <Loader2 className="h-4 w-4 animate-spin" /> : <Pencil className="h-4 w-4" />}
+                    </button>
+                    <ConfirmDialog title="Delete Blog Post" description={`Delete "${post.title}"? This action cannot be undone.`} confirmText="Delete" onConfirm={() => handleDelete(post)}>
+                      <button type="button" aria-label={`Delete ${post.title}`} title="Delete post" className="flex h-9 w-9 items-center justify-center rounded-xl border border-border text-red-500 transition hover:border-red-500/30 hover:bg-red-500/10"><Trash2 className="h-4 w-4" /></button>
+                    </ConfirmDialog>
+                  </div>
                 </div>
               </article>
             ))
@@ -703,7 +689,7 @@ export default function BlogPage() {
           )}
         </div>
 
-        <div className="hidden md:block">
+        <div className="hidden lg:block">
           <DataTable
             columns={columns}
             data={paginatedPosts}
@@ -739,7 +725,7 @@ export default function BlogPage() {
         </DataTablePagination>
       </Card>
 
-      {editor && <EditPostDrawer key={`${editor.demo ? "demo" : "post"}-${editor.post.id}`} editor={editor} onClose={() => setEditor(null)} onSaved={handleSavedPost} />}
+      {editor && <EditPostDrawer key={`post-${editor.post.id}`} editor={editor} onClose={() => setEditor(null)} onSaved={handleSavedPost} />}
       <PostDetailsDialog
         post={selectedPost}
         onClose={() => setSelectedPost(null)}

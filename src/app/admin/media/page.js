@@ -11,6 +11,7 @@ import Button from "@/components/admin/ui/Button";
 import ConfirmDialog from "@/components/admin/ui/ConfirmDialog";
 
 import { toast } from "@/components/admin/ui/Toast";
+import { formatMediaSize, formatMediaType } from "@/lib/media-format";
 
 export default function MediaPage() {
   const [search, setSearch] = useState("");
@@ -58,6 +59,8 @@ export default function MediaPage() {
 
     try {
       for (const file of files) {
+        if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) throw new Error(`${file.name}: supported formats are JPG, PNG, and WebP.`);
+        if (file.size > 2 * 1024 * 1024) throw new Error(`${file.name} is larger than the maximum 2 MB upload limit.`);
         const body = new FormData();
         body.append("file", file);
 
@@ -91,11 +94,11 @@ export default function MediaPage() {
         title="Media Library"
         description="Manage uploaded media files."
         actions={
-          <>
+          <div className="flex flex-col items-start gap-2 lg:items-end">
             <input
               ref={fileInputRef}
               type="file"
-              accept="image/jpeg,image/png,image/webp,image/gif,image/svg+xml"
+              accept="image/jpeg,image/png,image/webp"
               multiple
               className="sr-only"
               onChange={handleUpload}
@@ -107,7 +110,8 @@ export default function MediaPage() {
             >
               Upload Media
             </Button>
-          </>
+            <p className="rounded-full border border-brand-primary/20 bg-brand-primary/5 px-3 py-1.5 text-xs font-medium text-text dark:text-text-dark">Max size: 2MB · JPG, PNG, WEBP</p>
+          </div>
         }
       />
 
@@ -131,13 +135,17 @@ export default function MediaPage() {
             {filteredMedia.map((item) => (
               <Card key={item.id}>
                 <div className="space-y-4">
-                  <div className="relative aspect-4/3 overflow-hidden rounded-lg bg-muted">
+                  <div className="group/media relative aspect-4/3 overflow-hidden rounded-lg bg-muted">
                     <Image
                       src={item.url}
                       alt={item.name}
                       fill
                       className="object-cover"
                     />
+                    <div className="absolute inset-x-0 bottom-0 flex translate-y-full items-center justify-between gap-2 bg-black/75 px-3 py-2 text-xs font-medium text-white backdrop-blur-sm transition-transform group-hover/media:translate-y-0 group-focus-within/media:translate-y-0">
+                      <span>{formatMediaType(item.mimeType)}</span>
+                      <span>{formatMediaSize(item.sizeBytes)}</span>
+                    </div>
                   </div>
 
                   <div>
@@ -146,7 +154,7 @@ export default function MediaPage() {
                     </h3>
 
                     <p className="mt-1 text-sm text-text dark:text-text-dark">
-                      {Math.round(item.sizeBytes / 1024)} KB
+                      {formatMediaSize(item.sizeBytes)} · {formatMediaType(item.mimeType)}
                     </p>
 
                     <p className="text-xs text-text-muted dark:text-text-dark">

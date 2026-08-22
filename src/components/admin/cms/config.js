@@ -41,6 +41,7 @@ export const cmsConfigs = {
       role: "",
       heading: "",
       description: "",
+      imageUrl: "",
       experiences: [],
       jobExperiences: [],
       education: [],
@@ -52,6 +53,7 @@ export const cmsConfigs = {
       { key: "role", label: "Role" },
       { key: "heading", label: "Heading" },
       { key: "description", label: "Description", type: "textarea" },
+      { key: "imageUrl", label: "Profile Image", type: "image", description: "JPG, PNG, or WebP · automatically optimized" },
     ],
 
     groups: [
@@ -211,6 +213,7 @@ export const cmsConfigs = {
       instagram: "",
       linkedin: "",
       youtube: "",
+      whatsapp: "",
       copyright: "",
     },
 
@@ -229,6 +232,7 @@ export const cmsConfigs = {
       { key: "instagram", label: "Instagram URL" },
       { key: "linkedin", label: "LinkedIn URL" },
       { key: "youtube", label: "YouTube URL" },
+      { key: "whatsapp", label: "WhatsApp URL" },
       { key: "copyright", label: "Copyright" },
     ],
 
@@ -243,8 +247,6 @@ export const cmsConfigs = {
       phone: "",
       jobTitle: "",
       avatarUrl: "",
-      loginAlerts: true,
-      contentUpdates: true,
     },
 
     fields: [
@@ -257,10 +259,8 @@ export const cmsConfigs = {
         key: "avatarUrl",
         label: "Profile Image",
         type: "image",
-        description: "JPG, PNG, WebP, GIF, or SVG · maximum 5 MB",
+        description: "Max size: 2MB · JPG, PNG, WEBP",
       },
-      { key: "loginAlerts", label: "Login Alerts", type: "switch" },
-      { key: "contentUpdates", label: "Content Updates", type: "switch" },
     ],
 
     groups: [],

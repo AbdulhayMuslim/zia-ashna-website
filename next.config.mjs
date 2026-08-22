@@ -1,5 +1,12 @@
+const remotePatterns = [];
+if (process.env.S3_PUBLIC_URL) {
+  try { remotePatterns.push(new URL(`${process.env.S3_PUBLIC_URL.replace(/\/$/, "")}/**`)); }
+  catch { /* Invalid storage URLs are reported by the upload endpoint. */ }
+}
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  images: { remotePatterns },
   async headers() {
     return [
       {

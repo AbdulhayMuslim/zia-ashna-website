@@ -82,6 +82,7 @@ export default function CreateBlogPostPage() {
       if (image?.file) {
         const body = new FormData();
         body.append("file", image.file);
+        body.append("purpose", "post");
         const uploadResponse = await fetch("/api/admin/uploads", { method: "POST", body });
         const uploadResult = await uploadResponse.json();
         if (!uploadResponse.ok) throw new Error(uploadResult.message || "Unable to upload image.");
@@ -240,7 +241,7 @@ export default function CreateBlogPostPage() {
                 id="featuredImage"
                 value={image}
                 onChange={setImage}
-                description="Recommended size: 1200 × 800 px"
+                description="Max size: 2MB · JPG, PNG, WEBP"
               />
             </Card>
           </div>

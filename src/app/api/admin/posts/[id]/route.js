@@ -1,7 +1,7 @@
 import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { databaseErrorResponse } from "@/lib/api-error";
 import { prisma } from "@/lib/prisma";
-import { createPostApiSchema } from "@/validations/blog";
+import { createPostApiSchema, updatePostStatusSchema } from "@/validations/blog";
 
 async function getId(params) { const id = Number((await params).id); return Number.isInteger(id) && id > 0 ? id : null; }
 
@@ -25,6 +25,23 @@ export async function PUT(request, { params }) {
       category: { connect: { slug: category } },
       tags: { deleteMany: {}, create: tagIds.map((tagId) => ({ tag: { connect: { id: tagId } } })) },
     }, include: { category: true, tags: { include: { tag: true } } } });
+    return Response.json({ data: post });
+  } catch (error) { return databaseErrorResponse(error); }
+}
+
+export async function PATCH(request, { params }) {
+  if (!(await isAdminAuthenticated())) return Response.json({ message: "Unauthorized." }, { status: 401 });
+  const id = await getId(params); const result = updatePostStatusSchema.safeParse(await request.json().catch(() => null));
+  if (!id || !result.success) return Response.json({ message: "Invalid post status." }, { status: 400 });
+  try {
+    const post = await prisma.post.update({
+      where: { id },
+      data: {
+        status: result.data.status,
+        publishedAt: result.data.status === "published" ? new Date() : null,
+      },
+      include: { category: true, tags: { include: { tag: true } } },
+    });
     return Response.json({ data: post });
   } catch (error) { return databaseErrorResponse(error); }
 }

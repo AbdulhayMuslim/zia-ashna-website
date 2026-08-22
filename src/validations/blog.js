@@ -37,3 +37,7 @@ export const createBlogSchema = z.object({
 export const createPostApiSchema = createBlogSchema.extend({
   tagIds: z.array(z.coerce.number().int().positive()).max(20).default([]),
 });
+
+export const updatePostStatusSchema = z.object({
+  status: z.enum(["draft", "published"]),
+});

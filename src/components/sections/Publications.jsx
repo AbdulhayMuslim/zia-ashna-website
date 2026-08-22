@@ -3,11 +3,10 @@ import Container from "@/components/ui/Container";
 import SectionTitle from "../ui/SectionTitle";
 import PostCard from "../ui/PostCard";
 import FadeRight from "../animations/FadeRight";
-import { posts } from "@/data/posts";
 import Link from "next/link";
 import { ArrowRightCircle } from "lucide-react";
 
-export default function Publications() {
+export default function Publications({ posts = [] }) {
   const visiblePosts = posts.slice(0, 4);
 
   return (
