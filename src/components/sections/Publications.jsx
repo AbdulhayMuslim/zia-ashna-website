@@ -1,6 +1,3 @@
-"use client";
-
-import { useMediaQuery } from "usehooks-ts";
 import Section from "@/components/ui/Section";
 import Container from "@/components/ui/Container";
 import SectionTitle from "../ui/SectionTitle";
@@ -11,14 +8,7 @@ import Link from "next/link";
 import { ArrowRightCircle } from "lucide-react";
 
 export default function Publications() {
-  const isDesktop = useMediaQuery("(min-width: 1024px)");
-  const isTablet = useMediaQuery("(min-width: 640px) and (max-width: 1023px)");
-
-  const visiblePosts = isDesktop
-    ? posts.slice(0, 3)
-    : isTablet
-      ? posts.slice(0, 4)
-      : posts.slice(0, 3);
+  const visiblePosts = posts.slice(0, 4);
 
   return (
     <Section
@@ -42,17 +32,25 @@ export default function Publications() {
           
         "
         >
-          {visiblePosts.map((post) => (
-            <PostCard
+          {visiblePosts.map((post, index) => (
+            <div
               key={post.id}
-              image={post.image}
-              category={post.category}
-              date={post.date}
-              title={post.title}
-              text={post.excerpt}
-              btn="Read Article"
-              href={`/blog/${post.slug}`}
-            />
+              className={
+                index === 3
+                  ? "hidden h-full sm:block lg:hidden [&>a]:h-full"
+                  : "h-full [&>a]:h-full"
+              }
+            >
+              <PostCard
+                image={post.image}
+                category={post.category}
+                date={post.date}
+                title={post.title}
+                text={post.excerpt}
+                btn="Read Article"
+                href={`/blog/${post.slug}`}
+              />
+            </div>
           ))}
         </FadeRight>
 

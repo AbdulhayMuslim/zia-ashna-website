@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { LogOut, PanelLeftClose, PanelLeftOpen, X } from "lucide-react";
+import { ChevronDown, LogOut, PanelLeftClose, PanelLeftOpen, X } from "lucide-react";
 
 import { adminNav, cmsConfig } from "@/data/admin-nav";
 import cn from "@/utils/cn";
@@ -90,10 +90,22 @@ export default function AdminSidebar({ sidebarOpen, setSidebarOpen, collapsed, o
           <ul className="space-y-2">
             {adminNav.map((item) => {
               const Icon = item.icon;
-              const active = pathname === item.href;
+              const hasChildren = Boolean(item.children?.length);
+              const childActive = item.children?.some(
+                (child) =>
+                  pathname === child.href || pathname.startsWith(`${child.href}/`),
+              );
+              const active = pathname === item.href || childActive;
 
               return (
-                <li key={item.href}>
+                <li
+                  key={item.href}
+                  className={cn(
+                    hasChildren && "group/nav-item",
+                    item.dividerBefore &&
+                      "mt-4 border-t border-gray-200 pt-4 dark:border-gray-700",
+                  )}
+                >
                   <Link
                     href={item.href}
                     onClick={() => setSidebarOpen(false)}
@@ -108,8 +120,52 @@ export default function AdminSidebar({ sidebarOpen, setSidebarOpen, collapsed, o
                     )}
                   >
                     <Icon className="h-5 w-5 shrink-0" />
-                    <span className={cn(collapsed && "lg:hidden")}>{item.title}</span>
+                    <span className={cn("flex-1", collapsed && "lg:hidden")}>{item.title}</span>
+                    {hasChildren && (
+                      <ChevronDown
+                        className={cn(
+                          "h-4 w-4 shrink-0 transition-transform duration-300 group-hover/nav-item:rotate-180 group-focus-within/nav-item:rotate-180",
+                          childActive && "rotate-180",
+                          collapsed && "lg:hidden",
+                        )}
+                      />
+                    )}
                   </Link>
+
+                  {hasChildren && (
+                    <div
+                      className={cn(
+                        "grid grid-rows-[0fr] -translate-y-2 opacity-0 transition-[grid-template-rows,opacity,transform] duration-300 ease-out group-hover/nav-item:grid-rows-[1fr] group-hover/nav-item:translate-y-0 group-hover/nav-item:opacity-100 group-focus-within/nav-item:grid-rows-[1fr] group-focus-within/nav-item:translate-y-0 group-focus-within/nav-item:opacity-100",
+                        childActive && "grid-rows-[1fr] translate-y-0 opacity-100",
+                        collapsed && "lg:hidden",
+                      )}
+                    >
+                      <ul className="min-h-0 space-y-1 overflow-hidden pt-2 pl-8">
+                        {item.children.map((child) => {
+                          const activeChild =
+                            pathname === child.href ||
+                            pathname.startsWith(`${child.href}/`);
+
+                          return (
+                            <li key={child.href}>
+                              <Link
+                                href={child.href}
+                                onClick={() => setSidebarOpen(false)}
+                                className={cn(
+                                  "block rounded-lg px-4 py-2 text-sm transition-colors",
+                                  activeChild
+                                    ? "bg-brand-primary/10 font-medium text-brand-primary dark:bg-brand-primary/15"
+                                    : "text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white",
+                                )}
+                              >
+                                {child.title}
+                              </Link>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </div>
+                  )}
                 </li>
               );
             })}

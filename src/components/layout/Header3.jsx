@@ -5,34 +5,34 @@ import SocialMedia from "../ui/SocialMedia";
 
 export default function Header() {
   return (
-    <header className="fixed top-0 left-0 z-50 w-full py-4">
-      <Container>
-        <div className="flex items-center justify-between gap-4">
+    <header className="fixed inset-x-0 top-0 z-50 overflow-x-clip py-3 sm:py-4">
+      <Container className="px-3 sm:px-6 lg:px-8">
+        <div className="flex w-full items-center gap-4">
           {/* Navigation */}
           <nav
             className="
-              flex-1
+              w-full min-w-0 lg:w-auto lg:flex-1
 
               rounded-full
               border border-black/5 dark:border-white/10
 
-              bg-gray-200/60
-              dark:bg-black/30
+              bg-gray-200/60 shadow-lg shadow-black/5
+              dark:bg-black/30 dark:shadow-black/20
 
-              backdrop-blur-sm
+              backdrop-blur-md
 
-              px-2
-              xsm:px-4
+              px-1.5
+              sm:px-4
               py-2
               md:py-4
             "
           >
-            <ul className="flex items-center justify-between">
+            <ul className="flex min-w-0 items-center justify-between">
               {navigationLinks.map((item) => {
                 const Icon = item.icon;
 
                 return (
-                  <li key={item.href}>
+                  <li key={item.href} className="flex min-w-0 flex-1 lg:flex-none">
                     <a
                       href={item.href}
                       aria-label={item.label}
@@ -40,11 +40,11 @@ export default function Header() {
                       className="
                         group
 
-                        flex items-center gap-2
+                        mx-auto flex items-center justify-center gap-2
 
                         rounded-full
 
-                        px-2 lg:px-4
+                        px-1.5 sm:px-3 lg:px-4
                         py-2
 
                         text-sm
@@ -55,7 +55,7 @@ export default function Header() {
                         hover:bg-brand-primary/20
 
                         outline-none
-                       
+
                       "
                     >
                       <Icon
@@ -91,7 +91,7 @@ export default function Header() {
               })}
 
               {/* Theme Toggle */}
-              <li>
+              <li className="flex min-w-0 flex-1 justify-center lg:flex-none">
                 <ThemeToggle />
               </li>
             </ul>

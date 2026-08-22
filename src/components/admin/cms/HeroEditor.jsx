@@ -76,6 +76,7 @@ export default function HeroEditor() {
   }
 
   async function selectHeroImage(value) {
+    if (value?.url) return update("heroImageUrl", value.url);
     if (!value?.file) return update("heroImageUrl", "");
     setUploading(true);
     try {
@@ -86,6 +87,7 @@ export default function HeroEditor() {
   }
 
   async function selectLogoImage(index, value) {
+    if (value?.url) return updateLogo(index, "imageUrl", value.url);
     if (!value?.file) return updateLogo(index, "imageUrl", "");
     setUploading(true);
     try {

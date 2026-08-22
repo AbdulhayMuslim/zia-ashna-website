@@ -21,5 +21,13 @@ export async function DELETE(_request, { params }) {
   if (!(await isAdminAuthenticated())) return Response.json({ message: "Unauthorized." }, { status: 401 });
   const id = await getId(params); if (!id) return Response.json({ message: "Invalid ID." }, { status: 400 });
   try { await prisma.category.delete({ where: { id } }); return new Response(null, { status: 204 }); }
-  catch (error) { return databaseErrorResponse(error); }
+  catch (error) {
+    if (error?.code === "P2003") {
+      return Response.json(
+        { message: "This category is assigned to one or more posts. Reassign those posts before deleting it." },
+        { status: 409 },
+      );
+    }
+    return databaseErrorResponse(error);
+  }
 }

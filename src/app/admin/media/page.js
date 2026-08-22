@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 
 import PageContainer from "@/components/admin/layout/PageContainer";
@@ -15,6 +15,8 @@ import { toast } from "@/components/admin/ui/Toast";
 export default function MediaPage() {
   const [search, setSearch] = useState("");
   const [media, setMedia] = useState([]);
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     fetch("/api/admin/media")
@@ -46,12 +48,67 @@ export default function MediaPage() {
     toast.success("Media deleted.");
   };
 
+  const handleUpload = async (event) => {
+    const input = event.currentTarget;
+    const files = Array.from(event.target.files ?? []);
+    if (!files.length) return;
+
+    setUploading(true);
+    let uploadedCount = 0;
+
+    try {
+      for (const file of files) {
+        const body = new FormData();
+        body.append("file", file);
+
+        const response = await fetch("/api/admin/uploads", {
+          method: "POST",
+          body,
+        });
+        const result = await response.json();
+        if (!response.ok) {
+          throw new Error(result.message || `Unable to upload ${file.name}.`);
+        }
+
+        setMedia((current) => [result.data, ...current]);
+        uploadedCount += 1;
+      }
+
+      toast.success(
+        `${uploadedCount} media file${uploadedCount === 1 ? "" : "s"} uploaded.`,
+      );
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setUploading(false);
+      input.value = "";
+    }
+  };
+
   return (
     <PageContainer>
       <PageHeader
         title="Media Library"
         description="Manage uploaded media files."
-        actions={<Button>Upload Media</Button>}
+        actions={
+          <>
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/jpeg,image/png,image/webp,image/gif,image/svg+xml"
+              multiple
+              className="sr-only"
+              onChange={handleUpload}
+            />
+            <Button
+              loading={uploading}
+              disabled={uploading}
+              onClick={() => fileInputRef.current?.click()}
+            >
+              Upload Media
+            </Button>
+          </>
+        }
       />
 
       <Card>

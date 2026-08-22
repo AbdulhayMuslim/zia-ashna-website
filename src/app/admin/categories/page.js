@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { Pencil, Trash2 } from "lucide-react";
 import { useAdminCollection } from "@/hooks/useAdminCollection";
 
 import PageContainer from "@/components/admin/layout/PageContainer";
@@ -11,19 +11,19 @@ import Card from "@/components/admin/ui/Card";
 import Button from "@/components/admin/ui/Button";
 import StatusBadge from "@/components/admin/ui/StatusBadge";
 import ConfirmDialog from "@/components/admin/ui/ConfirmDialog";
-import ActionMenu from "@/components/admin/ui/ActionMenu";
 import DataTable from "@/components/admin/ui/DataTable/DataTable";
 import DataTableToolbar from "@/components/admin/ui/DataTable/DataTableToolbar";
 import DataTablePagination from "@/components/admin/ui/DataTable/DataTablePagination";
+import TaxonomyEditDrawer from "@/components/admin/ui/TaxonomyEditDrawer";
 
 import { toast } from "@/components/admin/ui/Toast";
 
 export default function CategoriesPage() {
-  const router = useRouter();
-  const { items: categories, remove } = useAdminCollection("categories");
+  const { items: categories, remove, replace } = useAdminCollection("categories");
 
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [editingCategory, setEditingCategory] = useState(null);
 
   const filteredCategories = useMemo(() => {
     return categories.filter((category) => {
@@ -39,8 +39,12 @@ export default function CategoriesPage() {
   }, [categories, search, statusFilter]);
 
   const handleDelete = async (id) => {
-    try { await remove(id); toast.success("Category deleted."); }
-    catch (error) { toast.error(error.message); }
+    try {
+      await remove(id);
+      toast.success("Category deleted.");
+    } catch (error) {
+      toast.error(error.message);
+    }
   };
 
   const columns = [
@@ -61,11 +65,6 @@ export default function CategoriesPage() {
     },
 
     {
-      key: "description",
-      label: "Description",
-    },
-
-    {
       key: "status",
       label: "Status",
       render: (row) => <StatusBadge status={row.status} />,
@@ -76,17 +75,30 @@ export default function CategoriesPage() {
       label: "Actions",
       align: "right",
       render: (row) => (
-        <div className="flex justify-end">
+        <div className="flex items-center justify-end gap-2">
+          <button
+            type="button"
+            onClick={() => setEditingCategory(row)}
+            aria-label={`Edit ${row.name}`}
+            title="Edit category"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-border text-text transition hover:border-brand-primary/40 hover:bg-brand-primary/10 hover:text-brand-primary dark:text-text-dark"
+          >
+            <Pencil className="h-4 w-4" />
+          </button>
           <ConfirmDialog
             title="Delete Category"
             description={`Delete "${row.name}"? This action cannot be undone.`}
             confirmText="Delete"
             onConfirm={() => handleDelete(row.id)}
           >
-            <ActionMenu
-              onEdit={() => router.push(`/admin/categories/${row.id}`)}
-              onDelete={(e) => e?.preventDefault?.()}
-            />
+            <button
+              type="button"
+              aria-label={`Delete ${row.name}`}
+              title="Delete category"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-red-500/25 text-red-500 transition hover:border-red-500/50 hover:bg-red-500/10"
+            >
+              <Trash2 className="h-4 w-4" />
+            </button>
           </ConfirmDialog>
         </div>
       ),
@@ -162,6 +174,16 @@ export default function CategoriesPage() {
           </div>
         </DataTablePagination>
       </Card>
+
+      {editingCategory && (
+        <TaxonomyEditDrawer
+          key={editingCategory.id}
+          item={editingCategory}
+          type="categories"
+          onClose={() => setEditingCategory(null)}
+          onSaved={replace}
+        />
+      )}
     </PageContainer>
   );
 }

@@ -11,13 +11,11 @@ import PageHeader from "@/components/admin/ui/PageHeader";
 import Card from "@/components/admin/ui/Card";
 import Button from "@/components/admin/ui/Button";
 import InputField from "@/components/admin/ui/InputField";
-import TextareaField from "@/components/admin/ui/TextareaField";
 import SelectField from "@/components/admin/ui/SelectField";
 
 const INITIAL_FORM = {
   name: "",
   slug: "",
-  description: "",
   status: "published",
 };
 
@@ -54,7 +52,8 @@ export default function CreateTagPage() {
       });
       const result = await response.json();
 
-      if (!response.ok) throw new Error(result.message || "Unable to create tag.");
+      if (!response.ok)
+        throw new Error(result.message || "Unable to create tag.");
 
       toast.success("Tag created successfully.");
       setForm(INITIAL_FORM);
@@ -99,14 +98,6 @@ export default function CreateTagPage() {
                 Generate
               </Button>
             </div>
-
-            <TextareaField
-              id="description"
-              label="Description"
-              rows={5}
-              value={form.description}
-              onChange={(e) => updateField("description", e.target.value)}
-            />
 
             <SelectField
               id="status"

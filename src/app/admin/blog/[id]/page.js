@@ -54,9 +54,18 @@ export default function EditBlogPostPage() {
   }, [id]);
 
   async function save() {
+    let featuredImage = typeof image === "string" ? image : image?.url ?? null;
+    if (image?.file) {
+      const body = new FormData();
+      body.append("file", image.file);
+      const uploadResponse = await fetch("/api/admin/uploads", { method: "POST", body });
+      const uploadResult = await uploadResponse.json();
+      if (!uploadResponse.ok) return toast.error(uploadResult.message || "Unable to upload image.");
+      featuredImage = uploadResult.data.url;
+    }
     const response = await fetch(`/api/admin/posts/${id}`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({
       title, slug, category, excerpt, content, status, featured,
-      featuredImage: typeof image === "string" ? image : null,
+      featuredImage,
       tagIds: post.tags?.map((entry) => entry.tagId) ?? [],
     }) });
     const result = await response.json();

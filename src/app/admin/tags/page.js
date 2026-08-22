@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { Pencil, Trash2 } from "lucide-react";
 import { useAdminCollection } from "@/hooks/useAdminCollection";
 
 import PageContainer from "@/components/admin/layout/PageContainer";
@@ -11,19 +11,19 @@ import Card from "@/components/admin/ui/Card";
 import Button from "@/components/admin/ui/Button";
 import StatusBadge from "@/components/admin/ui/StatusBadge";
 import ConfirmDialog from "@/components/admin/ui/ConfirmDialog";
-import ActionMenu from "@/components/admin/ui/ActionMenu";
 import DataTable from "@/components/admin/ui/DataTable/DataTable";
 import DataTableToolbar from "@/components/admin/ui/DataTable/DataTableToolbar";
 import DataTablePagination from "@/components/admin/ui/DataTable/DataTablePagination";
+import TaxonomyEditDrawer from "@/components/admin/ui/TaxonomyEditDrawer";
 
 import { toast } from "@/components/admin/ui/Toast";
 
 export default function TagsPage() {
-  const router = useRouter();
-  const { items: tags, remove } = useAdminCollection("tags");
+  const { items: tags, remove, replace } = useAdminCollection("tags");
 
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [editingTag, setEditingTag] = useState(null);
 
   const filteredTags = useMemo(() => {
     return tags.filter((tag) => {
@@ -73,17 +73,30 @@ export default function TagsPage() {
       label: "Actions",
       align: "right",
       render: (row) => (
-        <div className="flex justify-end">
+        <div className="flex items-center justify-end gap-2">
+          <button
+            type="button"
+            onClick={() => setEditingTag(row)}
+            aria-label={`Edit ${row.name}`}
+            title="Edit tag"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-border text-text transition hover:border-brand-primary/40 hover:bg-brand-primary/10 hover:text-brand-primary dark:text-text-dark"
+          >
+            <Pencil className="h-4 w-4" />
+          </button>
           <ConfirmDialog
             title="Delete Tag"
             description={`Delete "${row.name}"? This action cannot be undone.`}
             confirmText="Delete"
             onConfirm={() => handleDelete(row.id)}
           >
-            <ActionMenu
-              onEdit={() => router.push(`/admin/tags/${row.id}`)}
-              onDelete={(e) => e?.preventDefault?.()}
-            />
+            <button
+              type="button"
+              aria-label={`Delete ${row.name}`}
+              title="Delete tag"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-red-500/25 text-red-500 transition hover:border-red-500/50 hover:bg-red-500/10"
+            >
+              <Trash2 className="h-4 w-4" />
+            </button>
           </ConfirmDialog>
         </div>
       ),
@@ -159,6 +172,16 @@ export default function TagsPage() {
           </div>
         </DataTablePagination>
       </Card>
+
+      {editingTag && (
+        <TaxonomyEditDrawer
+          key={editingTag.id}
+          item={editingTag}
+          type="tags"
+          onClose={() => setEditingTag(null)}
+          onSaved={replace}
+        />
+      )}
     </PageContainer>
   );
 }

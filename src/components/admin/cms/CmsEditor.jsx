@@ -9,13 +9,15 @@ import RepeaterItem from "@/components/admin/ui/RepeaterItem";
 import InputField from "@/components/admin/ui/InputField";
 import TextareaField from "@/components/admin/ui/TextareaField";
 import IconField from "@/components/admin/ui/IconField";
+import ImageUploadField from "@/components/admin/ui/ImageUploadField";
 import SwitchField from "@/components/admin/ui/SwitchField";
 import Button from "@/components/admin/ui/Button";
 import { toast } from "@/components/admin/ui/Toast";
 
-function Field({ field, value, onChange, id }) {
+function Field({ field, value, onChange, id, disabled = false }) {
   if (field.type === "textarea") return <TextareaField id={id} label={field.label} rows={field.rows ?? 5} value={value ?? ""} onChange={(event) => onChange(event.target.value)} />;
   if (field.type === "icon") return <IconField id={id} label={field.label} value={value ?? ""} onChange={(event) => onChange(event?.target?.value ?? event)} />;
+  if (field.type === "image") return <ImageUploadField id={id} label={field.label} description={disabled ? "Uploading image..." : field.description} value={value ?? ""} onChange={onChange} disabled={disabled} />;
   if (field.type === "switch") return <SwitchField id={id} label={field.label} checked={Boolean(value)} onChange={onChange} />;
   return <InputField id={id} label={field.label} type={field.type === "email" ? "email" : "text"} value={value ?? ""} placeholder={field.placeholder} onChange={(event) => onChange(event.target.value)} />;
 }
@@ -34,6 +36,7 @@ export default function CmsEditor({
   const [saved, setSaved] = useState(initialValue);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     let active = true;
@@ -56,6 +59,26 @@ export default function CmsEditor({
 
   const dirty = useMemo(() => JSON.stringify(form) !== JSON.stringify(saved), [form, saved]);
   const setField = (key, value) => setForm((current) => ({ ...current, [key]: value }));
+  const setFieldValue = async (field, value) => {
+    if (field.type !== "image") return setField(field.key, value);
+    if (value?.url) return setField(field.key, value.url);
+    if (!value?.file) return setField(field.key, "");
+
+    setUploading(true);
+    try {
+      const body = new FormData();
+      body.append("file", value.file);
+      const response = await fetch("/api/admin/uploads", { method: "POST", body });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.message || "Unable to upload image.");
+      setField(field.key, result.data.url);
+      toast.success("Profile image uploaded.");
+    } catch (error) {
+      toast.error(error.message);
+    } finally {
+      setUploading(false);
+    }
+  };
   const setItem = (groupKey, index, key, value) => setForm((current) => ({
     ...current,
     [groupKey]: current[groupKey].map((item, itemIndex) => itemIndex === index ? { ...item, [key]: value } : item),
@@ -72,6 +95,9 @@ export default function CmsEditor({
       const next = { ...initialValue, ...result.data };
       setForm(next);
       setSaved(next);
+      if (section === "profile") {
+        window.dispatchEvent(new CustomEvent("admin-profile-updated", { detail: next }));
+      }
       toast.success("Changes saved to the database.");
     } catch (error) {
       toast.error(error.message);
@@ -85,7 +111,7 @@ export default function CmsEditor({
       <PageHeader title={title} description={description} />
       <FormSection title={contentTitle} description={contentDescription}>
         <div className="grid gap-6">
-          {fields.map((field) => <Field key={field.key} field={field} id={`${section}-${field.key}`} value={form[field.key]} onChange={(value) => setField(field.key, value)} />)}
+          {fields.map((field) => <Field key={field.type === "image" ? `${field.key}-${form[field.key]}` : field.key} field={field} id={`${section}-${field.key}`} value={form[field.key]} onChange={(value) => setFieldValue(field, value)} disabled={field.type === "image" && uploading} />)}
         </div>
       </FormSection>
       {groups.map((group) => (
@@ -103,8 +129,8 @@ export default function CmsEditor({
         </FormSection>
       ))}
       <PageActions>
-        <Button type="button" variant="secondary" onClick={() => setForm(saved)} disabled={!dirty || submitting}>Reset</Button>
-        <Button type="button" onClick={save} disabled={loading || !dirty || submitting}>{submitting ? "Saving..." : "Save Changes"}</Button>
+        <Button type="button" variant="secondary" onClick={() => setForm(saved)} disabled={!dirty || submitting || uploading}>Reset</Button>
+        <Button type="button" onClick={save} disabled={loading || !dirty || submitting || uploading}>{submitting ? "Saving..." : "Save Changes"}</Button>
       </PageActions>
     </PageContainer>
   );

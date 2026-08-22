@@ -7,6 +7,7 @@ import {
   Activity,
   History,
   BookOpen,
+  Images,
   Mail,
 } from "lucide-react";
 
@@ -46,12 +47,24 @@ export const adminNav = [
     href: "/admin/blog",
     icon: BookOpen,
     description: "Manage blog content and images.",
+    children: [
+      { title: "All Posts", href: "/admin/blog" },
+      { title: "Categories", href: "/admin/categories" },
+      { title: "Tags", href: "/admin/tags" },
+    ],
   },
   {
     title: "Contact Section",
     href: "/admin/contact",
     icon: Mail,
     description: "Manage contact content and images.",
+  },
+  {
+    title: "Media Library",
+    href: "/admin/media",
+    icon: Images,
+    description: "Manage uploaded media files.",
+    dividerBefore: true,
   },
 ];
 

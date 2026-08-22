@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Menu, UserCircle2 } from "lucide-react";
 import Link from "next/link";
 
@@ -7,6 +8,27 @@ import Breadcrumbs from "./Breadcrumbs";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 
 export default function AdminHeader({ setSidebarOpen }) {
+  const [avatarUrl, setAvatarUrl] = useState("");
+
+  useEffect(() => {
+    let active = true;
+
+    fetch("/api/admin/cms/profile")
+      .then((response) => response.json())
+      .then((result) => {
+        if (active) setAvatarUrl(result.data?.avatarUrl ?? "");
+      })
+      .catch(() => {});
+
+    const updateAvatar = (event) => setAvatarUrl(event.detail?.avatarUrl ?? "");
+    window.addEventListener("admin-profile-updated", updateAvatar);
+
+    return () => {
+      active = false;
+      window.removeEventListener("admin-profile-updated", updateAvatar);
+    };
+  }, []);
+
   return (
     <header
       className="
@@ -80,7 +102,13 @@ export default function AdminHeader({ setSidebarOpen }) {
               dark:focus-visible:ring-brand-secondary/30
             "
           >
-            <UserCircle2 className="h-6 w-6" />
+            {avatarUrl ? (
+              // Profile images can be uploaded files or administrator-provided remote URLs.
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={avatarUrl} alt="Admin profile" onError={() => setAvatarUrl("")} className="h-full w-full rounded-xl object-cover" />
+            ) : (
+              <UserCircle2 className="h-6 w-6" />
+            )}
           </Link>
         </div>
       </div>

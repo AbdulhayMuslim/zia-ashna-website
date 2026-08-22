@@ -12,7 +12,6 @@ import PageHeader from "@/components/admin/ui/PageHeader";
 import Card from "@/components/admin/ui/Card";
 import Button from "@/components/admin/ui/Button";
 import InputField from "@/components/admin/ui/InputField";
-import TextareaField from "@/components/admin/ui/TextareaField";
 import SelectField from "@/components/admin/ui/SelectField";
 
 function generateSlug(text) {
@@ -27,15 +26,22 @@ function generateSlug(text) {
 export default function EditCategoryPage() {
   const { id } = useParams();
 
-  const initialForm = { name: "", slug: "", description: "", status: "published" };
+  const initialForm = {
+    name: "",
+    slug: "",
+    description: "",
+    status: "published",
+  };
   const [form, setForm] = useState(initialForm);
 
   useEffect(() => {
-    fetch(`/api/admin/categories/${id}`).then(async (response) => {
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.message);
-      setForm(result.data);
-    }).catch((error) => toast.error(error.message));
+    fetch(`/api/admin/categories/${id}`)
+      .then(async (response) => {
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.message);
+        setForm(result.data);
+      })
+      .catch((error) => toast.error(error.message));
   }, [id]);
 
   const updateField = (key, value) => {
@@ -47,10 +53,16 @@ export default function EditCategoryPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const response = await fetch(`/api/admin/categories/${id}`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(form) });
+    const response = await fetch(`/api/admin/categories/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(form),
+    });
     const result = await response.json();
-    if (!response.ok) return toast.error(result.message || "Unable to update category.");
-    setForm(result.data); toast.success("Category updated successfully.");
+    if (!response.ok)
+      return toast.error(result.message || "Unable to update category.");
+    setForm(result.data);
+    toast.success("Category updated successfully.");
   };
 
   return (
@@ -90,14 +102,6 @@ export default function EditCategoryPage() {
                 Generate
               </Button>
             </div>
-
-            <TextareaField
-              id="description"
-              label="Description"
-              rows={5}
-              value={form.description}
-              onChange={(e) => updateField("description", e.target.value)}
-            />
 
             <SelectField
               id="status"

@@ -3,6 +3,11 @@ import { z } from "zod";
 const text = (max = 500) => z.string().trim().max(max);
 const requiredText = (max = 500) => text(max).min(1, "This field is required.");
 const nullableUrl = z.union([z.literal(""), z.url().max(1000)]).optional().nullable();
+const nullableAssetUrl = z.union([
+  z.literal(""),
+  z.url().max(1000),
+  z.string().trim().max(1000).regex(/^\/(?!\/)/, "Use a valid image path."),
+]).optional().nullable();
 const ordered = { sortOrder: z.coerce.number().int().min(0).optional() };
 
 export const heroSchema = z.object({
@@ -49,7 +54,7 @@ export const settingsSchema = z.object({
 
 export const profileSchema = z.object({
   fullName: text(160), username: requiredText(100), email: z.union([z.literal(""), z.email().max(254)]).optional().nullable(),
-  phone: text(60).optional(), jobTitle: text(160).optional(), avatarUrl: nullableUrl,
+  phone: text(60).optional(), jobTitle: text(160).optional(), avatarUrl: nullableAssetUrl,
   loginAlerts: z.boolean(), twoFactor: z.boolean(), contentUpdates: z.boolean(),
 });
 
