@@ -143,7 +143,7 @@ export default function LoginPage() {
                 key={item}
                 className="flex items-center gap-3 text-sm text-white/85"
               >
-                <span className="h-2 w-2 rounded-full bg-brand-secondary" />
+                <span className="h-2 w-2 rounded-full bg-gray-200" />
                 {item}
               </div>
             ))}
@@ -171,8 +171,8 @@ export default function LoginPage() {
                     <Image
                       src={imageUrl}
                       alt={`${displayName} profile`}
-                      width={64}
-                      height={64}
+                      width={70}
+                      height={70}
                       priority
                       onError={() => setAvatarFailed(true)}
                       className="h-full w-full object-cover"

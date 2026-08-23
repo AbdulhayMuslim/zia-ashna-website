@@ -185,12 +185,16 @@ export default function AdminSidebar({ sidebarOpen, setSidebarOpen, collapsed, o
                                 href={child.href}
                                 onClick={() => setSidebarOpen(false)}
                                 className={cn(
-                                  "block rounded-lg px-4 py-2 text-sm transition-colors",
+                                  "flex items-center gap-3 rounded-lg px-4 py-2 text-sm transition-colors",
                                   activeChild
                                     ? "bg-brand-primary/10 font-medium text-brand-primary dark:bg-brand-primary/15"
                                     : "text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white",
                                 )}
                               >
+                                <span
+                                  aria-hidden="true"
+                                  className="h-2 w-2 shrink-0 rounded-full border border-current"
+                                />
                                 {child.title}
                               </Link>
                             </li>
