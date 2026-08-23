@@ -9,6 +9,12 @@ const nullableAssetUrl = z.union([
   z.string().trim().max(1000).regex(/^\/(?!\/)/, "Use a valid image path."),
 ]).optional().nullable();
 const ordered = { sortOrder: z.coerce.number().int().min(0).optional() };
+const contactLink = z.union([
+  z.literal(""),
+  z.literal("#"),
+  z.url().max(1000),
+  z.string().trim().max(1000).regex(/^(mailto:|tel:)/, "Use a valid website, email, or phone link."),
+]).optional().nullable();
 
 export const heroSchema = z.object({
   sectionTitle: requiredText(120),
@@ -43,6 +49,12 @@ export const historySchema = z.object({
 export const contactSchema = z.object({
   sectionTitle: requiredText(120), heading: text(240), description: text(5000),
   cards: z.array(z.object({ title: requiredText(200), icon: text(80).optional(), ...ordered })).max(30),
+  addresses: z.array(z.object({
+    label: requiredText(120), value: requiredText(500), icon: text(80).default("MapPin"), linkUrl: contactLink, ...ordered,
+  })).max(30),
+  socialLinks: z.array(z.object({
+    label: requiredText(100), icon: text(80).default("Globe"), url: contactLink.refine(Boolean, "A social media link is required."), ...ordered,
+  })).max(30),
 });
 
 export const settingsSchema = z.object({

@@ -1,9 +1,12 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { Save } from "lucide-react";
 import PageContainer from "@/components/admin/layout/PageContainer";
 import PageActions from "@/components/admin/layout/PageActions";
 import PageHeader from "@/components/admin/ui/PageHeader";
+import ViewSectionLink from "@/components/admin/ui/ViewSectionLink";
+import UnsavedChangesGuard from "@/components/admin/ui/UnsavedChangesGuard";
 import FormSection from "@/components/admin/ui/FormSection";
 import RepeaterItem from "@/components/admin/ui/RepeaterItem";
 import InputField from "@/components/admin/ui/InputField";
@@ -26,11 +29,13 @@ export default function CmsEditor({
   section,
   title,
   description,
+  viewHref,
   contentTitle = "Content Settings",
   contentDescription = "This content is stored in PostgreSQL.",
   initialValue,
   fields,
   groups = [],
+  children,
 }) {
   const [form, setForm] = useState(initialValue);
   const [saved, setSaved] = useState(initialValue);
@@ -97,10 +102,17 @@ export default function CmsEditor({
       setSaved(next);
       if (section === "profile") {
         window.dispatchEvent(new CustomEvent("admin-profile-updated", { detail: next }));
+        if (typeof BroadcastChannel !== "undefined") {
+          const channel = new BroadcastChannel("admin-profile");
+          channel.postMessage({ updatedAt: next.updatedAt });
+          channel.close();
+        }
       }
       toast.success("Changes saved to the database.");
+      return true;
     } catch (error) {
       toast.error(error.message);
+      return false;
     } finally {
       setSubmitting(false);
     }
@@ -108,7 +120,7 @@ export default function CmsEditor({
 
   return (
     <PageContainer>
-      <PageHeader title={title} description={description} />
+      <PageHeader title={title} description={description} actions={viewHref ? <div className="flex flex-wrap gap-2"><ViewSectionLink href={viewHref} /><Button type="button" leftIcon={Save} onClick={save} disabled={loading || !dirty || submitting || uploading}>{submitting ? "Saving..." : "Save changes"}</Button></div> : undefined} />
       <FormSection title={contentTitle} description={contentDescription}>
         <div className="grid gap-6">
           {fields.map((field) => <Field key={field.type === "image" ? `${field.key}-${form[field.key]}` : field.key} field={field} id={`${section}-${field.key}`} value={form[field.key]} onChange={(value) => setFieldValue(field, value)} disabled={field.type === "image" && uploading} />)}
@@ -128,10 +140,12 @@ export default function CmsEditor({
           </div>
         </FormSection>
       ))}
+      {children}
       <PageActions>
         <Button type="button" variant="secondary" onClick={() => setForm(saved)} disabled={!dirty || submitting || uploading}>Reset</Button>
         <Button type="button" onClick={save} disabled={loading || !dirty || submitting || uploading}>{submitting ? "Saving..." : "Save Changes"}</Button>
       </PageActions>
+      <UnsavedChangesGuard when={dirty && !submitting} onSave={save} />
     </PageContainer>
   );
 }

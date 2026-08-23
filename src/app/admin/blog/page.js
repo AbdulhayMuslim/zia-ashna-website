@@ -11,6 +11,7 @@ import { useAdminCollection } from "@/hooks/useAdminCollection";
 import PageContainer from "@/components/admin/layout/PageContainer";
 
 import PageHeader from "@/components/admin/ui/PageHeader";
+import ViewSectionLink from "@/components/admin/ui/ViewSectionLink";
 import Card from "@/components/admin/ui/Card";
 import Button from "@/components/admin/ui/Button";
 import InputField from "@/components/admin/ui/InputField";
@@ -19,6 +20,7 @@ import SwitchField from "@/components/admin/ui/SwitchField";
 import RichTextEditor from "@/components/admin/ui/RichTextEditor";
 import ImageUploadField from "@/components/admin/ui/ImageUploadField";
 import ConfirmDialog from "@/components/admin/ui/ConfirmDialog";
+import { UnsavedChangesPrompt } from "@/components/admin/ui/UnsavedChangesGuard";
 import StatusBadge from "@/components/admin/ui/StatusBadge";
 
 import DataTable from "@/components/admin/ui/DataTable/DataTable";
@@ -112,7 +114,9 @@ function EditPostDrawer({ editor, onClose, onSaved }) {
   const [open, setOpen] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [confirmClose, setConfirmClose] = useState(false);
   const dirty = JSON.stringify(form) !== JSON.stringify(initialForm);
+  const requestClose = () => dirty ? setConfirmClose(true) : setOpen(false);
   const update = (key, value) => setForm((current) => ({ ...current, [key]: value }));
 
   useEffect(() => {
@@ -148,7 +152,7 @@ function EditPostDrawer({ editor, onClose, onSaved }) {
   }
 
   async function save() {
-    if (!dirty) return;
+    if (!dirty) return true;
 
     setSubmitting(true);
     try {
@@ -164,15 +168,17 @@ function EditPostDrawer({ editor, onClose, onSaved }) {
       onSaved(result.data);
       toast.success("Blog post updated successfully.");
       setOpen(false);
+      return true;
     } catch (error) {
       toast.error(error.message);
+      return false;
     } finally {
       setSubmitting(false);
     }
   }
 
   return (
-    <Dialog.Root open={open} onOpenChange={setOpen}>
+    <Dialog.Root open={open} onOpenChange={(nextOpen) => { if (!nextOpen) requestClose(); }}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-50 bg-black/55 backdrop-blur-sm data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 duration-300" />
         <Dialog.Content className="fixed inset-y-0 right-0 z-50 flex w-full max-w-2xl flex-col border-l border-border bg-background shadow-2xl outline-none dark:bg-gray-900 data-[state=open]:animate-in data-[state=open]:slide-in-from-right data-[state=closed]:animate-out data-[state=closed]:slide-out-to-right duration-300">
@@ -181,9 +187,7 @@ function EditPostDrawer({ editor, onClose, onSaved }) {
               <Dialog.Title className="font-heading text-xl font-semibold text-heading dark:text-heading-dark">Edit blog post</Dialog.Title>
               <Dialog.Description className="mt-1 truncate text-sm text-text dark:text-text-dark">{post.title}</Dialog.Description>
             </div>
-            <Dialog.Close asChild>
-              <button type="button" aria-label="Close editor" className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-text transition hover:bg-brand-primary/10 hover:text-brand-primary dark:text-text-dark"><X className="h-5 w-5" /></button>
-            </Dialog.Close>
+            <button type="button" onClick={requestClose} aria-label="Close editor" className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-text transition hover:bg-brand-primary/10 hover:text-brand-primary dark:text-text-dark"><X className="h-5 w-5" /></button>
           </div>
 
           <div className="flex-1 space-y-6 overflow-y-auto p-5 sm:p-6">
@@ -244,12 +248,13 @@ function EditPostDrawer({ editor, onClose, onSaved }) {
           <div className="flex shrink-0 flex-col-reverse gap-3 border-t border-border bg-card p-4 dark:bg-gray-800 sm:flex-row sm:items-center sm:justify-between sm:px-6">
             <Link href={`/admin/blog/${post.id}`} className="inline-flex h-11 items-center justify-center gap-2 rounded-2xl px-4 text-sm font-medium text-text transition hover:bg-brand-primary/10 hover:text-brand-primary dark:text-text-dark"><ExternalLink className="h-4 w-4" /> Open full editor</Link>
             <div className="flex justify-end gap-2">
-              <Button type="button" variant="secondary" onClick={() => setOpen(false)}>Cancel</Button>
+              <Button type="button" variant="secondary" onClick={requestClose}>Cancel</Button>
               <Button type="button" leftIcon={Save} onClick={save} loading={submitting} disabled={!dirty || uploading}>Save Changes</Button>
             </div>
           </div>
         </Dialog.Content>
       </Dialog.Portal>
+      <UnsavedChangesPrompt open={confirmClose} onStay={() => setConfirmClose(false)} onDiscard={() => { setConfirmClose(false); setOpen(false); }} onSave={save} saving={submitting} />
     </Dialog.Root>
   );
 }
@@ -592,9 +597,10 @@ export default function BlogPage() {
         title="Blog Posts"
         description="Manage and organize your blog content."
         actions={
-          <Link href="/admin/blog/create">
-            <Button leftIcon={Plus}>Add New Post</Button>
-          </Link>
+          <div className="flex flex-wrap gap-2">
+            <ViewSectionLink href="/blog" />
+            <Link href="/admin/blog/create"><Button leftIcon={Plus}>Add New Post</Button></Link>
+          </div>
         }
       />
 

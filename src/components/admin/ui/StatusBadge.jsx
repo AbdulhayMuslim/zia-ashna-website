@@ -7,7 +7,9 @@ const variants = {
     "bg-yellow-100 text-yellow-700 dark:bg-yellow-500/10 dark:text-yellow-400",
   archived: "bg-red-100 text-red-700 dark:bg-red-500/10 dark:text-red-400",
   new: "bg-blue-100 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400",
+  unread: "bg-blue-100 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400",
   read: "bg-gray-100 text-gray-700 dark:bg-gray-500/10 dark:text-gray-300",
+  seen: "bg-gray-100 text-gray-700 dark:bg-gray-500/10 dark:text-gray-300",
   default: "bg-gray-100 text-gray-700 dark:bg-gray-500/10 dark:text-gray-300",
 };
 

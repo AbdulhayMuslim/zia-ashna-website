@@ -116,9 +116,9 @@ export default function TagsPage() {
         title="Tags"
         description="Manage blog tags."
         actions={
-          <Link href="/admin/tags/create">
-            <Button>Add Tag</Button>
-          </Link>
+          <div className="flex flex-wrap gap-2">
+            <Link href="/admin/tags/create"><Button>Add Tag</Button></Link>
+          </div>
         }
       />
 

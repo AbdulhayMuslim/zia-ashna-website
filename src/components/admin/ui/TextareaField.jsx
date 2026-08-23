@@ -39,6 +39,7 @@ export default function TextareaField({
             }
           : {
               defaultValue,
+              onChange,
             })}
         placeholder={placeholder}
         disabled={disabled}

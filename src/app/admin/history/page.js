@@ -7,6 +7,7 @@ export default function HistoryPage() {
       section="history"
       title="History Section"
       description="Manage timeline content and milestones."
+      viewHref="/#history"
       contentTitle="History introduction"
       contentDescription="Edit the section title, heading, and description displayed above the timeline."
       {...cmsConfigs.history}

@@ -16,7 +16,7 @@ export function formatPost(post) {
 export async function getPublishedPosts({ take, skip } = {}) {
   const posts = await prisma.post.findMany({
     where: { status: "published" },
-    orderBy: [{ publishedAt: "desc" }, { id: "desc" }],
+    orderBy: [{ featured: "desc" }, { publishedAt: "desc" }, { id: "desc" }],
     ...(Number.isInteger(take) ? { take } : {}),
     ...(Number.isInteger(skip) ? { skip } : {}),
     include: { category: true, tags: { include: { tag: true } } },
@@ -37,7 +37,7 @@ export async function getHomepageContent() {
     prisma.aboutSection.findUnique({ where: { id: 1 }, include: { experiences: { orderBy }, jobExperiences: { orderBy }, education: { orderBy }, certificates: { orderBy } } }),
     prisma.activitySection.findUnique({ where: { id: 1 }, include: { cards: { orderBy } } }),
     prisma.historySection.findUnique({ where: { id: 1 }, include: { cards: { orderBy } } }),
-    prisma.contactSection.findUnique({ where: { id: 1 }, include: { cards: { orderBy } } }),
+    prisma.contactSection.findUnique({ where: { id: 1 }, include: { cards: { orderBy }, addresses: { orderBy }, socialLinks: { orderBy } } }),
     getSiteSettings(),
     getPublishedPosts({ take: 4 }),
   ]);
@@ -46,4 +46,15 @@ export async function getHomepageContent() {
 
 export function getSiteSettings() {
   return prisma.siteSettings.findUnique({ where: { id: 1 } });
+}
+
+export async function getWebsiteChrome() {
+  const [settings, contact] = await Promise.all([
+    getSiteSettings(),
+    prisma.contactSection.findUnique({
+      where: { id: 1 },
+      select: { socialLinks: { orderBy } },
+    }),
+  ]);
+  return { settings, socialLinks: contact?.socialLinks ?? [] };
 }

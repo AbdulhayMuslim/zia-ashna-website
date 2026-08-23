@@ -6,13 +6,22 @@ import sharp from "sharp";
 import { compressPostImage, POST_IMAGE_COMPRESSION_THRESHOLD_BYTES, POST_IMAGE_MAX_BYTES } from "../src/lib/image-processing.js";
 import { formatMediaSize, formatMediaType } from "../src/lib/media-format.js";
 import { createSessionToken, verifySessionToken } from "../src/lib/session.js";
+import { createPasswordHash, verifyPassword } from "../src/lib/password.js";
 import { createPostApiSchema, updatePostStatusSchema } from "../src/validations/blog.js";
-import { aboutSchema, settingsSchema } from "../src/validations/cms.js";
+import { aboutSchema, contactSchema, settingsSchema } from "../src/validations/cms.js";
 
 test("session tokens verify and reject tampering", async () => {
   const token = await createSessionToken("admin", "test-secret");
   assert.equal(await verifySessionToken(token, "test-secret"), true);
   assert.equal(await verifySessionToken(`${token}x`, "test-secret"), false);
+});
+
+test("admin passwords are salted, hashed, and verified", () => {
+  const first = createPasswordHash("a-secure-password");
+  const second = createPasswordHash("a-secure-password");
+  assert.notEqual(first.hash, second.hash);
+  assert.equal(verifyPassword("a-secure-password", first.hash, first.salt), true);
+  assert.equal(verifyPassword("wrong-password", first.hash, first.salt), false);
 });
 
 test("post validation accepts complete CMS content", () => {
@@ -29,6 +38,18 @@ test("CMS schemas support database-driven image and social fields", () => {
   const settings = settingsSchema.safeParse({ siteName: "Site", siteDescription: "Description", whatsapp: "https://wa.me/123" });
   assert.equal(about.success, true);
   assert.equal(settings.success, true);
+});
+
+test("contact CMS accepts ordered addresses and social profiles", () => {
+  const result = contactSchema.safeParse({
+    sectionTitle: "Contact",
+    heading: "Get in touch",
+    description: "Contact details",
+    cards: [],
+    addresses: [{ label: "Email", value: "hello@example.com", icon: "Mail", linkUrl: "mailto:hello@example.com" }],
+    socialLinks: [{ label: "LinkedIn", icon: "LinkedIn", url: "https://linkedin.com/in/example" }],
+  });
+  assert.equal(result.success, true);
 });
 
 test("post image processing produces WebP below 2 MB", async () => {

@@ -1,9 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Link from "next/link";
 import {
-  Eye,
   Link2,
   Loader2,
   Plus,
@@ -14,6 +12,8 @@ import {
 
 import PageContainer from "@/components/admin/layout/PageContainer";
 import PageHeader from "@/components/admin/ui/PageHeader";
+import ViewSectionLink from "@/components/admin/ui/ViewSectionLink";
+import UnsavedChangesGuard from "@/components/admin/ui/UnsavedChangesGuard";
 import Card from "@/components/admin/ui/Card";
 import Button from "@/components/admin/ui/Button";
 import InputField from "@/components/admin/ui/InputField";
@@ -111,8 +111,10 @@ export default function HeroEditor() {
       setForm(next);
       setSaved(next);
       toast.success("Hero section saved to the database.");
+      return true;
     } catch (error) {
       toast.error(error.message);
+      return false;
     } finally {
       setSubmitting(false);
     }
@@ -125,9 +127,7 @@ export default function HeroEditor() {
         description="Shape the first impression visitors see on your homepage."
         actions={(
           <div className="flex flex-wrap gap-2">
-            <Link href="/#home" target="_blank" className="inline-flex h-11 items-center gap-2 rounded-2xl border border-border bg-card px-4 text-sm font-medium text-heading transition hover:border-brand-primary/40 hover:bg-brand-primary/10 dark:bg-gray-800 dark:text-heading-dark">
-              <Eye className="h-4 w-4" /> View website
-            </Link>
+            <ViewSectionLink href="/" />
             <Button onClick={save} loading={submitting} disabled={loading || uploading || !dirty} leftIcon={Save}>Save changes</Button>
           </div>
         )}
@@ -213,6 +213,7 @@ export default function HeroEditor() {
               <Button type="button" leftIcon={Save} onClick={save} loading={submitting} disabled={!dirty || uploading}>Save changes</Button>
             </div>
           </div>
+          <UnsavedChangesGuard when={dirty && !submitting} onSave={save} />
         </>
       )}
     </PageContainer>

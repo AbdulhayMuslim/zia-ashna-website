@@ -13,6 +13,7 @@ import Card from "@/components/admin/ui/Card";
 import Button from "@/components/admin/ui/Button";
 import InputField from "@/components/admin/ui/InputField";
 import SelectField from "@/components/admin/ui/SelectField";
+import UnsavedChangesGuard from "@/components/admin/ui/UnsavedChangesGuard";
 
 function generateSlug(text) {
   return text
@@ -33,6 +34,7 @@ export default function EditTagPage() {
     status: "published",
   };
   const [form, setForm] = useState(initialForm);
+  const [savedForm, setSavedForm] = useState(null);
 
   useEffect(() => {
     fetch(`/api/admin/tags/${id}`)
@@ -40,6 +42,7 @@ export default function EditTagPage() {
         const result = await response.json();
         if (!response.ok) throw new Error(result.message);
         setForm(result.data);
+        setSavedForm(result.data);
       })
       .catch((error) => toast.error(error.message));
   }, [id]);
@@ -52,17 +55,18 @@ export default function EditTagPage() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e?.preventDefault();
     const response = await fetch(`/api/admin/tags/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(form),
     });
     const result = await response.json();
-    if (!response.ok)
-      return toast.error(result.message || "Unable to update tag.");
+    if (!response.ok) { toast.error(result.message || "Unable to update tag."); return false; }
     setForm(result.data);
+    setSavedForm(result.data);
     toast.success("Tag updated successfully.");
+    return true;
   };
 
   return (
@@ -124,7 +128,7 @@ export default function EditTagPage() {
             type="button"
             variant="secondary"
             onClick={() => {
-              window.location.reload();
+              setForm(savedForm ?? initialForm);
             }}
           >
             Reset
@@ -133,6 +137,7 @@ export default function EditTagPage() {
           <Button type="submit">Save Changes</Button>
         </PageActions>
       </form>
+      <UnsavedChangesGuard when={Boolean(savedForm) && JSON.stringify(form) !== JSON.stringify(savedForm)} onSave={handleSubmit} />
     </PageContainer>
   );
 }

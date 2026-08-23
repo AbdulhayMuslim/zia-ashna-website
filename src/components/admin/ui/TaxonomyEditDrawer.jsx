@@ -8,6 +8,7 @@ import Button from "@/components/admin/ui/Button";
 import InputField from "@/components/admin/ui/InputField";
 import SelectField from "@/components/admin/ui/SelectField";
 import { toast } from "@/components/admin/ui/Toast";
+import { UnsavedChangesPrompt } from "@/components/admin/ui/UnsavedChangesGuard";
 
 function generateSlug(value) {
   return value
@@ -28,8 +29,10 @@ export default function TaxonomyEditDrawer({ item, type, onClose, onSaved }) {
   const [form, setForm] = useState(initialForm);
   const [open, setOpen] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [confirmClose, setConfirmClose] = useState(false);
   const dirty = JSON.stringify(form) !== JSON.stringify(initialForm);
   const singular = type === "categories" ? "Category" : "Tag";
+  const requestClose = () => dirty ? setConfirmClose(true) : setOpen(false);
 
   useEffect(() => {
     if (open) return undefined;
@@ -42,7 +45,7 @@ export default function TaxonomyEditDrawer({ item, type, onClose, onSaved }) {
   };
 
   const save = async () => {
-    if (!dirty) return;
+    if (!dirty) return true;
     setSubmitting(true);
 
     try {
@@ -59,15 +62,17 @@ export default function TaxonomyEditDrawer({ item, type, onClose, onSaved }) {
       onSaved(result.data);
       toast.success(`${singular} updated successfully.`);
       setOpen(false);
+      return true;
     } catch (error) {
       toast.error(error.message);
+      return false;
     } finally {
       setSubmitting(false);
     }
   };
 
   return (
-    <Dialog.Root open={open} onOpenChange={setOpen}>
+    <Dialog.Root open={open} onOpenChange={(nextOpen) => { if (!nextOpen) requestClose(); }}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-50 bg-black/55 backdrop-blur-sm duration-300 data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=closed]:animate-out data-[state=closed]:fade-out-0" />
         <Dialog.Content className="fixed inset-y-0 right-0 z-50 flex w-full max-w-2xl flex-col border-l border-border bg-background shadow-2xl outline-none duration-300 data-[state=open]:animate-in data-[state=open]:slide-in-from-right data-[state=closed]:animate-out data-[state=closed]:slide-out-to-right dark:bg-gray-900">
@@ -80,11 +85,7 @@ export default function TaxonomyEditDrawer({ item, type, onClose, onSaved }) {
                 {item.name}
               </Dialog.Description>
             </div>
-            <Dialog.Close asChild>
-              <button type="button" aria-label="Close editor" className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-text transition hover:bg-brand-primary/10 hover:text-brand-primary dark:text-text-dark">
-                <X className="h-5 w-5" />
-              </button>
-            </Dialog.Close>
+            <button type="button" onClick={requestClose} aria-label="Close editor" className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-text transition hover:bg-brand-primary/10 hover:text-brand-primary dark:text-text-dark"><X className="h-5 w-5" /></button>
           </div>
 
           <div className="flex-1 space-y-6 overflow-y-auto p-5 sm:p-6">
@@ -132,13 +133,14 @@ export default function TaxonomyEditDrawer({ item, type, onClose, onSaved }) {
           </div>
 
           <div className="flex shrink-0 justify-end gap-2 border-t border-border bg-card p-4 dark:bg-gray-800 sm:px-6">
-            <Button type="button" variant="secondary" onClick={() => setOpen(false)}>Cancel</Button>
+            <Button type="button" variant="secondary" onClick={requestClose}>Cancel</Button>
             <Button type="button" leftIcon={Save} onClick={save} loading={submitting} disabled={!dirty}>
               Save Changes
             </Button>
           </div>
         </Dialog.Content>
       </Dialog.Portal>
+      <UnsavedChangesPrompt open={confirmClose} onStay={() => setConfirmClose(false)} onDiscard={() => { setConfirmClose(false); setOpen(false); }} onSave={save} saving={submitting} />
     </Dialog.Root>
   );
 }

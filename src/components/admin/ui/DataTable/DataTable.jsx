@@ -37,10 +37,10 @@ export default function DataTable({
 
   return (
     <div className="overflow-hidden rounded-2xl border border-border bg-card dark:border-border-dark dark:bg-card-dark">
-      <div className={cn("overflow-x-auto", fixedLayout && "lg:overflow-x-hidden")}>
+      <div className={cn("max-w-full overflow-x-auto", fixedLayout && "overflow-x-hidden")}>
         <table className={cn(
-          "min-w-full divide-y divide-border dark:divide-border-dark",
-          fixedLayout && "min-w-[760px] lg:table-fixed lg:min-w-full",
+          "divide-y divide-border dark:divide-border-dark",
+          fixedLayout ? "w-full table-fixed" : "min-w-full",
         )}>
           <thead className="bg-muted dark:bg-muted-dark">
             <tr>
@@ -48,7 +48,7 @@ export default function DataTable({
                 <th
                   key={column.key}
                   style={{ width: column.width || "auto" }}
-                  className={`${fixedLayout ? "px-3" : "px-6"} py-4 text-xs font-semibold uppercase tracking-wider text-heading dark:text-heading-dark ${
+                  className={`${fixedLayout ? "overflow-hidden px-2 xl:px-3" : "px-6"} py-4 text-xs font-semibold uppercase tracking-wider text-heading dark:text-heading-dark ${
                     column.align === "center"
                       ? "text-center"
                       : column.align === "right"
@@ -71,7 +71,7 @@ export default function DataTable({
                 {columns.map((column) => (
                   <td
                     key={column.key}
-                    className={`${fixedLayout ? "px-3" : "px-6"} py-4 text-sm text-body dark:text-body-dark ${
+                    className={`${fixedLayout ? "min-w-0 overflow-hidden px-2 xl:px-3" : "px-6"} py-4 text-sm text-body dark:text-body-dark ${
                       column.align === "center"
                         ? "text-center"
                         : column.align === "right"

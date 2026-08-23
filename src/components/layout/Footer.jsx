@@ -1,6 +1,7 @@
 import Container from "../ui/Container";
+import SocialMedia from "../ui/SocialMedia";
 
-export default function Footer({ settings }) {
+export default function Footer({ settings, socialLinks }) {
   const copyright = (settings?.copyright || "Copyright © {year} Sayed Zia Ashna. All rights reserved.").replace("{year}", new Date().getFullYear());
   return (
     <footer className="bg-brand-primary/20 py-4">
@@ -8,6 +9,7 @@ export default function Footer({ settings }) {
         <p className="text-sm text-center md:text-start text-gray-700 dark:text-gray-300">
           {copyright}
         </p>
+        <SocialMedia links={socialLinks} placement="footer" />
       </Container>
     </footer>
   );

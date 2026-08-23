@@ -13,6 +13,7 @@ import Card from "@/components/admin/ui/Card";
 import Button from "@/components/admin/ui/Button";
 import InputField from "@/components/admin/ui/InputField";
 import SelectField from "@/components/admin/ui/SelectField";
+import UnsavedChangesGuard from "@/components/admin/ui/UnsavedChangesGuard";
 
 function generateSlug(text) {
   return text
@@ -33,6 +34,7 @@ export default function EditCategoryPage() {
     status: "published",
   };
   const [form, setForm] = useState(initialForm);
+  const [savedForm, setSavedForm] = useState(null);
 
   useEffect(() => {
     fetch(`/api/admin/categories/${id}`)
@@ -40,6 +42,7 @@ export default function EditCategoryPage() {
         const result = await response.json();
         if (!response.ok) throw new Error(result.message);
         setForm(result.data);
+        setSavedForm(result.data);
       })
       .catch((error) => toast.error(error.message));
   }, [id]);
@@ -52,17 +55,18 @@ export default function EditCategoryPage() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e?.preventDefault();
     const response = await fetch(`/api/admin/categories/${id}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(form),
     });
     const result = await response.json();
-    if (!response.ok)
-      return toast.error(result.message || "Unable to update category.");
+    if (!response.ok) { toast.error(result.message || "Unable to update category."); return false; }
     setForm(result.data);
+    setSavedForm(result.data);
     toast.success("Category updated successfully.");
+    return true;
   };
 
   return (
@@ -127,7 +131,7 @@ export default function EditCategoryPage() {
             type="button"
             variant="secondary"
             onClick={() => {
-              window.location.reload();
+              setForm(savedForm ?? initialForm);
             }}
           >
             Reset
@@ -136,6 +140,7 @@ export default function EditCategoryPage() {
           <Button type="submit">Save Changes</Button>
         </PageActions>
       </form>
+      <UnsavedChangesGuard when={Boolean(savedForm) && JSON.stringify(form) !== JSON.stringify(savedForm)} onSave={handleSubmit} />
     </PageContainer>
   );
 }

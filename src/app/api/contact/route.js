@@ -13,10 +13,18 @@ const contactSchema = z.object({
 export async function POST(request) {
   const contentType = request.headers.get("content-type") ?? "";
   if (!contentType.includes("application/json")) {
-    return Response.json({ message: "Unsupported content type." }, { status: 415 });
+    return Response.json(
+      { message: "Unsupported content type." },
+      { status: 415 },
+    );
   }
 
-  const rateLimit = await consumeRateLimit({ scope: "contact", key: getClientKey(request), limit: 5, windowMs: 10 * 60 * 1000 });
+  const rateLimit = await consumeRateLimit({
+    scope: "contact",
+    key: getClientKey(request),
+    limit: 5,
+    windowMs: 10 * 60 * 1000,
+  });
   if (!rateLimit.allowed) {
     return Response.json(
       { message: "Too many requests. Please try again later." },
@@ -33,7 +41,10 @@ export async function POST(request) {
 
   const result = contactSchema.safeParse(body);
   if (!result.success) {
-    return Response.json({ message: "Please check the form fields." }, { status: 400 });
+    return Response.json(
+      { message: "Please check the form fields." },
+      { status: 400 },
+    );
   }
 
   try {
@@ -50,7 +61,8 @@ export async function POST(request) {
   }
 
   const endpoint = process.env.CONTACT_FORM_ENDPOINT;
-  if (!endpoint) return Response.json({ message: "Message received." }, { status: 201 });
+  if (!endpoint)
+    return Response.json({ message: "Message received." }, { status: 201 });
 
   const response = await fetch(endpoint, {
     method: "POST",
@@ -60,7 +72,10 @@ export async function POST(request) {
   });
 
   if (!response.ok) {
-    return Response.json({ message: "Message delivery failed." }, { status: 502 });
+    return Response.json(
+      { message: "Message delivery failed." },
+      { status: 502 },
+    );
   }
 
   return Response.json({ message: "Message sent and saved." }, { status: 201 });

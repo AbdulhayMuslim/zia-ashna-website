@@ -17,7 +17,7 @@ export default function Hero({ data }) {
   return (
     <Section
       id="home"
-      className="relative bg-gray-200 dark:bg-[#222] pt-23 md:pt-25"
+      className="relative bg-gray-200 dark:bg-[#222] pt-23 md:pt-26"
     >
       <div className="opacity-70 dark:opacity-10 absolute top-0 left-0 h-full w-full bg-[url('/images/herobg.png')] bg-cover bg-center bg-no-repeat" />
       <Container className="relative">
@@ -42,14 +42,30 @@ export default function Hero({ data }) {
             </FadeLeft>
 
             <FadeUp>
-              <Button href={data.buttonUrl || "#contact"} label={data.buttonLabel} icon={ArrowRight} />
+              <Button
+                href={data.buttonUrl || "#contact"}
+                label={data.buttonLabel}
+                icon={ArrowRight}
+              />
             </FadeUp>
 
             <ZoomIn className="flex justify-center lg:justify-start">
-              <div className="grid grid-cols-1 xsm:grid-cols-2 grid-rows-4 xsm:grid-rows-2 place-items-center gap-4 mt-4 md:w-[80%]">
+              <div className="grid grid-cols-1 xsm:grid-cols-2 md:grid-cols-3 place-items-center gap-2 mt-4 items-stretch">
                 {data.logos.map((logo) => (
-                  <a key={logo.id} href={logo.linkUrl || "#"} target={logo.linkUrl ? "_blank" : undefined} rel={logo.linkUrl ? "noopener noreferrer" : undefined} className="flex items-center justify-center rounded-xl bg-bg p-4 shadow-[0_0_30px_rgba(0,0,0,0.12)] duration-300 hover:-translate-y-2 dark:bg-gray-600">
-                    <Image src={logo.imageUrl} alt={`${logo.name} logo`} width={180} height={80} className="h-16 w-auto object-contain" />
+                  <a
+                    key={logo.id}
+                    href={logo.linkUrl || "#"}
+                    target={logo.linkUrl ? "_blank" : undefined}
+                    rel={logo.linkUrl ? "noopener noreferrer" : undefined}
+                    className="flex items-center justify-center rounded-xl bg-bg p-4 shadow-[0_0_30px_rgba(0,0,0,0.12)] duration-300 hover:-translate-y-1 dark:bg-gray-600"
+                  >
+                    <Image
+                      src={logo.imageUrl}
+                      alt={`${logo.name} logo`}
+                      width={180}
+                      height={80}
+                      className="w-auto object-contain"
+                    />
                   </a>
                 ))}
               </div>
@@ -59,7 +75,16 @@ export default function Hero({ data }) {
           {/* Right Section */}
           <div className="lg:w-[50%] flex items-center justify-center lg:justify-end -mb-10">
             <FadeRight className="flex justify-center lg:justify-end">
-              {data.heroImageUrl && <Image src={data.heroImageUrl} alt={data.name} width={800} height={900} priority className="h-auto w-[90%]" />}
+              {data.heroImageUrl && (
+                <Image
+                  src={data.heroImageUrl}
+                  alt={data.name}
+                  width={800}
+                  height={900}
+                  priority
+                  className="h-auto w-[90%]"
+                />
+              )}
             </FadeRight>
           </div>
         </div>

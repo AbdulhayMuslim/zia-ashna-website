@@ -5,7 +5,7 @@ import SocialMedia from "../ui/SocialMedia";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function Header({ settings }) {
+export default function Header({ settings, socialLinks }) {
   return (
     <header className="fixed inset-x-0 top-0 z-50 overflow-x-clip py-3 sm:py-4">
       <Container className="px-3 sm:px-6 lg:px-8">
@@ -100,7 +100,7 @@ export default function Header({ settings }) {
             </ul>
           </nav>
 
-          <SocialMedia settings={settings} />
+          <SocialMedia links={socialLinks} />
         </div>
       </Container>
     </header>

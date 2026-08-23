@@ -6,6 +6,7 @@ import Image from "next/image";
 import PageContainer from "@/components/admin/layout/PageContainer";
 
 import PageHeader from "@/components/admin/ui/PageHeader";
+import ViewSectionLink from "@/components/admin/ui/ViewSectionLink";
 import Card from "@/components/admin/ui/Card";
 import Button from "@/components/admin/ui/Button";
 import ConfirmDialog from "@/components/admin/ui/ConfirmDialog";
@@ -103,13 +104,10 @@ export default function MediaPage() {
               className="sr-only"
               onChange={handleUpload}
             />
-            <Button
-              loading={uploading}
-              disabled={uploading}
-              onClick={() => fileInputRef.current?.click()}
-            >
-              Upload Media
-            </Button>
+            <div className="flex flex-wrap gap-2">
+              <ViewSectionLink href="/" />
+              <Button loading={uploading} disabled={uploading} onClick={() => fileInputRef.current?.click()}>Upload Media</Button>
+            </div>
             <p className="rounded-full border border-brand-primary/20 bg-brand-primary/5 px-3 py-1.5 text-xs font-medium text-text dark:text-text-dark">Max size: 2MB · JPG, PNG, WEBP</p>
           </div>
         }

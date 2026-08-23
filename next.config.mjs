@@ -6,7 +6,11 @@ if (process.env.S3_PUBLIC_URL) {
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  images: { remotePatterns },
+  images: {
+    remotePatterns,
+    // Uploaded images use version query parameters to refresh cached avatars.
+    localPatterns: [{ pathname: "/uploads/**" }],
+  },
   async headers() {
     return [
       {

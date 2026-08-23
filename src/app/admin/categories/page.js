@@ -122,9 +122,9 @@ export default function CategoriesPage() {
         title="Categories"
         description="Manage blog categories."
         actions={
-          <Link href="/admin/categories/create">
-            <Button>Add Category</Button>
-          </Link>
+          <div className="flex flex-wrap gap-2">
+            <Link href="/admin/categories/create"><Button>Add Category</Button></Link>
+          </div>
         }
       />
 

@@ -16,6 +16,7 @@ import SelectField from "@/components/admin/ui/SelectField";
 import ImageUploadField from "@/components/admin/ui/ImageUploadField";
 import RichTextEditor from "@/components/admin/ui/RichTextEditor";
 import SwitchField from "@/components/admin/ui/SwitchField";
+import UnsavedChangesGuard from "@/components/admin/ui/UnsavedChangesGuard";
 
 function generateSlug(text) {
   return text
@@ -39,6 +40,11 @@ export default function EditBlogPostPage() {
   const [image, setImage] = useState(null);
   const [status, setStatus] = useState("draft");
   const [featured, setFeatured] = useState(false);
+  const currentImageUrl = typeof image === "string" ? image : image?.url ?? null;
+  const dirty = Boolean(post) && (
+    title !== post.title || slug !== post.slug || category !== post.category?.slug || excerpt !== post.excerpt ||
+    content !== post.content || currentImageUrl !== (post.featuredImage ?? null) || Boolean(image?.file) || status !== post.status || featured !== post.featured
+  );
 
   useEffect(() => {
     Promise.all([
@@ -61,7 +67,7 @@ export default function EditBlogPostPage() {
       body.append("purpose", "post");
       const uploadResponse = await fetch("/api/admin/uploads", { method: "POST", body });
       const uploadResult = await uploadResponse.json();
-      if (!uploadResponse.ok) return toast.error(uploadResult.message || "Unable to upload image.");
+      if (!uploadResponse.ok) { toast.error(uploadResult.message || "Unable to upload image."); return false; }
       featuredImage = uploadResult.data.url;
     }
     const response = await fetch(`/api/admin/posts/${id}`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({
@@ -70,8 +76,11 @@ export default function EditBlogPostPage() {
       tagIds: post.tags?.map((entry) => entry.tagId) ?? [],
     }) });
     const result = await response.json();
-    if (!response.ok) return toast.error(result.message || "Unable to update post.");
-    setPost(result.data); toast.success("Blog post updated successfully.");
+    if (!response.ok) { toast.error(result.message || "Unable to update post."); return false; }
+    setPost(result.data);
+    setImage(result.data.featuredImage);
+    toast.success("Blog post updated successfully.");
+    return true;
   }
 
   function handleGenerateSlug() {
@@ -216,6 +225,7 @@ export default function EditBlogPostPage() {
           Save Changes
         </Button>
       </PageActions>
+      <UnsavedChangesGuard when={dirty} onSave={save} />
     </PageContainer>
   );
 }

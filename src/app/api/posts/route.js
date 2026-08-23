@@ -5,7 +5,7 @@ export async function GET(request) {
   const limit = Math.min(Math.max(Number(new URL(request.url).searchParams.get("limit")) || 20, 1), 100);
   try {
     const data = await prisma.post.findMany({
-      where: { status: "published" }, orderBy: { publishedAt: "desc" }, take: limit,
+      where: { status: "published" }, orderBy: [{ featured: "desc" }, { publishedAt: "desc" }, { id: "desc" }], take: limit,
       include: { category: true, tags: { include: { tag: true } } },
     });
     return Response.json({ data }, { headers: { "Cache-Control": "public, max-age=60, stale-while-revalidate=300" } });

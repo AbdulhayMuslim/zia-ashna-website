@@ -22,7 +22,7 @@ export default function SectionTitle({
 
           px-6 py-1.5
 
-          text-sm md:text-lg font-medium
+          text-sm md:text-md font-medium
 
           bg-brand-primary/15
           text-brand-primary

@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { ChevronDown, LogOut, PanelLeftClose, PanelLeftOpen, X } from "lucide-react";
@@ -10,6 +11,33 @@ import cn from "@/utils/cn";
 export default function AdminSidebar({ sidebarOpen, setSidebarOpen, collapsed, onToggleCollapsed }) {
   const pathname = usePathname();
   const router = useRouter();
+  const [unreadMessages, setUnreadMessages] = useState(0);
+
+  useEffect(() => {
+    let active = true;
+    async function refreshUnreadCount() {
+      try {
+        const response = await fetch("/api/admin/messages/unread-count", { cache: "no-store" });
+        const result = await response.json();
+        if (active && response.ok) setUnreadMessages(result.data?.count ?? 0);
+      } catch {
+        // Keep the last known count when a background refresh fails.
+      }
+    }
+    function handleVisibilityChange() { if (document.visibilityState === "visible") void refreshUnreadCount(); }
+    void refreshUnreadCount();
+    const interval = window.setInterval(refreshUnreadCount, 30000);
+    window.addEventListener("focus", refreshUnreadCount);
+    window.addEventListener("messages:unread-count-changed", refreshUnreadCount);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    return () => {
+      active = false;
+      window.clearInterval(interval);
+      window.removeEventListener("focus", refreshUnreadCount);
+      window.removeEventListener("messages:unread-count-changed", refreshUnreadCount);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, []);
 
   async function handleLogout() {
     await fetch("/api/auth/logout", { method: "POST" });
@@ -112,7 +140,7 @@ export default function AdminSidebar({ sidebarOpen, setSidebarOpen, collapsed, o
                     aria-label={collapsed ? item.title : undefined}
                     title={collapsed ? item.title : undefined}
                     className={cn(
-                      "flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all",
+                      "relative flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-all",
                       collapsed && "lg:justify-center lg:px-0",
                       active
                         ? "bg-brand-primary text-white"
@@ -121,6 +149,11 @@ export default function AdminSidebar({ sidebarOpen, setSidebarOpen, collapsed, o
                   >
                     <Icon className="h-5 w-5 shrink-0" />
                     <span className={cn("flex-1", collapsed && "lg:hidden")}>{item.title}</span>
+                    {item.href === "/admin/messages" && unreadMessages > 0 && (
+                      <span aria-label={`${unreadMessages} unread messages`} className={cn("inline-flex min-w-6 items-center justify-center rounded-full bg-red-500 px-1.5 py-0.5 text-[11px] font-bold leading-5 text-white shadow-sm", collapsed && "lg:absolute lg:right-1 lg:top-1 lg:min-w-5 lg:px-1 lg:leading-4")}>
+                        {unreadMessages > 99 ? "99+" : unreadMessages}
+                      </span>
+                    )}
                     {hasChildren && (
                       <ChevronDown
                         className={cn(

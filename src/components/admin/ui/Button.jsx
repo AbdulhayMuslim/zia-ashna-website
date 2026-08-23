@@ -44,14 +44,14 @@ export default function Button({
       {...props}
     >
       {loading ? (
-        <Loader2 className="h-4 w-4 animate-spin" />
+        <Loader2 className="h-4 w-4 shrink-0 animate-spin" />
       ) : (
-        LeftIcon && <LeftIcon className="h-4 w-4" />
+        LeftIcon && <LeftIcon className="h-4 w-4 shrink-0" />
       )}
 
       <span>{children}</span>
 
-      {!loading && RightIcon && <RightIcon className="h-4 w-4" />}
+      {!loading && RightIcon && <RightIcon className="h-4 w-4 shrink-0" />}
     </button>
   );
 }

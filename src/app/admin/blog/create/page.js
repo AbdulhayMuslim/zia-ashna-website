@@ -19,6 +19,7 @@ import SelectField from "@/components/admin/ui/SelectField";
 import ImageUploadField from "@/components/admin/ui/ImageUploadField";
 import RichTextEditor from "@/components/admin/ui/RichTextEditor";
 import SwitchField from "@/components/admin/ui/SwitchField";
+import UnsavedChangesGuard from "@/components/admin/ui/UnsavedChangesGuard";
 
 function generateSlug(text) {
   return text
@@ -64,6 +65,7 @@ export default function CreateBlogPostPage() {
   const title = useWatch({ control, name: "title" });
   const featured = useWatch({ control, name: "featured" });
   const status = useWatch({ control, name: "status" });
+  const category = useWatch({ control, name: "category" });
   const content = useWatch({ control, name: "content" });
   const hasChanges = isDirty || image !== null;
 
@@ -102,8 +104,10 @@ export default function CreateBlogPostPage() {
       toast.success("Blog post created successfully.");
       reset();
       setImage(null);
+      return true;
     } catch (error) {
       toast.error(error.message);
+      return false;
     } finally {
       setSubmitting(false);
     }
@@ -221,8 +225,9 @@ export default function CreateBlogPostPage() {
               <SelectField
                 id="category"
                 label="Post Category"
+                value={category}
                 error={errors.category?.message}
-                {...register("category")}
+                onChange={(event) => setValue("category", event.target.value, { shouldDirty: true, shouldValidate: true })}
                 options={[
                   {
                     label: "Select Category",
@@ -265,6 +270,7 @@ export default function CreateBlogPostPage() {
           </Button>
         </PageActions>
       </form>
+      <UnsavedChangesGuard when={hasChanges && !submitting} onSave={handleSubmit(onSubmit)} />
     </PageContainer>
   );
 }

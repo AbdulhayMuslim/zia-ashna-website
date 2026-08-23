@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 
 import { prisma } from "@/lib/prisma";
+import ViewSectionLink from "@/components/admin/ui/ViewSectionLink";
 
 export const dynamic = "force-dynamic";
 
@@ -209,10 +210,7 @@ export default async function AdminDashboardPage({ searchParams }) {
           <p className="mt-2 text-sm text-text dark:text-text-dark">Live content, publishing, and audience activity from PostgreSQL.</p>
         </div>
         <div className="flex flex-wrap gap-2">
-          <Link href={demoMode ? "/admin" : "/admin?demo=1"} className="inline-flex h-11 items-center justify-center gap-2 rounded-2xl border border-border bg-card px-4 text-sm font-semibold text-heading transition hover:border-brand-primary/40 hover:bg-brand-primary/10 dark:bg-gray-800 dark:text-heading-dark">
-            {demoMode ? <Database className="h-4 w-4" /> : <TrendingUp className="h-4 w-4" />}
-            {demoMode ? "Use live data" : "Preview demo data"}
-          </Link>
+          <ViewSectionLink href="/" label="View website" />
           <Link href="/admin/blog/create" className="inline-flex h-11 items-center justify-center gap-2 rounded-2xl bg-brand-primary px-5 text-sm font-semibold text-white transition hover:opacity-90">
             <Plus className="h-4 w-4" /> New post
           </Link>

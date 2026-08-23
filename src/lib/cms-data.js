@@ -1,6 +1,10 @@
 import { prisma } from "@/lib/prisma";
 
 const orderBy = { sortOrder: "asc" };
+const profileSelect = {
+  id: true, fullName: true, username: true, email: true, phone: true, jobTitle: true, avatarUrl: true,
+  loginAlerts: true, twoFactor: true, contentUpdates: true, createdAt: true, updatedAt: true,
+};
 
 const readers = {
   hero: () => prisma.heroSection.findUnique({ where: { id: 1 }, include: { logos: { orderBy } } }),
@@ -9,9 +13,11 @@ const readers = {
   } }),
   activity: () => prisma.activitySection.findUnique({ where: { id: 1 }, include: { cards: { orderBy } } }),
   history: () => prisma.historySection.findUnique({ where: { id: 1 }, include: { cards: { orderBy } } }),
-  contact: () => prisma.contactSection.findUnique({ where: { id: 1 }, include: { cards: { orderBy } } }),
+  contact: () => prisma.contactSection.findUnique({ where: { id: 1 }, include: {
+    cards: { orderBy }, addresses: { orderBy }, socialLinks: { orderBy },
+  } }),
   settings: () => prisma.siteSettings.findUnique({ where: { id: 1 } }),
-  profile: () => prisma.adminProfile.findUnique({ where: { id: 1 } }),
+  profile: () => prisma.adminProfile.findUnique({ where: { id: 1 }, select: profileSelect }),
 };
 
 function orderedCreate(items) {
@@ -36,12 +42,14 @@ const writers = {
     where: { id: 1 }, create: { id: 1, ...data, cards: { create: orderedCreate(cards) } },
     update: { ...data, cards: { deleteMany: {}, create: orderedCreate(cards) } }, include: { cards: { orderBy } },
   }),
-  contact: ({ cards, ...data }) => prisma.contactSection.upsert({
-    where: { id: 1 }, create: { id: 1, ...data, cards: { create: orderedCreate(cards) } },
-    update: { ...data, cards: { deleteMany: {}, create: orderedCreate(cards) } }, include: { cards: { orderBy } },
+  contact: ({ cards, addresses, socialLinks, ...data }) => prisma.contactSection.upsert({
+    where: { id: 1 },
+    create: { id: 1, ...data, cards: { create: orderedCreate(cards) }, addresses: { create: orderedCreate(addresses) }, socialLinks: { create: orderedCreate(socialLinks) } },
+    update: { ...data, cards: { deleteMany: {}, create: orderedCreate(cards) }, addresses: { deleteMany: {}, create: orderedCreate(addresses) }, socialLinks: { deleteMany: {}, create: orderedCreate(socialLinks) } },
+    include: { cards: { orderBy }, addresses: { orderBy }, socialLinks: { orderBy } },
   }),
   settings: (data) => prisma.siteSettings.upsert({ where: { id: 1 }, create: { id: 1, ...data }, update: data }),
-  profile: (data) => prisma.adminProfile.upsert({ where: { id: 1 }, create: { id: 1, ...data }, update: data }),
+  profile: (data) => prisma.adminProfile.upsert({ where: { id: 1 }, create: { id: 1, ...data }, update: data, select: profileSelect }),
 };
 
 export function isCmsSection(section) {

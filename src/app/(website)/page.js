@@ -16,7 +16,7 @@ export default async function Home() {
       <Activity data={content.activity} />
       <History data={content.history} />
       <Publications posts={content.posts} />
-      <Contact data={content.contact} settings={content.settings} />
+      <Contact data={content.contact} />
     </>
   );
 }

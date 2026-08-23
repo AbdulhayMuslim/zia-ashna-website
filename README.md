@@ -22,6 +22,7 @@ Copy `.env.example` to `.env.local` and configure:
 - `ADMIN_USERNAME`: administrator login name.
 - `ADMIN_PASSWORD_SALT` and `ADMIN_PASSWORD_SCRYPT`: unique salt and scrypt password hash. The example file contains a generation command.
 - `AUTH_SECRET`: long random key used to sign the HTTP-only admin session.
+- `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASSWORD`, and `SMTP_FROM`: SMTP delivery settings for password-reset emails.
 - `CONTACT_FORM_ENDPOINT`: Formspree or another server-side JSON form endpoint.
 
 Never commit `.env.local` or real credentials.

@@ -6,7 +6,7 @@ import FadeLeft from "../animations/FadeLeft";
 import { ICONS } from "@/lib/icons";
 import ZoomIn from "../animations/ZoomIn";
 
-export default function Contact({ data, settings }) {
+export default function Contact({ data }) {
   if (!data) return null;
   return (
     <Section id="contact">
@@ -26,11 +26,28 @@ export default function Contact({ data, settings }) {
             </p>
           </FadeLeft>
 
-          {(settings?.contactEmail || settings?.phone || settings?.address) && (
-            <div className="flex flex-wrap justify-center gap-3 text-sm text-text dark:text-text-dark lg:justify-start">
-              {settings.contactEmail && <a href={`mailto:${settings.contactEmail}`} className="rounded-full bg-brand-primary/10 px-3 py-2 hover:text-brand-primary">{settings.contactEmail}</a>}
-              {settings.phone && <a href={`tel:${settings.phone}`} className="rounded-full bg-brand-primary/10 px-3 py-2 hover:text-brand-primary">{settings.phone}</a>}
-              {settings.address && <span className="rounded-full bg-brand-primary/10 px-3 py-2">{settings.address}</span>}
+          {data.addresses?.length > 0 && (
+            <div className="grid w-full gap-3 sm:grid-cols-2">
+              {data.addresses.map((address) => {
+                const Icon = ICONS[address.icon] || ICONS.MapPin;
+                const content = (
+                  <>
+                    <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-brand-primary/10 text-brand-primary dark:text-brand-secondary">
+                      <Icon className="h-5 w-5" />
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block text-xs font-medium uppercase tracking-wide text-text-muted dark:text-text-muted-dark">{address.label}</span>
+                      <span className="mt-1 block break-words text-sm font-medium text-heading dark:text-heading-dark">{address.value}</span>
+                    </span>
+                  </>
+                );
+                const className = "flex min-w-0 items-center gap-3 rounded-2xl border border-brand-primary/10 bg-card/80 p-3.5 text-start shadow-sm transition dark:border-white/10 dark:bg-white/5";
+                return address.linkUrl ? (
+                  <a key={address.id} href={address.linkUrl} className={`${className} hover:-translate-y-0.5 hover:border-brand-primary/30 hover:shadow-md`}>{content}</a>
+                ) : (
+                  <div key={address.id} className={className}>{content}</div>
+                );
+              })}
             </div>
           )}
 

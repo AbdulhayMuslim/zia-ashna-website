@@ -17,6 +17,8 @@ export default function IconField({
   error,
   helperText,
   className,
+  icons = ICONS,
+  iconList = ICON_LIST,
 }) {
   const wrapperRef = useRef(null);
 
@@ -24,15 +26,15 @@ export default function IconField({
   const [search, setSearch] = useState("");
 
   const filteredIcons = useMemo(() => {
-    return ICON_LIST.filter(({ name }) =>
+    return iconList.filter(({ name }) =>
       name.toLowerCase().includes(search.toLowerCase()),
     );
-  }, [search]);
+  }, [iconList, search]);
 
   const selectedIcon = value || "";
 
   const SelectedIcon =
-    selectedIcon && ICONS[selectedIcon] ? ICONS[selectedIcon] : null;
+    selectedIcon && icons[selectedIcon] ? icons[selectedIcon] : null;
 
   useEffect(() => {
     function handleClickOutside(e) {

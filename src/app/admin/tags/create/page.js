@@ -12,6 +12,7 @@ import Card from "@/components/admin/ui/Card";
 import Button from "@/components/admin/ui/Button";
 import InputField from "@/components/admin/ui/InputField";
 import SelectField from "@/components/admin/ui/SelectField";
+import UnsavedChangesGuard from "@/components/admin/ui/UnsavedChangesGuard";
 
 const INITIAL_FORM = {
   name: "",
@@ -41,7 +42,7 @@ export default function CreateTagPage() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e?.preventDefault();
     setSubmitting(true);
 
     try {
@@ -57,8 +58,10 @@ export default function CreateTagPage() {
 
       toast.success("Tag created successfully.");
       setForm(INITIAL_FORM);
+      return true;
     } catch (error) {
       toast.error(error.message);
+      return false;
     } finally {
       setSubmitting(false);
     }
@@ -133,6 +136,7 @@ export default function CreateTagPage() {
           </Button>
         </PageActions>
       </form>
+      <UnsavedChangesGuard when={dirty && !submitting} onSave={handleSubmit} />
     </PageContainer>
   );
 }
