@@ -9,7 +9,10 @@ const nextConfig = {
   images: {
     remotePatterns,
     // Uploaded images use version query parameters to refresh cached avatars.
-    localPatterns: [{ pathname: "/uploads/**" }],
+    localPatterns: [
+      { pathname: "/images/**" },
+      { pathname: "/uploads/**" },
+    ],
   },
   async headers() {
     return [

@@ -46,9 +46,10 @@ export default function LoginPage() {
     const refreshWhenVisible = () => {
       if (document.visibilityState === "visible") loadProfile();
     };
-    const channel = typeof BroadcastChannel === "undefined"
-      ? null
-      : new BroadcastChannel("admin-profile");
+    const channel =
+      typeof BroadcastChannel === "undefined"
+        ? null
+        : new BroadcastChannel("admin-profile");
     channel?.addEventListener("message", loadProfile);
     window.addEventListener("focus", loadProfile);
     document.addEventListener("visibilitychange", refreshWhenVisible);
@@ -92,7 +93,7 @@ export default function LoginPage() {
   const imageUrl = avatarFailed ? "" : avatarSource(profile);
 
   return (
-    <main className="relative flex min-h-dvh w-full items-center justify-center overflow-hidden bg-[#f5f4f1] px-4 py-8 dark:bg-gray-950 sm:px-6">
+    <main className="relative flex h-dvh w-full items-center justify-center overflow-hidden bg-[#f5f4f1] p-2 dark:bg-gray-950 sm:p-4">
       <div
         aria-hidden="true"
         className="absolute -left-24 top-0 h-80 w-80 rounded-full bg-brand-primary/15 blur-3xl"
@@ -110,12 +111,8 @@ export default function LoginPage() {
         }}
       />
 
-      <div className="absolute right-4 top-4 z-20 sm:right-6 sm:top-6">
-        <ThemeToggle />
-      </div>
-
-      <section className="relative z-10 grid w-full max-w-5xl overflow-hidden rounded-[2rem] border border-white/70 bg-white/90 shadow-[0_30px_100px_rgba(36,32,27,0.16)] backdrop-blur-xl dark:border-white/10 dark:bg-gray-900/90 dark:shadow-black/40 md:grid-cols-[0.9fr_1.1fr]">
-        <div className="relative hidden min-h-[650px] overflow-hidden bg-brand-primary p-10 text-white md:flex md:flex-col md:justify-between lg:p-12">
+      <section className="relative z-10 grid h-full max-h-[90dvh] min-h-0 w-full max-w-5xl overflow-hidden rounded-2xl border border-white/70 bg-white/90 shadow-[0_30px_100px_rgba(36,32,27,0.16)] backdrop-blur-xl dark:border-white/10 dark:bg-gray-900/90 dark:shadow-black/40 sm:rounded-[2rem] md:grid-cols-[0.9fr_1.1fr]">
+        <div className="relative hidden h-full min-h-0 overflow-hidden bg-brand-primary p-6 text-white md:flex md:flex-col md:justify-between lg:p-10">
           <div
             aria-hidden="true"
             className="absolute -right-24 -top-24 h-72 w-72 rounded-full border-[42px] border-white/10"
@@ -128,10 +125,10 @@ export default function LoginPage() {
             <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em]">
               <ShieldCheck className="h-4 w-4" /> Secure access
             </span>
-            <h1 className="mt-8 font-heading text-4xl font-bold leading-tight lg:text-5xl">
+            <h1 className="mt-5 font-heading text-3xl font-bold leading-tight lg:mt-8 lg:text-5xl">
               Welcome back to your CMS.
             </h1>
-            <p className="mt-5 max-w-sm text-sm leading-7 text-white/75">
+            <p className="mt-3 max-w-sm text-sm leading-6 text-white/75 lg:mt-5 lg:leading-7">
               Manage publications, website sections, media, and messages from
               one focused workspace.
             </p>
@@ -139,7 +136,7 @@ export default function LoginPage() {
           <div className="relative space-y-4">
             {[
               "Protected administrator access",
-              "Database-powered content management",
+              "Database powered content management",
               "Responsive publishing workspace",
             ].map((item) => (
               <div
@@ -153,89 +150,107 @@ export default function LoginPage() {
           </div>
         </div>
 
-        <div className="flex min-h-[620px] flex-col justify-center px-5 py-9 sm:px-10 lg:px-14 dark:bg-gray-800">
-          <Link
-            href="/"
-            className="mb-8 inline-flex w-fit items-center gap-2 text-sm font-medium text-text-muted transition hover:text-brand-primary dark:text-text-muted-dark"
-          >
-            <ArrowLeft className="h-4 w-4" /> Back to website
-          </Link>
+        <div className="h-full min-h-0 overflow-hidden px-4 dark:bg-gray-800 sm:px-10 lg:px-14">
+          <div className="relative flex h-full min-h-0 w-full flex-col items-center justify-around pb-2 pt-14 sm:pb-4">
+            <div className="absolute inset-x-0 md:-inset-x-5 lg:-inset-x-8 top-3 md:top-4 z-20 flex items-center justify-between">
+              <Link
+                href="/"
+                className="inline-flex w-fit items-center gap-2 text-xs font-medium text-text-muted transition hover:text-brand-primary dark:text-text-muted-dark sm:text-sm"
+              >
+                <ArrowLeft className="h-4 w-4" /> Back to website
+              </Link>
 
-          <div className="text-center">
-            <div className="relative mx-auto h-24 w-24">
-              <div className="absolute -inset-2 rounded-full bg-gradient-to-br from-brand-primary/30 to-brand-secondary/40 blur-md" />
-              <div className="relative flex h-24 w-24 items-center justify-center overflow-hidden rounded-full border-4 border-white bg-brand-primary/10 shadow-xl dark:border-gray-800">
-                {imageUrl ? (
-                  <Image
-                    src={imageUrl}
-                    alt={`${displayName} profile`}
-                    width={96}
-                    height={96}
-                    priority
-                    onError={() => setAvatarFailed(true)}
-                    className="h-full w-full object-cover"
-                  />
-                ) : (
-                  <UserRound className="h-10 w-10 text-brand-primary" />
-                )}
-              </div>
-              <span
-                className="absolute bottom-1 right-0 h-5 w-5 rounded-full border-4 border-white bg-emerald-500 dark:border-gray-800"
-                title="Administrator profile"
-              />
+              <ThemeToggle />
             </div>
-            <h2 className="mt-5 font-heading text-2xl font-bold text-heading dark:text-heading-dark">
-              {displayName}
-            </h2>
-            <p className="mt-1 text-sm text-text-muted dark:text-text-muted-dark">
-              {profile.role || "Administrator"}
-            </p>
-            <p className="mt-5 text-sm text-text dark:text-text-dark">
-              Enter your credentials to continue.
+
+            <div className="text-center">
+              <div className="relative mx-auto h-14 w-14 sm:h-16 sm:w-16">
+                <div className="absolute -inset-2 rounded-full bg-gradient-to-br from-brand-primary/30 to-brand-secondary/40 blur-md" />
+                <div className="relative flex h-14 w-14 items-center justify-center overflow-hidden rounded-full border-4 border-white bg-brand-primary/10 shadow-xl dark:border-gray-800 sm:h-16 sm:w-16">
+                  {imageUrl ? (
+                    <Image
+                      src={imageUrl}
+                      alt={`${displayName} profile`}
+                      width={64}
+                      height={64}
+                      priority
+                      onError={() => setAvatarFailed(true)}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <UserRound className="h-7 w-7 text-brand-primary sm:h-8 sm:w-8" />
+                  )}
+                </div>
+                <span
+                  className="absolute bottom-0.5 right-0 h-4 w-4 rounded-full border-[3px] border-white bg-emerald-500 dark:border-gray-800 sm:bottom-1 sm:h-5 sm:w-5 sm:border-4"
+                  title="Administrator profile"
+                />
+              </div>
+              <h2 className="mt-1 font-heading text-lg font-bold text-heading dark:text-heading-dark sm:mt-2 sm:text-xl">
+                {displayName}
+              </h2>
+              <p className="mt-0.5 text-xs text-text-muted dark:text-text-muted-dark sm:mt-1 sm:text-sm">
+                {profile.role || "Administrator"}
+              </p>
+              <p className="mt-1 text-xs text-text dark:text-text-dark sm:mt-2 sm:text-sm">
+                Enter your credentials to continue.
+              </p>
+            </div>
+
+            <form
+              onSubmit={handleSubmit}
+              className="w-full space-y-2 sm:space-y-3"
+            >
+              <InputField
+                id="username"
+                type="text"
+                label="Username"
+                value={form.username}
+                onChange={(event) =>
+                  updateField("username", event.target.value)
+                }
+                placeholder="Enter your username"
+                autoComplete="username"
+                required
+                className="bg-white/80 py-1.5 text-sm dark:bg-gray-950/60 sm:py-2"
+              />
+              <InputField
+                id="password"
+                type="password"
+                label="Password"
+                value={form.password}
+                onChange={(event) =>
+                  updateField("password", event.target.value)
+                }
+                placeholder="Enter your password"
+                autoComplete="current-password"
+                required
+                className="bg-white/80 py-1.5 text-sm dark:bg-gray-950/60 sm:py-2"
+              />
+              <div className="flex justify-end">
+                <Link
+                  href="/reset-password"
+                  className="text-xs font-medium text-brand-primary transition hover:opacity-75 sm:text-sm"
+                >
+                  Forgot password?
+                </Link>
+              </div>
+              <Button
+                type="submit"
+                size="sm"
+                leftIcon={LockKeyhole}
+                className="h-8 w-full text-sm shadow-lg shadow-brand-primary/20 sm:h-9"
+                loading={submitting}
+              >
+                Sign in securely
+              </Button>
+            </form>
+
+            <p className="text-center text-[11px] leading-4 text-text-muted dark:text-text-muted-dark sm:text-xs sm:leading-5">
+              Authorized administrators only. Login attempts are rate limited
+              and monitored.
             </p>
           </div>
-
-          <form onSubmit={handleSubmit} className="mt-7 space-y-5">
-            <InputField
-              id="username"
-              type="text"
-              label="Username"
-              value={form.username}
-              onChange={(event) => updateField("username", event.target.value)}
-              placeholder="Enter your username"
-              autoComplete="username"
-              required
-              className="bg-white/80 py-3.5 dark:bg-gray-950/60"
-            />
-            <InputField
-              id="password"
-              type="password"
-              label="Password"
-              value={form.password}
-              onChange={(event) => updateField("password", event.target.value)}
-              placeholder="Enter your password"
-              autoComplete="current-password"
-              required
-              className="bg-white/80 py-3.5 dark:bg-gray-950/60"
-            />
-            <div className="flex justify-end">
-              <Link href="/reset-password" className="text-sm font-medium text-brand-primary transition hover:opacity-75">Forgot password?</Link>
-            </div>
-            <Button
-              type="submit"
-              size="lg"
-              leftIcon={LockKeyhole}
-              className="w-full shadow-lg shadow-brand-primary/20"
-              loading={submitting}
-            >
-              Sign in securely
-            </Button>
-          </form>
-
-          <p className="mt-7 text-center text-xs leading-5 text-text-muted dark:text-text-muted-dark">
-            Authorized administrators only. Login attempts are rate limited and
-            monitored.
-          </p>
         </div>
       </section>
       <Toaster />
