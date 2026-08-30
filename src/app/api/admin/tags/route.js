@@ -10,7 +10,7 @@ export async function GET() {
 }
 
 export async function POST(request) {
-  if (!(await isAdminAuthenticated())) {
+  if (!(await isAdminAuthenticated(request))) {
     return Response.json({ message: "Unauthorized." }, { status: 401 });
   }
 

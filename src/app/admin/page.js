@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 
 import { prisma } from "@/lib/prisma";
+import { requireAdmin } from "@/lib/admin-auth";
 import ViewSectionLink from "@/components/admin/ui/ViewSectionLink";
 
 export const dynamic = "force-dynamic";
@@ -106,7 +107,7 @@ async function getDashboardData() {
     history,
     contact,
     settings,
-  ] = await prisma.$transaction([
+  ] = await Promise.all([
     prisma.post.count(),
     prisma.post.count({ where: { status: "published" } }),
     prisma.post.count({ where: { status: "draft" } }),
@@ -181,6 +182,7 @@ function EmptyRow({ children }) {
 }
 
 export default async function AdminDashboardPage({ searchParams }) {
+  await requireAdmin();
   const params = await searchParams;
   const demoMode = params?.demo === "1";
   let data;

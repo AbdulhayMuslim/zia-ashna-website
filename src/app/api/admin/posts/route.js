@@ -2,17 +2,18 @@ import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { databaseErrorResponse } from "@/lib/api-error";
 import { prisma } from "@/lib/prisma";
 import { createPostApiSchema } from "@/validations/blog";
+import { revalidatePath } from "next/cache";
 
 export async function GET() {
   if (!(await isAdminAuthenticated())) return Response.json({ message: "Unauthorized." }, { status: 401 });
   try {
-    const data = await prisma.post.findMany({ orderBy: { createdAt: "desc" }, include: { category: true, tags: { include: { tag: true } } } });
+    const data = await prisma.post.findMany({ take: 1000, orderBy: { createdAt: "desc" }, include: { category: true, tags: { include: { tag: true } } } });
     return Response.json({ data });
   } catch (error) { return databaseErrorResponse(error); }
 }
 
 export async function POST(request) {
-  if (!(await isAdminAuthenticated())) {
+  if (!(await isAdminAuthenticated(request))) {
     return Response.json({ message: "Unauthorized." }, { status: 401 });
   }
 
@@ -42,6 +43,8 @@ export async function POST(request) {
       },
       select: { id: true, slug: true },
     });
+    revalidatePath("/blog");
+    revalidatePath(`/blog/${post.slug}`);
 
     return Response.json(post, { status: 201 });
   } catch (error) {

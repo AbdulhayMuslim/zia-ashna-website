@@ -64,19 +64,17 @@ export async function POST(request) {
   if (!endpoint)
     return Response.json({ message: "Message received." }, { status: 201 });
 
-  const response = await fetch(endpoint, {
-    method: "POST",
-    headers: { "Content-Type": "application/json", Accept: "application/json" },
-    body: JSON.stringify(result.data),
-    signal: AbortSignal.timeout(10000),
-  });
-
-  if (!response.ok) {
-    return Response.json(
-      { message: "Message delivery failed." },
-      { status: 502 },
-    );
+  try {
+    const response = await fetch(endpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify(result.data),
+      signal: AbortSignal.timeout(10000),
+    });
+    if (!response.ok) console.error("Contact forwarding failed with status:", response.status);
+  } catch (error) {
+    console.error("Contact forwarding failed:", error);
   }
 
-  return Response.json({ message: "Message sent and saved." }, { status: 201 });
+  return Response.json({ message: "Message received." }, { status: 201 });
 }

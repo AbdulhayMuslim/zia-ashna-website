@@ -11,14 +11,14 @@ export async function GET(_request, { params }) {
   catch (error) { return databaseErrorResponse(error); }
 }
 export async function PUT(request, { params }) {
-  if (!(await isAdminAuthenticated())) return Response.json({ message: "Unauthorized." }, { status: 401 });
+  if (!(await isAdminAuthenticated(request))) return Response.json({ message: "Unauthorized." }, { status: 401 });
   const id = await getId(params); const result = createCategorySchema.safeParse(await request.json().catch(() => null));
   if (!id || !result.success) return Response.json({ message: "Invalid category." }, { status: 400 });
   try { return Response.json({ data: await prisma.category.update({ where: { id }, data: result.data }) }); }
   catch (error) { return databaseErrorResponse(error); }
 }
-export async function DELETE(_request, { params }) {
-  if (!(await isAdminAuthenticated())) return Response.json({ message: "Unauthorized." }, { status: 401 });
+export async function DELETE(request, { params }) {
+  if (!(await isAdminAuthenticated(request))) return Response.json({ message: "Unauthorized." }, { status: 401 });
   const id = await getId(params); if (!id) return Response.json({ message: "Invalid ID." }, { status: 400 });
   try { await prisma.category.delete({ where: { id } }); return new Response(null, { status: 204 }); }
   catch (error) {

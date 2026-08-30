@@ -36,10 +36,12 @@ export default function CreateBlogPostPage() {
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
-    fetch("/api/admin/categories")
+    const controller = new AbortController();
+    fetch("/api/admin/categories", { signal: controller.signal })
       .then((response) => response.json())
       .then((result) => setCategories(result.data ?? []))
-      .catch(() => toast.error("Unable to load categories."));
+      .catch((error) => { if (error.name !== "AbortError") toast.error("Unable to load categories."); });
+    return () => controller.abort();
   }, []);
 
   const {

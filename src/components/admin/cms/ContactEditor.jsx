@@ -102,7 +102,7 @@ export default function ContactEditor() {
       const response = await fetch("/api/admin/cms/contact", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, expectedUpdatedAt: saved.updatedAt }),
       });
       const result = await response.json();
       if (!response.ok) throw new Error(result.message || "Unable to save contact content.");

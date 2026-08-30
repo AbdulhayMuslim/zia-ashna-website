@@ -23,7 +23,7 @@ Copy `.env.example` to `.env.local` and configure:
 - `ADMIN_PASSWORD_SALT` and `ADMIN_PASSWORD_SCRYPT`: unique salt and scrypt password hash. The example file contains a generation command.
 - `AUTH_SECRET`: long random key used to sign the HTTP-only admin session.
 - `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASSWORD`, and `SMTP_FROM`: SMTP delivery settings for password-reset emails.
-- `CONTACT_FORM_ENDPOINT`: Formspree or another server-side JSON form endpoint.
+- `CONTACT_FORM_ENDPOINT`: optional Formspree-compatible forwarding endpoint. Leave it empty to save contact messages only in PostgreSQL.
 
 Never commit `.env.local` or real credentials.
 
@@ -56,7 +56,7 @@ All public content and admin collections use PostgreSQL. Run `npx prisma migrate
 ## Deployment checklist
 
 1. Provision PostgreSQL and S3-compatible object storage, then run `npx prisma migrate deploy`.
-2. Set every environment variable in the deployment platform.
+2. Set the required database, authentication, SMTP, site URL, and S3 environment variables in the deployment platform. `CONTACT_FORM_ENDPOINT` may remain empty.
 3. Replace or remove social links until verified profile URLs are available.
 4. Run `npm run check`.
 5. Test login, logout, contact delivery, post rendering, mobile navigation, keyboard navigation, and error states.

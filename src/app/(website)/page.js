@@ -6,6 +6,10 @@ import Contact from "@/components/sections/Contact";
 import Activity from "@/components/sections/Activity";
 import { getHomepageContent } from "@/lib/public-data";
 
+export const metadata = {
+  alternates: { canonical: "/" },
+};
+
 export default async function Home() {
   const content = await getHomepageContent();
 

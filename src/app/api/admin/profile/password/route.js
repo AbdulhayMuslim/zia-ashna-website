@@ -61,7 +61,7 @@ export async function GET() {
 }
 
 export async function PUT(request) {
-  if (!(await isAdminAuthenticated()))
+  if (!(await isAdminAuthenticated(request)))
     return Response.json({ message: "Unauthorized." }, { status: 401 });
   const rateLimit = await allowPasswordAttempt(request);
   if (!rateLimit.allowed)
@@ -118,6 +118,7 @@ export async function PUT(request) {
         passwordHash: next.hash,
         passwordSalt: next.salt,
         passwordChangedAt: new Date(),
+        sessionVersion: { increment: 1 },
       },
     });
     return Response.json({
@@ -136,7 +137,7 @@ export async function PUT(request) {
 }
 
 export async function DELETE(request) {
-  if (!(await isAdminAuthenticated()))
+  if (!(await isAdminAuthenticated(request)))
     return Response.json({ message: "Unauthorized." }, { status: 401 });
   const rateLimit = await allowPasswordAttempt(request);
   if (!rateLimit.allowed)
@@ -180,6 +181,7 @@ export async function DELETE(request) {
         passwordHash: null,
         passwordSalt: null,
         passwordChangedAt: new Date(),
+        sessionVersion: { increment: 1 },
       },
     });
     return Response.json({

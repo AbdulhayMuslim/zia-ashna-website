@@ -6,12 +6,12 @@ import { mediaSchema } from "@/validations/cms";
 export async function GET() {
   if (!(await isAdminAuthenticated())) return Response.json({ message: "Unauthorized." }, { status: 401 });
   try {
-    return Response.json({ data: await prisma.mediaAsset.findMany({ orderBy: { uploadedAt: "desc" } }) });
+    return Response.json({ data: await prisma.mediaAsset.findMany({ take: 1000, orderBy: { uploadedAt: "desc" } }) });
   } catch (error) { return databaseErrorResponse(error); }
 }
 
 export async function POST(request) {
-  if (!(await isAdminAuthenticated())) return Response.json({ message: "Unauthorized." }, { status: 401 });
+  if (!(await isAdminAuthenticated(request))) return Response.json({ message: "Unauthorized." }, { status: 401 });
   const result = mediaSchema.safeParse(await request.json().catch(() => null));
   if (!result.success) return Response.json({ message: "Invalid media details.", errors: result.error.flatten().fieldErrors }, { status: 400 });
   try {

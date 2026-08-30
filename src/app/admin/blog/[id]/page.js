@@ -47,16 +47,18 @@ export default function EditBlogPostPage() {
   );
 
   useEffect(() => {
+    const controller = new AbortController();
     Promise.all([
-      fetch(`/api/admin/posts/${id}`).then((response) => response.json().then((body) => ({ response, body }))),
-      fetch("/api/admin/categories").then((response) => response.json()),
+      fetch(`/api/admin/posts/${id}`, { signal: controller.signal }).then((response) => response.json().then((body) => ({ response, body }))),
+      fetch("/api/admin/categories", { signal: controller.signal }).then((response) => response.json()),
     ]).then(([postResult, categoryResult]) => {
       if (!postResult.response.ok) throw new Error(postResult.body.message);
       const data = postResult.body.data;
       setPost(data); setTitle(data.title); setSlug(data.slug); setCategory(data.category.slug);
       setExcerpt(data.excerpt); setContent(data.content); setImage(data.featuredImage);
       setStatus(data.status); setFeatured(data.featured); setCategories(categoryResult.data ?? []);
-    }).catch((error) => toast.error(error.message));
+    }).catch((error) => { if (error.name !== "AbortError") toast.error(error.message); });
+    return () => controller.abort();
   }, [id]);
 
   async function save() {

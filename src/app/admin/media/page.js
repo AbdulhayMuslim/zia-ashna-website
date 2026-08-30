@@ -21,13 +21,15 @@ export default function MediaPage() {
   const fileInputRef = useRef(null);
 
   useEffect(() => {
-    fetch("/api/admin/media")
+    const controller = new AbortController();
+    fetch("/api/admin/media", { signal: controller.signal })
       .then(async (response) => {
         const result = await response.json();
         if (!response.ok) throw new Error(result.message);
         setMedia(result.data ?? []);
       })
-      .catch((error) => toast.error(error.message));
+      .catch((error) => { if (error.name !== "AbortError") toast.error(error.message); });
+    return () => controller.abort();
   }, []);
 
   const filteredMedia = useMemo(() => {

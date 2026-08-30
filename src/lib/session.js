@@ -18,14 +18,14 @@ async function sign(value, secret) {
   return toBase64Url(await crypto.subtle.sign("HMAC", key, encoder.encode(value)));
 }
 
-export async function createSessionToken(username, secret) {
+export async function createSessionToken(username, secret, sessionVersion = 0) {
   const payload = toBase64Url(
-    JSON.stringify({ username, expiresAt: Date.now() + 8 * 60 * 60 * 1000 }),
+    JSON.stringify({ username, sessionVersion, expiresAt: Date.now() + 8 * 60 * 60 * 1000 }),
   );
   return `${payload}.${await sign(payload, secret)}`;
 }
 
-export async function verifySessionToken(token, secret) {
+export async function verifySessionToken(token, secret, expectedVersion) {
   if (!token || !secret) return false;
   const [payload, signature] = token.split(".");
   if (!payload || !signature || (await sign(payload, secret)) !== signature) return false;
@@ -33,7 +33,8 @@ export async function verifySessionToken(token, secret) {
   try {
     const base64 = payload.replaceAll("-", "+").replaceAll("_", "/");
     const data = JSON.parse(atob(base64));
-    return typeof data.username === "string" && data.expiresAt > Date.now();
+    const validVersion = expectedVersion === undefined || data.sessionVersion === expectedVersion;
+    return typeof data.username === "string" && Number.isInteger(data.sessionVersion) && validVersion && data.expiresAt > Date.now();
   } catch {
     return false;
   }

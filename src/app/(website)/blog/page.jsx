@@ -4,6 +4,7 @@ import { getPublishedPosts } from "@/lib/public-data";
 export const metadata = {
   title: "Blog",
   description: "Articles and insights from Sayed Zia Ashna.",
+  alternates: { canonical: "/blog" },
 };
 
 export default async function BlogPage() {

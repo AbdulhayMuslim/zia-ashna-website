@@ -57,9 +57,10 @@ export async function POST(request) {
           passwordHash: next.hash,
           passwordSalt: next.salt,
           passwordChangedAt: changedAt,
+          sessionVersion: { increment: 1 },
         },
       });
-      await tx.passwordResetToken.deleteMany({});
+      await tx.passwordResetToken.deleteMany({ where: { expiresAt: { lte: changedAt } } });
     });
 
     const response = Response.json({ message: "Password reset successfully." });

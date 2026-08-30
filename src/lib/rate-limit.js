@@ -8,17 +8,36 @@ function hashKey(value) {
 
 export async function consumeRateLimit({ scope, key, limit, windowMs }) {
   const keyHash = hashKey(key);
-  const cutoff = new Date(Date.now() - windowMs);
-  const [, , count] = await prisma.$transaction([
-    prisma.rateLimitEvent.deleteMany({ where: { createdAt: { lt: cutoff } } }),
-    prisma.rateLimitEvent.create({ data: { scope, keyHash } }),
-    prisma.rateLimitEvent.count({ where: { scope, keyHash, createdAt: { gte: cutoff } } }),
-  ]);
+  const now = new Date();
+  const cutoff = new Date(now.getTime() - windowMs);
+  let count;
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    try {
+      count = await prisma.$transaction(async (tx) => {
+        const existing = await tx.rateLimitBucket.findUnique({ where: { scope_keyHash: { scope, keyHash } } });
+        if (!existing) {
+          const created = await tx.rateLimitBucket.create({ data: { scope, keyHash, windowStart: now, count: 1 } });
+          return created.count;
+        }
+        const updated = await tx.rateLimitBucket.update({
+          where: { scope_keyHash: { scope, keyHash } },
+          data: existing.windowStart < cutoff
+            ? { windowStart: now, count: 1 }
+            : { count: { increment: 1 } },
+        });
+        return updated.count;
+      }, { isolationLevel: "Serializable" });
+      break;
+    } catch (error) {
+      if (attempt === 2 || !["P2002", "P2034"].includes(error?.code)) throw error;
+    }
+  }
   return { allowed: count <= limit, remaining: Math.max(0, limit - count) };
 }
 
 export function getClientKey(request) {
-  return request.headers.get("x-forwarded-for")?.split(",")[0]?.trim()
-    || request.headers.get("x-real-ip")?.trim()
+  const trustedForwarding = process.env.TRUST_PROXY_HEADERS === "true" || Boolean(process.env.VERCEL || process.env.CF_PAGES);
+  return (trustedForwarding ? request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() : null)
+    || (process.env.CF_PAGES ? request.headers.get("cf-connecting-ip")?.trim() : null)
     || "local";
 }

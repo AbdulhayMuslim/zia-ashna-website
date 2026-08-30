@@ -34,7 +34,7 @@ export async function createAndSendPasswordReset({ email, fullName, requestUrl }
   resetUrl.searchParams.set("token", token);
 
   await prisma.$transaction([
-    prisma.passwordResetToken.deleteMany({}),
+    prisma.passwordResetToken.deleteMany({ where: { expiresAt: { lte: new Date() } } }),
     prisma.passwordResetToken.create({ data: { tokenHash, expiresAt } }),
   ]);
 

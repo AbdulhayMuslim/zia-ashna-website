@@ -94,7 +94,7 @@ export default function CmsEditor({
   const save = async () => {
     setSubmitting(true);
     try {
-      const response = await fetch(`/api/admin/cms/${section}`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(form) });
+      const response = await fetch(`/api/admin/cms/${section}`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ...form, expectedUpdatedAt: saved.updatedAt }) });
       const result = await response.json();
       if (!response.ok) throw new Error(result.message || "Unable to save content.");
       const next = { ...initialValue, ...result.data };

@@ -33,7 +33,7 @@ export async function POST(request) {
   );
   const profile = await prisma.adminProfile.findUnique({
     where: { id: 1 },
-    select: { username: true, passwordHash: true, passwordSalt: true },
+    select: { username: true, passwordHash: true, passwordSalt: true, sessionVersion: true },
   });
   const username =
     profile?.username?.trim() || process.env.ADMIN_USERNAME?.trim();
@@ -68,7 +68,7 @@ export async function POST(request) {
     );
   }
 
-  const token = await createSessionToken(username, secret);
+  const token = await createSessionToken(username, secret, profile?.sessionVersion ?? 0);
   const response = Response.json({ message: "Signed in." });
   response.headers.append(
     "Set-Cookie",

@@ -29,7 +29,9 @@ model Post {
   tags          PostTag[]
 
   @@index([categoryId])
-  @@index([status, publishedAt])
+  @@index([status, featured, publishedAt, id])
+  @@index([createdAt])
+  @@index([updatedAt])
 }
 
 model Category {
@@ -72,6 +74,8 @@ model HeroSection {
   buttonLabel  String     @default("Get In Touch") @db.VarChar(80)
   buttonUrl    String     @default("#contact") @db.VarChar(500)
   heroImageUrl String?    @db.VarChar(1000)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
   logos        HeroLogo[]
 }
 
@@ -251,6 +255,7 @@ model ContactSubmission {
   createdAt DateTime @default(now())
 
   @@index([status, createdAt])
+  @@index([createdAt])
   @@index([email])
 }
 
@@ -290,6 +295,7 @@ model AdminProfile {
   passwordHash      String?   @db.VarChar(128)
   passwordSalt      String?   @db.VarChar(64)
   passwordChangedAt DateTime?
+  sessionVersion    Int       @default(0)
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
 }
@@ -322,4 +328,15 @@ model RateLimitEvent {
 
   @@index([scope, keyHash, createdAt])
   @@index([createdAt])
+}
+
+model RateLimitBucket {
+  scope       String   @db.VarChar(80)
+  keyHash     String   @db.VarChar(64)
+  windowStart DateTime
+  count       Int      @default(0)
+  updatedAt   DateTime @updatedAt
+
+  @@id([scope, keyHash])
+  @@index([updatedAt])
 }

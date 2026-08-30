@@ -28,6 +28,7 @@ import DataTableToolbar from "@/components/admin/ui/DataTable/DataTableToolbar";
 import DataTablePagination from "@/components/admin/ui/DataTable/DataTablePagination";
 
 import { toast } from "@/components/admin/ui/Toast";
+import { sanitizeRichText } from "@/lib/sanitize-content";
 
 const shorten = (value, limit) => value.length > limit ? `${value.slice(0, limit).trimEnd()}…` : value;
 const generateSlug = (value) => value.toLowerCase().trim().replace(/['"]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
@@ -385,7 +386,7 @@ function PostDetailsDialog({ post, onClose, onEdit, onDelete }) {
 
             <section className="rounded-2xl border border-border bg-card p-4 dark:bg-gray-800">
               <h3 className="mb-3 text-sm font-semibold text-heading dark:text-heading-dark">Content</h3>
-              <div className="whitespace-pre-wrap text-sm leading-7 text-text dark:text-text-dark [&_a]:text-brand-primary [&_ol]:list-decimal [&_ol]:pl-5 [&_p]:mb-3 [&_ul]:list-disc [&_ul]:pl-5" dangerouslySetInnerHTML={{ __html: post.content || "No content provided." }} />
+              <div className="whitespace-pre-wrap text-sm leading-7 text-text dark:text-text-dark [&_a]:text-brand-primary [&_ol]:list-decimal [&_ol]:pl-5 [&_p]:mb-3 [&_ul]:list-disc [&_ul]:pl-5" dangerouslySetInnerHTML={{ __html: sanitizeRichText(post.content || "No content provided.") }} />
             </section>
           </div>
 

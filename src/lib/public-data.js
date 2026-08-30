@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { cache } from "react";
 
 const orderBy = { sortOrder: "asc" };
 
@@ -14,22 +15,24 @@ export function formatPost(post) {
 }
 
 export async function getPublishedPosts({ take, skip } = {}) {
+  const safeTake = Number.isInteger(take) ? Math.min(Math.max(take, 1), 100) : 100;
+  const safeSkip = Number.isInteger(skip) ? Math.max(skip, 0) : 0;
   const posts = await prisma.post.findMany({
     where: { status: "published" },
     orderBy: [{ featured: "desc" }, { publishedAt: "desc" }, { id: "desc" }],
-    ...(Number.isInteger(take) ? { take } : {}),
-    ...(Number.isInteger(skip) ? { skip } : {}),
+    take: safeTake,
+    skip: safeSkip,
     include: { category: true, tags: { include: { tag: true } } },
   });
   return posts.map(formatPost);
 }
 
-export function getPublishedPost(slug) {
+export const getPublishedPost = cache(function getPublishedPost(slug) {
   return prisma.post.findFirst({
     where: { slug, status: "published" },
     include: { category: true, tags: { include: { tag: true } } },
   });
-}
+});
 
 export async function getHomepageContent() {
   const [hero, about, activity, history, contact, settings, posts] = await Promise.all([
@@ -44,9 +47,9 @@ export async function getHomepageContent() {
   return { hero, about, activity, history, contact, settings, posts };
 }
 
-export function getSiteSettings() {
+export const getSiteSettings = cache(function getSiteSettings() {
   return prisma.siteSettings.findUnique({ where: { id: 1 } });
-}
+});
 
 export async function getWebsiteChrome() {
   const [settings, contact] = await Promise.all([

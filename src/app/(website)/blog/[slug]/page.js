@@ -1,19 +1,22 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import sanitizeHtml from "sanitize-html";
 
 import BackButton from "@/components/ui/BackButton";
 import Container from "@/components/ui/Container";
 import { formatPost, getPublishedPost } from "@/lib/public-data";
+import { sanitizeRichText } from "@/lib/sanitize-content";
 
 export async function generateMetadata({ params }) {
-  const post = await getPublishedPost((await params).slug);
+  const slug = (await params).slug;
+  const post = await getPublishedPost(slug);
   if (!post) return { title: "Post not found" };
   return {
     title: post.title,
     description: post.excerpt,
+    alternates: { canonical: `/blog/${slug}` },
     openGraph: {
       type: "article",
+      url: `/blog/${slug}`,
       title: post.title,
       description: post.excerpt,
       publishedTime: post.publishedAt?.toISOString(),
@@ -26,11 +29,7 @@ export default async function BlogPost({ params }) {
   const record = await getPublishedPost((await params).slug);
   if (!record) notFound();
   const post = formatPost(record);
-  const safeContent = sanitizeHtml(post.content, {
-    allowedTags: sanitizeHtml.defaults.allowedTags.concat(["img", "h1", "h2"]),
-    allowedAttributes: { ...sanitizeHtml.defaults.allowedAttributes, img: ["src", "alt", "title", "width", "height", "loading"] },
-    allowedSchemes: ["http", "https", "mailto"],
-  });
+  const safeContent = sanitizeRichText(post.content);
 
   return (
     <main className="min-h-screen py-30">
