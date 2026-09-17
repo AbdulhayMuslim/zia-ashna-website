@@ -45,7 +45,7 @@ export async function deleteStoredMedia(url) {
   }
   if (url.startsWith("/uploads/")) {
     const relative = url.slice(1).split("/");
-    if (relative.some((part) => part === "..")) return;
+    if (relative.length !== 2 || !/^[a-zA-Z0-9][a-zA-Z0-9._-]*$/.test(relative[1]) || relative[1].includes("..")) return;
     await unlink(path.join(process.cwd(), "public", ...relative)).catch((error) => {
       if (error.code !== "ENOENT") throw error;
     });

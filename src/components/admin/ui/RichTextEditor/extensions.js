@@ -7,6 +7,8 @@ import TextAlign from "@tiptap/extension-text-align";
 
 const extensions = [
   StarterKit.configure({
+    link: false,
+    underline: false,
     heading: {
       levels: [1, 2, 3],
     },

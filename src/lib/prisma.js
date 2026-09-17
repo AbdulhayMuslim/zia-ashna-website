@@ -11,7 +11,7 @@ function createPrismaClient() {
   }
 
   return new PrismaClient({
-    adapter: new PrismaPg({ connectionString }),
+    adapter: new PrismaPg({ connectionString }, { schema: new URL(connectionString).searchParams.get("schema") || "public" }),
   });
 }
 

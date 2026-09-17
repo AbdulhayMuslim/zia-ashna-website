@@ -1,8 +1,9 @@
+import { readBoundedBody, RequestBodyTooLargeError } from "@/lib/request-security";
 import { randomUUID } from "node:crypto";
 
 import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { databaseErrorResponse } from "@/lib/api-error";
-import { compressPostImage, POST_IMAGE_COMPRESSION_THRESHOLD_BYTES, POST_IMAGE_MAX_BYTES } from "@/lib/image-processing";
+import { compressPostImage, validatePostImage, POST_IMAGE_COMPRESSION_THRESHOLD_BYTES, POST_IMAGE_MAX_BYTES } from "@/lib/image-processing";
 import { deleteStoredMedia, storeMedia } from "@/lib/media-storage";
 import { prisma } from "@/lib/prisma";
 
@@ -12,7 +13,13 @@ const allowedImageTypes = new Set(["image/jpeg", "image/png", "image/webp"]);
 
 export async function POST(request) {
   if (!(await isAdminAuthenticated(request))) return Response.json({ message: "Unauthorized." }, { status: 401 });
-  const formData = await request.formData().catch(() => null);
+  let formData;
+  try {
+    const body = await readBoundedBody(request, POST_IMAGE_MAX_BYTES + 64 * 1024);
+    formData = await new Response(body, { headers: { "Content-Type": request.headers.get("content-type") || "" } }).formData();
+  } catch (error) {
+    return Response.json({ message: "Invalid upload or maximum 2 MB upload limit exceeded." }, { status: error instanceof RequestBodyTooLargeError ? 413 : 400 });
+  }
   const file = formData?.get("file");
   if (!(file instanceof File) || !file.size) return Response.json({ message: "Choose an image to upload." }, { status: 400 });
   if (!allowedImageTypes.has(file.type)) return Response.json({ message: "Supported image formats are JPG, PNG, and WebP." }, { status: 415 });
@@ -20,6 +27,9 @@ export async function POST(request) {
 
   try {
     const source = Buffer.from(await file.arrayBuffer());
+    try { await validatePostImage(source, file.type); } catch {
+      return Response.json({ message: "Choose a valid JPG, PNG, or WebP image with no more than 25 million pixels." }, { status: 400 });
+    }
     let compressed = false;
     let buffer = source;
     if (file.size > POST_IMAGE_COMPRESSION_THRESHOLD_BYTES) {
@@ -40,7 +50,7 @@ export async function POST(request) {
       await deleteStoredMedia(url).catch((cleanupError) => console.error("Upload cleanup failed:", cleanupError));
       return databaseErrorResponse(error);
     }
-  } catch (error) {
-    return Response.json({ message: error.message || "Unable to process image." }, { status: 400 });
+  } catch {
+    return Response.json({ message: "Unable to process or store the image. Please try again." }, { status: 400 });
   }
 }

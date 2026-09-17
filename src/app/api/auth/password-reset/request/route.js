@@ -1,3 +1,5 @@
+import { isSameOriginRequest } from "@/lib/request-security";
+import { readJsonBody } from "@/lib/request-security";
 import { z } from "zod";
 
 import { isAdminAuthenticated } from "@/lib/admin-auth";
@@ -16,6 +18,7 @@ const GENERIC_MESSAGE =
   "If that email matches the administrator profile, a reset link has been sent.";
 
 export async function POST(request) {
+  if (!isSameOriginRequest(request)) return Response.json({ message: "Cross-origin requests are not allowed." }, { status: 403 });
   const rateLimit = await consumeRateLimit({
     scope: "password-reset-request",
     key: getClientKey(request),
@@ -29,7 +32,7 @@ export async function POST(request) {
     );
 
   const result = requestSchema.safeParse(
-    await request.json().catch(() => ({})),
+    await readJsonBody(request).catch(() => ({})),
   );
   if (!result.success)
     return Response.json(

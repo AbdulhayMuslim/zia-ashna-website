@@ -13,11 +13,10 @@ export async function proxy(request) {
     return NextResponse.redirect(loginUrl);
   }
 
-  if (authenticated && isLogin) {
-    return NextResponse.redirect(new URL("/admin", request.url));
-  }
 
-  return NextResponse.next();
+  const headers = new Headers(request.headers);
+  headers.set("x-admin-pathname", pathname);
+  return NextResponse.next({ request: { headers } });
 }
 
 export const config = { matcher: ["/admin/:path*"] };

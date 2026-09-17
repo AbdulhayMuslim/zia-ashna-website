@@ -1,3 +1,5 @@
+import { isSameOriginRequest } from "@/lib/request-security";
+import { readJsonBody } from "@/lib/request-security";
 import { z } from "zod";
 
 import { databaseErrorResponse } from "@/lib/api-error";
@@ -19,6 +21,7 @@ const confirmSchema = z
   });
 
 export async function POST(request) {
+  if (!isSameOriginRequest(request)) return Response.json({ message: "Cross-origin requests are not allowed." }, { status: 403 });
   const rateLimit = await consumeRateLimit({
     scope: "password-reset-confirm",
     key: getClientKey(request),
@@ -31,7 +34,7 @@ export async function POST(request) {
       { status: 429 },
     );
   const result = confirmSchema.safeParse(
-    await request.json().catch(() => null),
+    await readJsonBody(request),
   );
   if (!result.success)
     return Response.json(

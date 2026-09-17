@@ -1,3 +1,4 @@
+import { nullableAssetUrl } from "./urls.js";
 import { z } from "zod";
 
 export const createBlogSchema = z.object({
@@ -25,17 +26,17 @@ export const createBlogSchema = z.object({
     .min(20, "Excerpt must be at least 20 characters.")
     .max(500, "Excerpt cannot exceed 500 characters."),
 
-  content: z.string().trim().min(50, "Content must be at least 50 characters."),
+  content: z.string().trim().min(50, "Content must be at least 50 characters.").max(200000),
 
   status: z.enum(["draft", "published"]),
 
   featured: z.boolean(),
 
-  featuredImage: z.string().trim().max(2048).nullable().optional(),
+  featuredImage: nullableAssetUrl,
 });
 
 export const createPostApiSchema = createBlogSchema.extend({
-  tagIds: z.array(z.coerce.number().int().positive()).max(20).default([]),
+  tagIds: z.array(z.coerce.number().int().positive()).max(20).default([]).transform((ids) => [...new Set(ids)]),
 });
 
 export const updatePostStatusSchema = z.object({

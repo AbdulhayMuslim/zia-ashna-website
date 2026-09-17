@@ -1,3 +1,4 @@
+import { readJsonBody } from "@/lib/request-security";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { databaseErrorResponse } from "@/lib/api-error";
 import { isCmsSection, readCmsSection, writeCmsSection } from "@/lib/cms-data";
@@ -21,15 +22,16 @@ export async function GET(_request, { params }) {
 export async function PUT(request, { params }) {
   if (!(await isAdminAuthenticated(request))) return Response.json({ message: "Unauthorized." }, { status: 401 });
   const { section } = await params;
-  const schema = cmsSchemas[section];
+  const schema = Object.hasOwn(cmsSchemas, section) ? cmsSchemas[section] : null;
   if (!schema) return Response.json({ message: "Unknown CMS section." }, { status: 404 });
-  const result = schema.safeParse(await request.json().catch(() => null));
+  const result = schema.safeParse(await readJsonBody(request));
   if (!result.success) return Response.json({ message: "Please check the form fields.", errors: result.error.flatten().fieldErrors }, { status: 400 });
   try {
     const data = await writeCmsSection(section, result.data);
     revalidatePath("/", "layout");
     return Response.json({ data });
   } catch (error) {
+    if (error?.message === "CMS_WRITE_CONFLICT" || error?.code === "P2034") return Response.json({ message: "This content changed in another session. Reload before saving again." }, { status: 409 });
     return databaseErrorResponse(error);
   }
 }

@@ -1,3 +1,5 @@
+import { isSameOriginRequest } from "@/lib/request-security";
+import { readJsonBody } from "@/lib/request-security";
 import { timingSafeEqual } from "node:crypto";
 import { z } from "zod";
 import { createSessionToken, SESSION_COOKIE } from "@/lib/session";
@@ -17,6 +19,7 @@ function safeEqual(left, right) {
 }
 
 export async function POST(request) {
+  if (!isSameOriginRequest(request)) return Response.json({ message: "Cross-origin requests are not allowed." }, { status: 403 });
   const rateLimit = await consumeRateLimit({
     scope: "admin-login",
     key: getClientKey(request),
@@ -29,7 +32,7 @@ export async function POST(request) {
       { status: 429 },
     );
   const result = credentialsSchema.safeParse(
-    await request.json().catch(() => null),
+    await readJsonBody(request),
   );
   const profile = await prisma.adminProfile.findUnique({
     where: { id: 1 },

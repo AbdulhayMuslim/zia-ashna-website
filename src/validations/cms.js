@@ -1,27 +1,14 @@
+import { assetUrl, localAssetPath, nullableAssetUrl, webUrl } from "./urls.js";
 import { z } from "zod";
 
 const text = (max = 500) => z.string().trim().max(max);
 const requiredText = (max = 500) => text(max).min(1, "This field is required.");
-const webUrl = z
-  .url()
-  .max(1000)
-  .refine((value) => /^https?:\/\//i.test(value), "Use a valid HTTP or HTTPS URL.");
-const localAssetPath = z
-  .string()
-  .trim()
-  .max(1000)
-  .regex(/^\/(?!\/)/, "Use a valid image path.");
-const assetUrl = z.union([webUrl, localAssetPath]);
 const navigationUrl = z.union([
   z.string().trim().max(500).regex(/^#[-\w]+$/, "Use a valid section link."),
-  z.string().trim().max(500).regex(/^\/(?!\/)/, "Use a valid local path."),
+  localAssetPath,
   webUrl,
 ]);
 const nullableUrl = z.union([z.literal(""), webUrl]).optional().nullable();
-const nullableAssetUrl = z.union([
-  z.literal(""),
-  assetUrl,
-]).optional().nullable();
 const ordered = { sortOrder: z.coerce.number().int().min(0).optional() };
 const concurrency = { expectedUpdatedAt: z.iso.datetime().optional() };
 const contactLink = z.union([
@@ -68,7 +55,7 @@ export const historySchema = z.object({
 export const contactSchema = z.object({
   ...concurrency,
   sectionTitle: requiredText(120), heading: text(240), description: text(5000),
-  cards: z.array(z.object({ title: requiredText(200), icon: text(80).optional(), ...ordered })).max(30),
+  cards: z.array(z.object({ title: requiredText(200), icon: text(80).optional().nullable(), ...ordered })).max(30),
   addresses: z.array(z.object({
     label: requiredText(120), value: requiredText(500), icon: text(80).default("MapPin"), linkUrl: contactLink, ...ordered,
   })).max(30),
@@ -79,22 +66,22 @@ export const contactSchema = z.object({
 
 export const settingsSchema = z.object({
   ...concurrency,
-  siteName: requiredText(160), siteDescription: text(5000), logoUrl: nullableUrl, faviconUrl: nullableUrl,
-  contactEmail: z.union([z.literal(""), z.email().max(254)]).optional().nullable(), phone: text(60).optional(), address: text(2000).optional(),
-  seoTitle: text(200).optional(), seoDescription: text(1000).optional(), facebook: nullableUrl, twitter: nullableUrl,
-  instagram: nullableUrl, linkedin: nullableUrl, youtube: nullableUrl, copyright: text(300).optional(),
+  siteName: requiredText(160), siteDescription: text(5000), logoUrl: nullableAssetUrl, faviconUrl: nullableAssetUrl,
+  contactEmail: z.union([z.literal(""), z.email().max(254)]).optional().nullable(), phone: text(60).optional().nullable(), address: text(2000).optional().nullable(),
+  seoTitle: text(200).optional().nullable(), seoDescription: text(1000).optional().nullable(), facebook: nullableUrl, twitter: nullableUrl,
+  instagram: nullableUrl, linkedin: nullableUrl, youtube: nullableUrl, copyright: text(300).optional().nullable(),
   whatsapp: nullableUrl,
 });
 
 export const profileSchema = z.object({
   ...concurrency,
   fullName: text(160), username: requiredText(100), email: z.union([z.literal(""), z.email().max(254)]).optional().nullable(),
-  phone: text(60).optional(), jobTitle: text(160).optional(), avatarUrl: nullableAssetUrl,
+  phone: text(60).optional().nullable(), jobTitle: text(160).optional().nullable(), avatarUrl: nullableAssetUrl,
 });
 
 export const mediaSchema = z.object({
   name: requiredText(255), url: assetUrl, mimeType: requiredText(120),
-  sizeBytes: z.coerce.number().int().min(0), altText: text(300).optional(),
+  sizeBytes: z.coerce.number().int().min(0), altText: text(300).optional().nullable(),
 });
 
 export const cmsSchemas = {

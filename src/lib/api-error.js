@@ -15,6 +15,13 @@ export function databaseErrorResponse(error) {
     );
   }
 
+  if (error?.code === "P2002") {
+    return Response.json(
+      { success: false, error: "ALREADY_EXISTS", message: "A record with these details already exists." },
+      { status: 409 },
+    );
+  }
+
   if (error?.code === "P2025") {
     return Response.json(
       { success: false, error: "NOT_FOUND", message: "The requested record was not found." },

@@ -1,3 +1,5 @@
+import { createSessionToken, SESSION_COOKIE } from "@/lib/session";
+import { readJsonBody } from "@/lib/request-security";
 import { z } from "zod";
 
 import { isAdminAuthenticated } from "@/lib/admin-auth";
@@ -70,7 +72,7 @@ export async function PUT(request) {
       { status: 429 },
     );
   const result = changePasswordSchema.safeParse(
-    await request.json().catch(() => null),
+    await readJsonBody(request),
   );
   if (!result.success)
     return Response.json(
@@ -106,7 +108,7 @@ export async function PUT(request) {
         { status: 400 },
       );
     const next = createPasswordHash(result.data.newPassword);
-    await prisma.adminProfile.upsert({
+    const updatedProfile = await prisma.adminProfile.upsert({
       where: { id: 1 },
       create: {
         id: 1,
@@ -121,7 +123,7 @@ export async function PUT(request) {
         sessionVersion: { increment: 1 },
       },
     });
-    return Response.json({
+    const response = Response.json({
       data: {
         customPassword: true,
         changedAt: new Date(),
@@ -131,6 +133,8 @@ export async function PUT(request) {
       },
       message: "Password updated.",
     });
+    await renewSession(response, updatedProfile);
+    return response;
   } catch (error) {
     return databaseErrorResponse(error);
   }
@@ -146,7 +150,7 @@ export async function DELETE(request) {
       { status: 429 },
     );
   const result = resetPasswordSchema.safeParse(
-    await request.json().catch(() => null),
+    await readJsonBody(request),
   );
   if (!result.success)
     return Response.json(
@@ -175,7 +179,7 @@ export async function DELETE(request) {
         { message: "Current password is incorrect." },
         { status: 400 },
       );
-    await prisma.adminProfile.update({
+    const updatedProfile = await prisma.adminProfile.update({
       where: { id: 1 },
       data: {
         passwordHash: null,
@@ -184,11 +188,18 @@ export async function DELETE(request) {
         sessionVersion: { increment: 1 },
       },
     });
-    return Response.json({
+    const response = Response.json({
       data: { customPassword: false, changedAt: new Date(), canReset: true },
       message: "Password reset to the server-configured password.",
     });
+    await renewSession(response, updatedProfile);
+    return response;
   } catch (error) {
     return databaseErrorResponse(error);
   }
+}
+
+async function renewSession(response, profile) {
+  const token = await createSessionToken(profile.username, process.env.AUTH_SECRET, profile.sessionVersion);
+  response.headers.append("Set-Cookie", `${SESSION_COOKIE}=${token}; Path=/; HttpOnly; SameSite=Strict; Max-Age=28800${process.env.NODE_ENV === "production" ? "; Secure" : ""}`);
 }

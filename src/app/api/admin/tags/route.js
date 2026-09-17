@@ -1,3 +1,4 @@
+import { readJsonBody } from "@/lib/request-security";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { databaseErrorResponse } from "@/lib/api-error";
 import { prisma } from "@/lib/prisma";
@@ -14,7 +15,7 @@ export async function POST(request) {
     return Response.json({ message: "Unauthorized." }, { status: 401 });
   }
 
-  const result = createTagSchema.safeParse(await request.json().catch(() => null));
+  const result = createTagSchema.safeParse(await readJsonBody(request));
   if (!result.success) {
     return Response.json({ message: "Invalid tag data.", errors: result.error.flatten().fieldErrors }, { status: 400 });
   }

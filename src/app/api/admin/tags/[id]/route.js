@@ -1,3 +1,4 @@
+import { readJsonBody } from "@/lib/request-security";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { databaseErrorResponse } from "@/lib/api-error";
 import { prisma } from "@/lib/prisma";
@@ -12,7 +13,7 @@ export async function GET(_request, { params }) {
 }
 export async function PUT(request, { params }) {
   if (!(await isAdminAuthenticated(request))) return Response.json({ message: "Unauthorized." }, { status: 401 });
-  const id = await getId(params); const result = createTagSchema.safeParse(await request.json().catch(() => null));
+  const id = await getId(params); const result = createTagSchema.safeParse(await readJsonBody(request));
   if (!id || !result.success) return Response.json({ message: "Invalid tag." }, { status: 400 });
   try { return Response.json({ data: await prisma.tag.update({ where: { id }, data: result.data }) }); }
   catch (error) { return databaseErrorResponse(error); }

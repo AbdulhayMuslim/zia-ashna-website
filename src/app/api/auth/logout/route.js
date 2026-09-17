@@ -1,6 +1,8 @@
+import { isSameOriginRequest } from "@/lib/request-security";
 import { SESSION_COOKIE } from "@/lib/session";
 
-export async function POST() {
+export async function POST(request) {
+  if (!isSameOriginRequest(request)) return Response.json({ message: "Cross-origin requests are not allowed." }, { status: 403 });
   const response = Response.json({ message: "Signed out." });
   response.headers.append(
     "Set-Cookie",

@@ -1,3 +1,4 @@
+import { readJsonBody } from "@/lib/request-security";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { databaseErrorResponse } from "@/lib/api-error";
 import { prisma } from "@/lib/prisma";
@@ -17,7 +18,7 @@ export async function GET(_request, { params }) {
 
 export async function PUT(request, { params }) {
   if (!(await isAdminAuthenticated(request))) return Response.json({ message: "Unauthorized." }, { status: 401 });
-  const id = await getId(params); const result = createPostApiSchema.safeParse(await request.json().catch(() => null));
+  const id = await getId(params); const result = createPostApiSchema.safeParse(await readJsonBody(request));
   if (!id || !result.success) return Response.json({ message: "Invalid post data." }, { status: 400 });
   const { category, tagIds, status, ...data } = result.data;
   try {
@@ -39,7 +40,7 @@ export async function PUT(request, { params }) {
 
 export async function PATCH(request, { params }) {
   if (!(await isAdminAuthenticated(request))) return Response.json({ message: "Unauthorized." }, { status: 401 });
-  const id = await getId(params); const result = updatePostStatusSchema.safeParse(await request.json().catch(() => null));
+  const id = await getId(params); const result = updatePostStatusSchema.safeParse(await readJsonBody(request));
   if (!id || !result.success) return Response.json({ message: "Invalid post status." }, { status: 400 });
   try {
     const post = await prisma.$transaction(async (tx) => {

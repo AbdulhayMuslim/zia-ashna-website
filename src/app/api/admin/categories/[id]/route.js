@@ -1,3 +1,4 @@
+import { readJsonBody } from "@/lib/request-security";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { databaseErrorResponse } from "@/lib/api-error";
 import { prisma } from "@/lib/prisma";
@@ -12,7 +13,7 @@ export async function GET(_request, { params }) {
 }
 export async function PUT(request, { params }) {
   if (!(await isAdminAuthenticated(request))) return Response.json({ message: "Unauthorized." }, { status: 401 });
-  const id = await getId(params); const result = createCategorySchema.safeParse(await request.json().catch(() => null));
+  const id = await getId(params); const result = createCategorySchema.safeParse(await readJsonBody(request));
   if (!id || !result.success) return Response.json({ message: "Invalid category." }, { status: 400 });
   try { return Response.json({ data: await prisma.category.update({ where: { id }, data: result.data }) }); }
   catch (error) { return databaseErrorResponse(error); }
@@ -22,7 +23,7 @@ export async function DELETE(request, { params }) {
   const id = await getId(params); if (!id) return Response.json({ message: "Invalid ID." }, { status: 400 });
   try { await prisma.category.delete({ where: { id } }); return new Response(null, { status: 204 }); }
   catch (error) {
-    if (error?.code === "P2003") {
+    if (error?.code === "P2003" || (error?.code === "P2039" && error.message?.includes("23001"))) {
       return Response.json(
         { message: "This category is assigned to one or more posts. Reassign those posts before deleting it." },
         { status: 409 },

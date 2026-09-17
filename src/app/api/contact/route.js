@@ -1,3 +1,4 @@
+import { readJsonBody } from "@/lib/request-security";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { databaseErrorResponse } from "@/lib/api-error";
@@ -34,7 +35,7 @@ export async function POST(request) {
 
   let body;
   try {
-    body = await request.json();
+    body = await readJsonBody(request);
   } catch {
     return Response.json({ message: "Invalid request body." }, { status: 400 });
   }

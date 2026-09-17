@@ -4,11 +4,13 @@ Portfolio, blog, and administration interface for Sayed Zia Ashna, built with Ne
 
 ## Local setup
 
-Requirements: a current Node.js LTS release and npm.
+Requirements: a current Node.js LTS release, npm, and PostgreSQL. Configure the environment before starting.
 
 ```bash
 npm install
 cp .env.example .env.local
+# Configure DATABASE_URL and authentication in .env.local, then:
+npx prisma migrate deploy
 npm run dev
 ```
 
@@ -18,6 +20,7 @@ Open `http://localhost:3000`. The administration login is at `/admin/login`.
 
 Copy `.env.example` to `.env.local` and configure:
 
+- `DATABASE_URL`: PostgreSQL connection string. The optional `schema` parameter is honored by the runtime adapter.
 - `NEXT_PUBLIC_SITE_URL`: canonical production URL used by metadata and the sitemap.
 - `ADMIN_USERNAME`: administrator login name.
 - `ADMIN_PASSWORD_SALT` and `ADMIN_PASSWORD_SCRYPT`: unique salt and scrypt password hash. The example file contains a generation command.
@@ -44,14 +47,14 @@ npm start       # serve a completed production build
 
 - Public pages are server-rendered or statically generated through the App Router.
 - Public pages, blog posts, metadata, settings, and sitemap entries read from PostgreSQL through Prisma.
-- Admin routes use a signed, HTTP-only, eight-hour session and are guarded by `src/proxy.js`.
+- Admin routes use a signed, HTTP-only, eight-hour session and are guarded by `src/proxy.js`, the server-side admin layout, and API authentication checks. Password changes revoke old sessions and renew the current session. Writes enforce same-origin requests and bounded bodies.
 - Contact messages are validated, saved, and database-rate-limited by `src/app/api/contact/route.js`; the third-party endpoint is never exposed to the browser.
-- CMS uploads are compressed and stored in S3-compatible object storage in production. Post featured images are converted to WebP and capped at 2 MB.
+- CMS uploads are compressed and stored in S3-compatible object storage in production. JPEG, PNG, and WebP uploads are capped at 2 MB and 25 million pixels and decoded to verify their contents. Images above 200 KB are compressed when this reduces their size. Referenced media cannot be deleted.
 - Metadata, Open Graph values, sitemap, robots rules, manifest, loading, error, and not-found states are implemented under `src/app`.
 
 ## Content persistence
 
-All public content and admin collections use PostgreSQL. Run `npx prisma migrate deploy` during deployment. Configure the S3 variables from `.env.example`; production intentionally rejects uploads when object storage is missing.
+All public content and admin collections use PostgreSQL. Run `npx prisma migrate deploy` during deployment. Code updates do not replace stored content. Back up PostgreSQL and object storage before deployment; review destructive migrations separately. Never reset or seed a production database. Configure the S3 variables from `.env.example`; production intentionally rejects uploads when object storage is missing.
 
 ## Deployment checklist
 

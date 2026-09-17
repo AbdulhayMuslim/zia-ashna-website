@@ -1,3 +1,4 @@
+import { readJsonBody } from "@/lib/request-security";
 import { z } from "zod";
 
 import { isAdminAuthenticated } from "@/lib/admin-auth";
@@ -12,7 +13,7 @@ async function idFrom(params) {
 export async function PATCH(request, { params }) {
   if (!(await isAdminAuthenticated(request))) return Response.json({ message: "Unauthorized." }, { status: 401 });
   const id = await idFrom(params);
-  const result = z.object({ status: z.enum(["new", "read"]) }).safeParse(await request.json().catch(() => null));
+  const result = z.object({ status: z.enum(["new", "read"]) }).safeParse(await readJsonBody(request));
   if (!id || !result.success) return Response.json({ message: "Invalid message update." }, { status: 400 });
   try { return Response.json({ data: await prisma.contactSubmission.update({ where: { id }, data: result.data }) }); }
   catch (error) { return databaseErrorResponse(error); }

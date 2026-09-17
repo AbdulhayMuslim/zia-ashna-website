@@ -1,3 +1,4 @@
+import { readJsonBody } from "@/lib/request-security";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { databaseErrorResponse } from "@/lib/api-error";
 import { prisma } from "@/lib/prisma";
@@ -18,7 +19,7 @@ export async function POST(request) {
   }
 
   const result = createPostApiSchema.safeParse(
-    await request.json().catch(() => null),
+    await readJsonBody(request),
   );
 
   if (!result.success) {

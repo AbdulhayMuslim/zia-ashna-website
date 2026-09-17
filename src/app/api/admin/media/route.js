@@ -1,3 +1,4 @@
+import { readJsonBody } from "@/lib/request-security";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { databaseErrorResponse } from "@/lib/api-error";
 import { prisma } from "@/lib/prisma";
@@ -12,7 +13,7 @@ export async function GET() {
 
 export async function POST(request) {
   if (!(await isAdminAuthenticated(request))) return Response.json({ message: "Unauthorized." }, { status: 401 });
-  const result = mediaSchema.safeParse(await request.json().catch(() => null));
+  const result = mediaSchema.safeParse(await readJsonBody(request));
   if (!result.success) return Response.json({ message: "Invalid media details.", errors: result.error.flatten().fieldErrors }, { status: 400 });
   try {
     return Response.json({ data: await prisma.mediaAsset.create({ data: result.data }) }, { status: 201 });

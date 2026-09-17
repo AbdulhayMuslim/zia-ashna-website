@@ -2,7 +2,7 @@ import { databaseErrorResponse } from "@/lib/api-error";
 import { prisma } from "@/lib/prisma";
 
 export async function GET(request) {
-  const limit = Math.min(Math.max(Number(new URL(request.url).searchParams.get("limit")) || 20, 1), 100);
+  const limit = Math.trunc(Math.min(Math.max(Number(new URL(request.url).searchParams.get("limit")) || 20, 1), 100));
   try {
     const data = await prisma.post.findMany({
       where: { status: "published" }, orderBy: [{ featured: "desc" }, { publishedAt: "desc" }, { id: "desc" }], take: limit,
