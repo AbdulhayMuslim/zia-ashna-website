@@ -640,7 +640,7 @@ function PostDetailsDialog({ post, onClose, onEdit, onDelete }) {
                 Content
               </h3>
               <div
-                className="whitespace-pre-wrap text-sm leading-7 text-text dark:text-text-dark [&_a]:text-brand-primary [&_ol]:list-decimal [&_ol]:pl-5 [&_p]:mb-3 [&_ul]:list-disc [&_ul]:pl-5"
+                className="blog-content whitespace-pre-wrap text-sm leading-7 text-text dark:text-text-dark [&_a]:text-brand-primary [&_ol]:list-decimal [&_ol]:pl-5 [&_p]:mb-3 [&_ul]:list-disc [&_ul]:pl-5"
                 dangerouslySetInnerHTML={{
                   __html: sanitizeRichText(
                     post.content || "No content provided.",

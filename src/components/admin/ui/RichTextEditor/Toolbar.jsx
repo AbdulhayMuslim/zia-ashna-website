@@ -14,11 +14,16 @@ import {
   AlignCenter,
   AlignRight,
   Link2,
+  Paperclip,
 } from "lucide-react";
 
+import { useRef, useState } from "react";
 import MenuButton from "./MenuButton";
 
 export default function Toolbar({ editor }) {
+  const fileInputRef = useRef(null);
+  const [uploading, setUploading] = useState(false);
+
   if (!editor) return null;
 
   const setLink = () => {
@@ -43,6 +48,90 @@ export default function Toolbar({ editor }) {
         rel: "noopener noreferrer",
       })
       .run();
+  };
+
+  const handleFileSelect = async (event) => {
+    const file = event.target.files?.[0];
+
+    if (!file) return;
+
+    const allowedTypes = [
+      "image/jpeg",
+      "image/png",
+      "image/webp",
+      "image/gif",
+      "application/pdf",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    ];
+
+    if (!allowedTypes.includes(file.type)) {
+      window.alert("Please select an image, PDF, or DOCX file.");
+      event.target.value = "";
+      return;
+    }
+
+    const maxSize = 10 * 1024 * 1024;
+
+    if (file.size > maxSize) {
+      window.alert("File size must not exceed 10MB.");
+      event.target.value = "";
+      return;
+    }
+
+    setUploading(true);
+
+    try {
+      const body = new FormData();
+      body.append("file", file);
+      body.append("purpose", "blog-attachment");
+
+      const response = await fetch("/api/admin/uploads", {
+        method: "POST",
+        body,
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || "Upload failed.");
+      }
+
+      const fileUrl = result.data.url;
+
+      if (file.type.startsWith("image/")) {
+        editor
+          .chain()
+          .focus()
+          .setImage({
+            src: fileUrl,
+          })
+          .run();
+      } else {
+        editor
+          .chain()
+          .focus()
+          .insertContent({
+            type: "text",
+            text: file.name,
+            marks: [
+              {
+                type: "link",
+                attrs: {
+                  href: fileUrl,
+                  target: "_blank",
+                  rel: "noopener noreferrer",
+                },
+              },
+            ],
+          })
+          .run();
+      }
+    } catch (error) {
+      window.alert(error.message || "Unable to upload file.");
+    } finally {
+      setUploading(false);
+      event.target.value = "";
+    }
   };
 
   return (
@@ -136,6 +225,22 @@ export default function Toolbar({ editor }) {
         label="Redo"
         disabled={!editor.can().chain().focus().redo().run()}
         onClick={() => editor.chain().focus().redo().run()}
+      />
+
+      <MenuButton
+        icon={Paperclip}
+        label={uploading ? "Uploading..." : "Attach File"}
+        disabled={uploading}
+        onClick={() => fileInputRef.current?.click()}
+      />
+
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*,.pdf,.docx,application/pdf,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+        className="hidden"
+        onChange={handleFileSelect}
+        disabled={uploading}
       />
     </div>
   );

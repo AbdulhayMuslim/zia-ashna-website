@@ -192,3 +192,17 @@ html {
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
 }
+
+/* ========================================
+   Public Blog Content Images
+======================================== */
+
+.blog-content img,
+.blog-content img.editor-image {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin-top: 1rem !important;
+  margin-bottom: 1rem !important;
+  border-radius: 0.75rem;
+}

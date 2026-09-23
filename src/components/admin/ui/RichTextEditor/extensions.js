@@ -29,6 +29,18 @@ const extensions = [
   Image.configure({
     inline: false,
     allowBase64: false,
+
+    resize: {
+      enabled: true,
+      directions: ["top-left", "top-right", "bottom-left", "bottom-right"],
+      minWidth: 100,
+      minHeight: 100,
+      alwaysPreserveAspectRatio: true,
+    },
+
+    HTMLAttributes: {
+      class: "editor-image",
+    },
   }),
 
   TextAlign.configure({

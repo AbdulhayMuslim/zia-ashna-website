@@ -28,7 +28,11 @@ export default function RichTextEditor({
     },
 
     onUpdate: ({ editor }) => {
-      onChange?.(editor.getHTML());
+      const html = editor.getHTML();
+
+      console.log("EDITOR HTML:", html);
+
+      onChange?.(html);
     },
   });
 
