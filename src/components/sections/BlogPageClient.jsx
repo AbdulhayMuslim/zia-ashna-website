@@ -43,7 +43,6 @@ export default function BlogPageClient({ posts }) {
               key={post.id}
               image={post.image}
               category={post.category}
-              date={post.date}
               title={post.title}
               text={post.excerpt}
               btn="Read Article"

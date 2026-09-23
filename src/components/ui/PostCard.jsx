@@ -57,13 +57,19 @@ export default function PostCard({
     >
       {/* Image */}
       <div className="relative h-60 overflow-hidden">
-        {image ? <Image
-          src={image}
-          alt={title || "Blog post"}
-          sizes="(max-width:768px)100vw,(max-width:1024px)50vw,400px"
-          fill
-          className="object-cover duration-400 group-hover:scale-110"
-        /> : <div className="flex h-full items-center justify-center bg-brand-primary/10 text-sm text-brand-primary">No featured image</div>}
+        {image ? (
+          <Image
+            src={image}
+            alt={title || "Blog post"}
+            sizes="(max-width:768px)100vw,(max-width:1024px)50vw,400px"
+            fill
+            className="object-cover duration-400 group-hover:scale-110"
+          />
+        ) : (
+          <div className="flex h-full items-center justify-center bg-brand-primary/10 text-sm text-brand-primary">
+            No featured image
+          </div>
+        )}
       </div>
 
       {/* Content */}
@@ -74,8 +80,6 @@ export default function PostCard({
             <div className="rounded-lg bg-brand-primary/10 px-2 py-1 text-sm text-brand-primary">
               {category}
             </div>
-
-            <div className="text-sm text-brand-primary">{date}</div>
           </div>
 
           <h3 className="line-clamp-2 text-xl font-semibold text-heading-soft duration-300 group-hover:text-brand-primary dark:text-heading-dark/80">
