@@ -13,8 +13,6 @@ export default function History({ data }) {
         <div className="flex flex-col items-center gap-12 lg:gap-16">
           {/* Header */}
           <div className="flex max-w-3xl flex-col items-center gap-4 text-center">
-            <SectionTitle title={data.sectionTitle} />
-
             <h2 className="font-heading text-3xl font-bold text-brand-primary dark:text-brand-secondary lg:text-4xl">
               {data.heading}
             </h2>

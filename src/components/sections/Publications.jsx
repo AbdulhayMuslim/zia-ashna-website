@@ -16,11 +16,6 @@ export default function Publications({ posts = [] }) {
     >
       <div className="opacity-70 dark:opacity-10 absolute top-0 left-0 h-full w-full bg-[url('/images/herobg2.png')] bg-cover bg-center bg-no-repeat" />
       <Container className="relative z-10 flex flex-col gap-15 items-center justify-center">
-        <SectionTitle
-          title="Publications"
-          className="bg-gray-200 dark:bg-bg-dark"
-        />
-
         <FadeRight
           className="
           grid

@@ -4,11 +4,7 @@ import Section from "@/components/ui/Section";
 import Container from "@/components/ui/Container";
 import SectionTitle from "@/components/ui/SectionTitle";
 
-import {
-  GraduationCap,
-  BriefcaseBusiness,
-  Building2,
-} from "lucide-react";
+import { GraduationCap, BriefcaseBusiness, Building2 } from "lucide-react";
 
 export default function About({ data }) {
   if (!data) return null;
@@ -18,9 +14,6 @@ export default function About({ data }) {
       <Container>
         <div className="flex flex-col gap-12 lg:gap-16">
           {/* Header */}
-          <div className="flex flex-col items-center gap-4 text-center">
-            <SectionTitle title={data.sectionTitle} />
-          </div>
 
           {/* Main Profile Card */}
           <div
@@ -40,14 +33,16 @@ export default function About({ data }) {
                     max-w-md
                   "
                 >
-                  {data.imageUrl && <Image
-                    src={data.imageUrl}
-                    alt={data.heading}
-                    width={700}
-                    height={800}
-                    className="h-auto w-full object-cover dark:opacity-90"
-                    priority
-                  />}
+                  {data.imageUrl && (
+                    <Image
+                      src={data.imageUrl}
+                      alt={data.heading}
+                      width={700}
+                      height={800}
+                      className="h-auto w-full object-cover dark:opacity-90"
+                      priority
+                    />
+                  )}
                 </div>
               </div>
 
@@ -68,8 +63,15 @@ export default function About({ data }) {
                 {/* Stats */}
                 <div className="grid grid-cols-3 gap-4">
                   {data.experiences.map((item, index) => (
-                    <div key={item.id} className={`rounded-2xl p-4 text-center ${index % 2 ? "bg-brand-secondary/10" : "bg-brand-primary/10"}`}>
-                      <h4 className={`text-2xl font-bold ${index % 2 ? "text-brand-secondary" : "text-brand-primary"}`}>{item.number}</h4>
+                    <div
+                      key={item.id}
+                      className={`rounded-2xl p-4 text-center ${index % 2 ? "bg-brand-secondary/10" : "bg-brand-primary/10"}`}
+                    >
+                      <h4
+                        className={`text-2xl font-bold ${index % 2 ? "text-brand-secondary" : "text-brand-primary"}`}
+                      >
+                        {item.number}
+                      </h4>
                       <p className="text-xs">{item.title}</p>
                     </div>
                   ))}
@@ -99,9 +101,19 @@ export default function About({ data }) {
 
               <div className="flex flex-col gap-6">
                 {data.education.map((item, index) => (
-                  <div key={item.id} className={`border-l-2 pl-4 ${index % 2 ? "border-brand-secondary" : "border-brand-primary"}`}>
-                    <div className="mb-2 flex items-center justify-between gap-4"><h4 className="font-semibold text-heading-soft dark:text-heading-dark/90">{item.degree}</h4><p className="text-sm text-brand-primary">{item.year}</p></div>
-                    <p className="text-text dark:text-text-dark/70">{item.institution}</p>
+                  <div
+                    key={item.id}
+                    className={`border-l-2 pl-4 ${index % 2 ? "border-brand-secondary" : "border-brand-primary"}`}
+                  >
+                    <div className="mb-2 flex items-center justify-between gap-4">
+                      <h4 className="font-semibold text-heading-soft dark:text-heading-dark/90">
+                        {item.degree}
+                      </h4>
+                      <p className="text-sm text-brand-primary">{item.year}</p>
+                    </div>
+                    <p className="text-text dark:text-text-dark/70">
+                      {item.institution}
+                    </p>
                   </div>
                 ))}
 
