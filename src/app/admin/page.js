@@ -193,7 +193,7 @@ export default async function AdminDashboardPage({ searchParams }) {
     return (
       <div className="rounded-3xl border border-red-200 bg-red-50 p-6 text-red-800 dark:border-red-900/60 dark:bg-red-950/30 dark:text-red-200">
         <h1 className="text-xl font-semibold">Dashboard data is unavailable</h1>
-        <p className="mt-2 text-sm">The CMS is running, but PostgreSQL could not return analytics. Check the database connection and refresh this page.</p>
+        <p className="mt-2 text-sm">The CMS is running, but MySQL could not return analytics. Check the database connection and refresh this page.</p>
       </div>
     );
   }
@@ -209,7 +209,7 @@ export default async function AdminDashboardPage({ searchParams }) {
         <div>
           <p className="text-sm font-semibold uppercase tracking-[0.18em] text-brand-primary dark:text-brand-secondary">Overview</p>
           <h1 className="mt-2 text-3xl font-bold tracking-tight text-heading dark:text-heading-dark">Dashboard analytics</h1>
-          <p className="mt-2 text-sm text-text dark:text-text-dark">Live content, publishing, and audience activity from PostgreSQL.</p>
+          <p className="mt-2 text-sm text-text dark:text-text-dark">Live content, publishing, and audience activity from MySQL.</p>
         </div>
         <div className="flex flex-wrap gap-2">
           <ViewSectionLink href="/" label="View website" />

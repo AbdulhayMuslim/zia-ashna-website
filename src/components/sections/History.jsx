@@ -114,15 +114,14 @@ export default function History({ data }) {
                         >
                           <h3
                             className="
-    [font-family:var(--font-montserrat)]
-    text-2xl
-    font-extrabold
-    uppercase
-    leading-tight
-    tracking-wide
-    text-brand-primary
-    dark:text-brand-secondary
-  "
+                            [font-family:var(--font-montserrat)]
+                            text-2xl
+                            font-extrabold
+                            uppercase
+                            leading-tight
+                            tracking-wide
+                            text-brand-primary
+                            dark:text-brand-secondary"
                           >
                             {item.heading}
                           </h3>

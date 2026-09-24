@@ -31,7 +31,7 @@ export default function CmsEditor({
   description,
   viewHref,
   contentTitle = "Content Settings",
-  contentDescription = "This content is stored in PostgreSQL.",
+  contentDescription = "This content is stored in MySQL.",
   initialValue,
   fields,
   groups = [],

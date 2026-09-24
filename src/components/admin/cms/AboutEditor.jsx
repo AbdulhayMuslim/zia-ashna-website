@@ -246,12 +246,6 @@ export default function AboutEditor() {
           >
             <div className="grid gap-5 md:grid-cols-2">
               <InputField
-                id="sectionTitle"
-                label="Section Title"
-                value={form.sectionTitle}
-                onChange={(event) => update("sectionTitle", event.target.value)}
-              />
-              <InputField
                 id="role"
                 label="Role"
                 value={form.role}

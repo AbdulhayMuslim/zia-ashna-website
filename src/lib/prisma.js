@@ -1,5 +1,6 @@
-import { PrismaPg } from "@prisma/adapter-pg";
+import { PrismaMariaDb } from "@prisma/adapter-mariadb";
 import { PrismaClient } from "@/generated/prisma/client";
+import { mysqlConfigFromUrl } from "@/lib/mysql-config";
 
 const globalForPrisma = globalThis;
 
@@ -11,7 +12,7 @@ function createPrismaClient() {
   }
 
   return new PrismaClient({
-    adapter: new PrismaPg({ connectionString }, { schema: new URL(connectionString).searchParams.get("schema") || "public" }),
+    adapter: new PrismaMariaDb(mysqlConfigFromUrl(connectionString)),
   });
 }
 

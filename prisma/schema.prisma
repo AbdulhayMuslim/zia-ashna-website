@@ -1,15 +1,13 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
 }
 
 model Post {
@@ -17,7 +15,7 @@ model Post {
   title         String    @db.VarChar(200)
   slug          String    @unique @db.VarChar(200)
   excerpt       String    @db.VarChar(500)
-  content       String
+  content       String    @db.LongText
   status        String    @default("draft") @db.VarChar(20)
   featured      Boolean   @default(false)
   featuredImage String?
@@ -70,7 +68,7 @@ model HeroSection {
   id           Int        @id @default(1)
   sectionTitle String     @default("Entrepreneur | Founder") @db.VarChar(120)
   name         String     @default("Sayed Zia Ashna") @db.VarChar(160)
-  description  String     @default("")
+  description  String     @default("") @db.Text
   buttonLabel  String     @default("Get In Touch") @db.VarChar(80)
   buttonUrl    String     @default("#contact") @db.VarChar(500)
   heroImageUrl String?    @db.VarChar(1000)
@@ -96,7 +94,7 @@ model AboutSection {
   sectionTitle   String           @default("About Me") @db.VarChar(120)
   role           String           @default("") @db.VarChar(160)
   heading        String           @default("") @db.VarChar(240)
-  description    String           @default("")
+  description    String           @default("") @db.Text
   imageUrl       String?          @db.VarChar(1000)
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
@@ -155,7 +153,7 @@ model ActivitySection {
   id           Int            @id @default(1)
   sectionTitle String         @default("Activity") @db.VarChar(120)
   heading      String         @default("") @db.VarChar(240)
-  description  String         @default("")
+  description  String         @default("") @db.Text
   createdAt    DateTime       @default(now())
   updatedAt    DateTime       @updatedAt
   cards        ActivityCard[]
@@ -166,7 +164,7 @@ model ActivityCard {
   icon        String          @default("Rocket") @db.VarChar(80)
   number      String          @db.VarChar(40)
   heading     String          @db.VarChar(160)
-  description String
+  description String          @db.Text
   sortOrder   Int             @default(0)
   sectionId   Int             @default(1)
   section     ActivitySection @relation(fields: [sectionId], references: [id], onDelete: Cascade)
@@ -178,7 +176,7 @@ model HistorySection {
   id           Int           @id @default(1)
   sectionTitle String        @default("History") @db.VarChar(120)
   heading      String        @default("") @db.VarChar(240)
-  description  String        @default("")
+  description  String        @default("") @db.Text
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
   cards        HistoryCard[]
@@ -189,7 +187,7 @@ model HistoryCard {
   icon        String         @default("Rocket") @db.VarChar(80)
   number      String         @db.VarChar(80)
   heading     String         @db.VarChar(200)
-  description String
+  description String         @db.Text
   sortOrder   Int            @default(0)
   sectionId   Int            @default(1)
   section     HistorySection @relation(fields: [sectionId], references: [id], onDelete: Cascade)
@@ -201,7 +199,7 @@ model ContactSection {
   id           Int                 @id @default(1)
   sectionTitle String              @default("Contact") @db.VarChar(120)
   heading      String              @default("") @db.VarChar(240)
-  description  String              @default("")
+  description  String              @default("") @db.Text
   createdAt    DateTime            @default(now())
   updatedAt    DateTime            @updatedAt
   cards        ContactCard[]
@@ -250,7 +248,7 @@ model ContactSubmission {
   name      String   @db.VarChar(100)
   email     String   @db.VarChar(254)
   subject   String   @db.VarChar(150)
-  message   String
+  message   String   @db.Text
   status    String   @default("new") @db.VarChar(20)
   createdAt DateTime @default(now())
 
@@ -262,14 +260,14 @@ model ContactSubmission {
 model SiteSettings {
   id              Int      @id @default(1)
   siteName        String   @default("Sayed Zia Ashna") @db.VarChar(160)
-  siteDescription String   @default("")
+  siteDescription String   @default("") @db.Text
   logoUrl         String?  @db.VarChar(1000)
   faviconUrl      String?  @db.VarChar(1000)
   contactEmail    String?  @db.VarChar(254)
   phone           String?  @db.VarChar(60)
-  address         String?
+  address         String?  @db.Text
   seoTitle        String?  @db.VarChar(200)
-  seoDescription  String?
+  seoDescription  String?  @db.Text
   facebook        String?  @db.VarChar(1000)
   twitter         String?  @db.VarChar(1000)
   instagram       String?  @db.VarChar(1000)
@@ -311,7 +309,7 @@ model PasswordResetToken {
 model MediaAsset {
   id         Int      @id @default(autoincrement())
   name       String   @db.VarChar(255)
-  url        String   @unique @db.VarChar(1000)
+  url        String   @db.VarChar(1000)
   mimeType   String   @db.VarChar(120)
   sizeBytes  Int
   altText    String?  @db.VarChar(300)

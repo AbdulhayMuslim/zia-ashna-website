@@ -11,7 +11,6 @@ export const cmsConfigs = {
     },
 
     fields: [
-      { key: "sectionTitle", label: "Section Title" },
       { key: "name", label: "Name" },
       { key: "description", label: "Description", type: "textarea" },
       { key: "buttonLabel", label: "Button Label" },
@@ -49,7 +48,6 @@ export const cmsConfigs = {
     },
 
     fields: [
-      { key: "sectionTitle", label: "Section Title" },
       { key: "role", label: "Role" },
       { key: "heading", label: "Heading" },
       { key: "description", label: "Description", type: "textarea" },
@@ -113,7 +111,6 @@ export const cmsConfigs = {
     },
 
     fields: [
-      { key: "sectionTitle", label: "Section Title" },
       { key: "heading", label: "Heading" },
       { key: "description", label: "Description", type: "textarea" },
     ],
@@ -148,7 +145,6 @@ export const cmsConfigs = {
     },
 
     fields: [
-      { key: "sectionTitle", label: "Section Title" },
       { key: "heading", label: "Heading" },
       { key: "description", label: "Description", type: "textarea" },
     ],
@@ -185,7 +181,6 @@ export const cmsConfigs = {
     },
 
     fields: [
-      { key: "sectionTitle", label: "Section Title" },
       { key: "heading", label: "Heading" },
       { key: "description", label: "Description", type: "textarea" },
     ],

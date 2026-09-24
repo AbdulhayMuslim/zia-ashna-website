@@ -145,7 +145,6 @@ export default function ContactEditor() {
               bodyClassName="space-y-5"
               className="xl:sticky xl:top-6"
             >
-              <InputField id="contact-section-title" label="Section Title" value={form.sectionTitle} onChange={(event) => update("sectionTitle", event.target.value)} />
               <InputField id="contact-heading" label="Heading" value={form.heading} onChange={(event) => update("heading", event.target.value)} />
               <TextareaField id="contact-description" label="Description" rows={7} value={form.description} onChange={(event) => update("description", event.target.value)} />
             </Card>

@@ -146,10 +146,7 @@ export default function HeroEditor() {
                 description="Edit the headline and supporting copy shown above the fold."
                 bodyClassName="space-y-5"
               >
-                <div className="grid gap-5 sm:grid-cols-2">
-                  <InputField id="sectionTitle" label="Section Title" value={form.sectionTitle} onChange={(event) => update("sectionTitle", event.target.value)} />
-                  <InputField id="name" label="Name" value={form.name} onChange={(event) => update("name", event.target.value)} />
-                </div>
+                <InputField id="name" label="Name" value={form.name} onChange={(event) => update("name", event.target.value)} />
                 <TextareaField id="description" label="Description" rows={6} value={form.description} onChange={(event) => update("description", event.target.value)} />
               </Card>
 

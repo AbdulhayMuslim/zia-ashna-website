@@ -42,4 +42,4 @@ Local response medians ranged from 10 to 94 ms on four sampled routes during bro
 
 Production S3-compatible media storage is currently unconfigured. Configure the storage variables documented in `.env.example` before deployment; production uploads intentionally reject requests when storage is unavailable. Actual hosting, external SMTP delivery, HTTPS, trusted proxy configuration, and the object-storage service were not tested remotely. Password-reset delivery was verified using a local SMTP test server, without sending external messages.
 
-Use `prisma migrate deploy` for deployment migrations and preserve the existing PostgreSQL database and object storage. Back up data before applying destructive migrations. Do not reset or seed production data during code updates.
+Use `prisma migrate deploy` for deployment migrations and preserve the existing MySQL database and object storage. Back up data before applying destructive migrations. Do not reset or seed production data during code updates. Earlier PostgreSQL references in this report describe the database used when that historical review was performed.
