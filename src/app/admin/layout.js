@@ -3,8 +3,6 @@ import { redirect } from "next/navigation";
 import { isAdminAuthenticated, requireAdmin } from "@/lib/admin-auth";
 import AdminLayout from "@/components/admin/layout/AdminLayout";
 
-export const dynamic = "force-dynamic";
-
 export default async function Layout({ children }) {
   const isLogin = (await headers()).get("x-admin-pathname") === "/admin/login";
   if (isLogin) {

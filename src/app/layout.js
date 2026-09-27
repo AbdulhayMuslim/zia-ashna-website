@@ -3,6 +3,8 @@ import ThemeProvider from "@/components/providers/ThemeProvider";
 import { getSiteSettings } from "@/lib/public-data";
 import { Montserrat } from "next/font/google";
 
+export const dynamic = "force-dynamic";
+
 const montserrat = Montserrat({
   subsets: ["latin"],
   variable: "--font-montserrat",
