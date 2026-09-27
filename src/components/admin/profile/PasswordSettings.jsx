@@ -13,7 +13,7 @@ const EMPTY_FORM = { currentPassword: "", newPassword: "", confirmPassword: "" }
 
 export default function PasswordSettings() {
   const [form, setForm] = useState(EMPTY_FORM);
-  const [status, setStatus] = useState({ loading: true, customPassword: false, changedAt: null, canReset: false });
+  const [status, setStatus] = useState({ loading: true, changedAt: null });
   const [submitting, setSubmitting] = useState(false);
   const [requestingReset, setRequestingReset] = useState(false);
   const dirty = Object.values(form).some(Boolean);
@@ -38,7 +38,7 @@ export default function PasswordSettings() {
       if (!response.ok) throw new Error(result.message || "Unable to update password.");
       setStatus({ loading: false, ...result.data });
       setForm(EMPTY_FORM);
-      toast.success(status.customPassword ? "Password changed successfully." : "Password added successfully.");
+      toast.success("Password changed successfully.");
       return true;
     } catch (error) {
       toast.error(error.message);
@@ -72,7 +72,7 @@ export default function PasswordSettings() {
         <div className="flex items-center gap-3 rounded-2xl border border-border bg-background p-4 dark:bg-gray-900">
           <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"><ShieldCheck className="h-5 w-5" /></span>
           <div className="min-w-0 flex-1">
-            <p className="font-medium text-heading dark:text-heading-dark">{status.loading ? "Checking password status..." : status.customPassword ? "Custom CMS password enabled" : "Using server-configured password"}</p>
+            <p className="font-medium text-heading dark:text-heading-dark">{status.loading ? "Checking password status..." : "CMS password configured"}</p>
             {status.changedAt && <p className="mt-1 text-xs text-text-muted dark:text-text-muted-dark">Last changed {new Date(status.changedAt).toLocaleString("en-US", { month: "short", day: "numeric", year: "numeric", hour: "numeric", minute: "2-digit" })}</p>}
           </div>
         </div>
@@ -87,7 +87,7 @@ export default function PasswordSettings() {
           <div className="flex items-center gap-2 text-xs text-text-muted dark:text-text-muted-dark"><KeyRound className="h-4 w-4 shrink-0" /> Passwords are stored as salted cryptographic hashes.</div>
           <div className="flex flex-wrap gap-2">
             <Button type="button" variant="secondary" leftIcon={Mail} loading={requestingReset} onClick={requestPasswordReset}>Forgot current password?</Button>
-            <Button type="submit" leftIcon={Save} loading={submitting} disabled={!dirty || status.loading}>{status.customPassword ? "Change password" : "Add password"}</Button>
+            <Button type="submit" leftIcon={Save} loading={submitting} disabled={!dirty || status.loading}>Change password</Button>
           </div>
         </div>
       </form>

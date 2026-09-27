@@ -14,11 +14,7 @@ export function verifyPassword(password, hash, salt) {
 
 export function getAdminPasswordCredentials(profile) {
   if (profile?.passwordHash && profile?.passwordSalt) {
-    return { hash: profile.passwordHash, salt: profile.passwordSalt, source: "profile" };
+    return { hash: profile.passwordHash, salt: profile.passwordSalt };
   }
-  return {
-    hash: process.env.ADMIN_PASSWORD_SCRYPT?.trim().toLowerCase(),
-    salt: process.env.ADMIN_PASSWORD_SALT,
-    source: "environment",
-  };
+  return null;
 }

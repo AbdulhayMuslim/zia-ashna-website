@@ -21,13 +21,13 @@ Copy `.env.example` to `.env.local` and configure:
 
 - `DATABASE_URL`: MySQL connection string. Use `connection_limit=5` for shared hosting.
 - `NEXT_PUBLIC_SITE_URL`: canonical production URL used by metadata and the sitemap.
-- `ADMIN_USERNAME`: administrator login name.
-- `ADMIN_PASSWORD_SALT` and `ADMIN_PASSWORD_SCRYPT`: unique salt and scrypt password hash. The example file contains a generation command.
 - `AUTH_SECRET`: long random key used to sign the HTTP-only admin session.
 - `SMTP_HOST`, `SMTP_PORT`, `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASSWORD`, and `SMTP_FROM`: SMTP delivery settings for password-reset emails.
 - `CONTACT_FORM_ENDPOINT`: optional Formspree-compatible forwarding endpoint. Leave it empty to save contact messages only in MySQL.
 
 Never commit `.env.local` or real credentials.
+
+Administrator usernames and password hashes are stored only in the `AdminProfile` database record. An existing administrator can change them through the CMS; password-reset links also write the replacement hash to that record.
 
 ## Commands
 

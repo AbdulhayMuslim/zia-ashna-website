@@ -3,9 +3,6 @@ import "dotenv/config";
 const required = [
   "DATABASE_URL",
   "NEXT_PUBLIC_SITE_URL",
-  "ADMIN_USERNAME",
-  "ADMIN_PASSWORD_SALT",
-  "ADMIN_PASSWORD_SCRYPT",
   "AUTH_SECRET",
   "SMTP_HOST",
   "SMTP_PORT",
@@ -61,12 +58,6 @@ if (publicUrl) {
 if (process.env.S3_ENDPOINT) parseUrl("S3_ENDPOINT");
 if (process.env.AUTH_SECRET && process.env.AUTH_SECRET.length < 48) {
   errors.push("AUTH_SECRET must be at least 48 characters.");
-}
-if (process.env.ADMIN_PASSWORD_SCRYPT && !/^[a-f\d]{128}$/i.test(process.env.ADMIN_PASSWORD_SCRYPT)) {
-  errors.push("ADMIN_PASSWORD_SCRYPT must be a 128-character hexadecimal scrypt hash.");
-}
-if (process.env.ADMIN_PASSWORD_SALT && process.env.ADMIN_PASSWORD_SALT.length < 16) {
-  errors.push("ADMIN_PASSWORD_SALT must be at least 16 characters.");
 }
 if (process.env.SMTP_PORT && (!Number.isInteger(Number(process.env.SMTP_PORT)) || Number(process.env.SMTP_PORT) < 1 || Number(process.env.SMTP_PORT) > 65535)) {
   errors.push("SMTP_PORT must be an integer between 1 and 65535.");

@@ -7,7 +7,7 @@ import { compressPostImage, POST_IMAGE_COMPRESSION_THRESHOLD_BYTES, POST_IMAGE_M
 import { formatMediaSize, formatMediaType } from "../src/lib/media-format.js";
 import { createSessionToken, verifySessionToken } from "../src/lib/session.js";
 import { sanitizeRichText } from "../src/lib/sanitize-content.js";
-import { createPasswordHash, verifyPassword } from "../src/lib/password.js";
+import { createPasswordHash, getAdminPasswordCredentials, verifyPassword } from "../src/lib/password.js";
 import { createPostApiSchema, updatePostStatusSchema } from "../src/validations/blog.js";
 import robots from "../src/app/robots.js";
 import { aboutSchema, contactSchema, heroSchema, mediaSchema, profileSchema, settingsSchema } from "../src/validations/cms.js";
@@ -58,6 +58,10 @@ test("password verification safely rejects incomplete and malformed credentials"
   assert.equal(verifyPassword("password", "invalid-hash", "salt"), false);
   assert.equal(verifyPassword("", "a".repeat(128), "salt"), false);
   assert.equal(verifyPassword("password", "a".repeat(128), ""), false);
+});
+
+test("admin credentials never fall back to environment variables", () => {
+  assert.equal(getAdminPasswordCredentials(null), null);
 });
 
 test("post validation accepts complete CMS content", () => {

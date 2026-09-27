@@ -38,15 +38,14 @@ export async function POST(request) {
     where: { id: 1 },
     select: { username: true, passwordHash: true, passwordSalt: true, sessionVersion: true },
   });
-  const username =
-    profile?.username?.trim() || process.env.ADMIN_USERNAME?.trim();
+  const username = profile?.username?.trim();
   const passwordCredentials = getAdminPasswordCredentials(profile);
   const secret = process.env.AUTH_SECRET;
 
   if (
     !username ||
-    !passwordCredentials.hash ||
-    !passwordCredentials.salt ||
+    !passwordCredentials?.hash ||
+    !passwordCredentials?.salt ||
     !secret
   ) {
     return Response.json(
@@ -60,8 +59,8 @@ export async function POST(request) {
     safeEqual(result.data.username, username) &&
     verifyPassword(
       result.data.password,
-      passwordCredentials.hash,
-      passwordCredentials.salt,
+      passwordCredentials?.hash,
+      passwordCredentials?.salt,
     );
 
   if (!valid) {
