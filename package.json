@@ -15,6 +15,7 @@
     "build": "next build --webpack",
     "postinstall": "prisma generate",
     "start": "next start",
+    "prestart": "npm run deploy",
     "db:deploy": "prisma migrate deploy",
     "db:local:start": "node scripts/local-mysql.mjs start",
     "db:local:stop": "node scripts/local-mysql.mjs stop",
