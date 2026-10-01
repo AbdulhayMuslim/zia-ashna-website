@@ -50,7 +50,12 @@ export async function POST(request) {
       await deleteStoredMedia(url).catch((cleanupError) => console.error("Upload cleanup failed:", cleanupError));
       return databaseErrorResponse(error);
     }
-  } catch {
-    return Response.json({ message: "Unable to process or store the image. Please try again." }, { status: 400 });
+  } catch (error) {
+    if (error?.code === "MEDIA_STORAGE_NOT_CONFIGURED" || error?.code === "MEDIA_STORAGE_MISCONFIGURED") {
+      console.error("Media storage configuration error:", error.message);
+      return Response.json({ message: "Image uploads are not configured on the server. Configure the S3 media-storage variables and redeploy." }, { status: 503 });
+    }
+    console.error("Image upload failed:", error);
+    return Response.json({ message: "Unable to process or store the image. Please try again." }, { status: 500 });
   }
 }

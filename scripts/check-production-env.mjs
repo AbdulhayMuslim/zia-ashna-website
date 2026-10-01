@@ -63,6 +63,12 @@ if (publicUrl) {
   }
 }
 
+const storageVariables = ["S3_BUCKET", "S3_ACCESS_KEY_ID", "S3_SECRET_ACCESS_KEY", "S3_PUBLIC_URL"];
+const configuredStorageVariables = storageVariables.filter((name) => process.env[name]?.trim());
+if (configuredStorageVariables.length && configuredStorageVariables.length !== storageVariables.length) {
+  errors.push("S3_BUCKET, S3_ACCESS_KEY_ID, S3_SECRET_ACCESS_KEY, and S3_PUBLIC_URL must be configured together.");
+}
+
 if (process.env.S3_ENDPOINT) parseUrl("S3_ENDPOINT");
 if (process.env.AUTH_SECRET && process.env.AUTH_SECRET.length < 48) {
   errors.push("AUTH_SECRET must be at least 48 characters.");
