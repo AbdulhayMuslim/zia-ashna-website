@@ -18,6 +18,18 @@ Create a MySQL database in Hostinger and S3-compatible object storage before dep
 
 Add every production variable documented in `.env.example` through Hostinger's environment-variable screen. Do not upload `.env` or `.env.local`. `CONTACT_FORM_ENDPOINT` is optional. Set `TRUST_PROXY_HEADERS=true` only after Hostinger confirms that its proxy overwrites forwarded client-IP headers.
 
+### MySQL connection and pool
+
+Set `DATABASE_URL` in Hostinger's environment-variable screen; do not put it in Git. Copy the database host, user, password, and database name from Hostinger. The host is normally `localhost` and the port is normally `3306` for a Hostinger-managed MySQL database. Encode any special characters in the password, then use this shape:
+
+```env
+DATABASE_URL="mysql://DATABASE_USER:URL_ENCODED_PASSWORD@localhost:3306/DATABASE_NAME?connection_limit=5"
+```
+
+The application creates one shared Prisma/MariaDB pool per Node.js process and caps it at five connections. The production build rejects a missing, malformed, or larger pool limit before deployment. Keep the combined connection limits of all app processes using this database user within the limit shown in your Hostinger plan; do not add replicas or background workers with the same credentials without reducing their individual limits.
+
+After changing environment variables, restart the Node.js app from Hostinger. The build command runs the environment check and `prisma migrate deploy`, so a wrong database URL or an unreachable database stops the release instead of deploying a broken application.
+
 If existing content must be copied from the former PostgreSQL database, follow `POSTGRES_TO_MYSQL.md` before switching the live domain.
 
 `S3_PUBLIC_URL` is used while Next.js builds its image allowlist. Adding or changing it requires a full redeployment, not only an application restart.

@@ -37,6 +37,14 @@ if (databaseUrl) {
   if (!["mysql:", "mariadb:"].includes(databaseUrl.protocol)) {
     errors.push("DATABASE_URL must use MySQL.");
   }
+  if (!databaseUrl.hostname || !databaseUrl.username || !databaseUrl.password || databaseUrl.pathname === "/") {
+    errors.push("DATABASE_URL must include a host, username, password, and database name.");
+  }
+
+  const connectionLimit = databaseUrl.searchParams.get("connection_limit");
+  if (!connectionLimit || !/^[1-9]\d*$/.test(connectionLimit) || Number(connectionLimit) > 5) {
+    errors.push("DATABASE_URL must set connection_limit to an integer from 1 to 5.");
+  }
 }
 
 const siteUrl = parseUrl("NEXT_PUBLIC_SITE_URL");
